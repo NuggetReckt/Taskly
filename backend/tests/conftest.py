@@ -177,6 +177,11 @@ def client(fake_db):
     main.env["JWT_SECRET"] = "test-jwt-secret"
     main.env["JWT_ALGORITHM"] = "HS256"
 
+    # Ensure routes modules see the same JWT/API config (they may have their own `env`)
+    from routes import AuthRoutes
+    AuthRoutes.env["JWT_SECRET"] = "test-jwt-secret"
+    AuthRoutes.env["JWT_ALGORITHM"] = "HS256"
+
     # Prevent real DB usage (startup event uses this global)
     main.databaseHandler = fake_db
 
