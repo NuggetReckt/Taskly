@@ -1,0 +1,56 @@
+services:
+  db:
+    image: "postgres:latest"
+    restart: on-failure
+    environment:
+      - POSTGRES_PORT=5432
+      - POSTGRES_HOST=db
+      - POSTGRES_DB=taskly
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    volumes:
+      - db-data:/var/lib/postgresql
+      - ./backend/resources/database_scheme.sql:/docker-entrypoint-initdb.d/database_scheme.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+
+  api:
+    build: backend
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+    ports:
+      - "8000:8000"
+    networks:
+      - backend
+      - frontend
+
+  web:
+    build: frontend
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+      api:
+        condition: service_started
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - frontend
+
+networks:
+  backend:
+  frontend:
+
+volumes:
+  db-data:

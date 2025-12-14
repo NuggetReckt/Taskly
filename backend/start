@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+echo "Setting up python environment and project dependencies..."
+
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install --upgrade pip
+pip install -r requirements.txt
+
+echo "Starting server..."
+
+fastapi run src/main.py

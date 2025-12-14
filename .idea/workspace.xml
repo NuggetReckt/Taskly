@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="4cc50de9-dfc5-44f4-abd8-4356aa24684d" name="Changes" comment="mirror: added repo" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="2759" />
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Dockerfile" />
+        <option value="TypeScript JSX File" />
+        <option value="Python Script" />
+        <option value="GitHub Workflow" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="dev" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitToolBoxStore">
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="main" />
+                    <option name="lastUsedInstant" value="1765733580" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="dev" />
+                    <option name="lastUsedInstant" value="1765733251" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="35QmyhQNATpNReL1vJAaC4b8D78" />
+  <component name="ProjectLevelVcsManager">
+    <OptionsSetting value="false" id="Update" />
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Docker.Dockerfile.executor": "Run",
+    "Docker.Run (ALL).executor": "Run",
+    "Docker.Run (BACK+DB).executor": "Run",
+    "Docker.Run (DB).executor": "Run",
+    "FastAPI.FastAPI.executor": "Run",
+    "FastAPI.Unnamed.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.DatabaseHandler.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHELLCHECK.PATH": "C:\\Users\\corto\\AppData\\Roaming\\JetBrains\\PyCharm2025.2\\plugins\\Shell Script\\shellcheck.exe",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/corto/delivery/PRO/Taskly/frontend",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_interpreter_path": "C:/Users/corto/AppData/Roaming/JetBrains/PyCharm2025.2/node/versions/24.11.1/node",
+    "nodejs_package_manager_path": "npm",
+    "npm.Dev.executor": "Run",
+    "npm.[FRONT] Dev.executor": "Run",
+    "npm.install.executor": "Run",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
+    "ts.external.directory.path": "C:\\Users\\corto\\delivery\\PRO\\Taskly\\frontend\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "GitIgnore"
+    ]
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\corto\delivery\PRO\Taskly\frontend" />
+      <recent name="C:\Users\corto\delivery\PRO\Taskly\frontend\app\app" />
+      <recent name="C:\Users\corto\delivery\PRO\Taskly\frontend\app\register" />
+      <recent name="C:\Users\corto\delivery\PRO\Taskly\frontend\app\login" />
+      <recent name="C:\Users\corto\delivery\PRO\Taskly\frontend\app\board" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\corto\delivery\PRO\Taskly\frontend\app\http" />
+      <recent name="C:\Users\corto\delivery\PRO\Taskly\frontend\app\app" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="docker-deploy" factoryName="dockerfile" temporary="true">
+      <deployment type="dockerfile">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-c7e53b3be11b-JavaScript-PY-253.28294.336" />
+        <option value="bundled-python-sdk-0978a7220b69-9867c7d4c0a4-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-253.28294.336" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4cc50de9-dfc5-44f4-abd8-4356aa24684d" name="Changes" comment="" />
+      <created>1763050925384</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1763050925384</updated>
+      <workItem from="1763050926530" duration="18350000" />
+      <workItem from="1763129358381" duration="2309000" />
+      <workItem from="1763132240770" duration="12043000" />
+      <workItem from="1764257084527" duration="8906000" />
+      <workItem from="1764327050121" duration="11047000" />
+      <workItem from="1764846932354" duration="64000" />
+      <workItem from="1764847006840" duration="11006000" />
+      <workItem from="1764926801279" duration="27000" />
+      <workItem from="1765449871681" duration="1748000" />
+      <workItem from="1765451968573" duration="17474000" />
+      <workItem from="1765546090671" duration="4299000" />
+      <workItem from="1765551437868" duration="9995000" />
+      <workItem from="1765577992926" duration="5412000" />
+      <workItem from="1765723009634" duration="1287000" />
+      <workItem from="1765724327383" duration="6128000" />
+      <workItem from="1765733199700" duration="800000" />
+    </task>
+    <task id="LOCAL-00001" summary="feat(Server): Added FastAPI server &amp; basic routes&#10;feat(Server): Added Database connector&#10;feat(Deployment): Added docker compose yaml file for easier deployment">
+      <option name="closed" value="true" />
+      <created>1763059563694</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1763059563694</updated>
+    </task>
+    <task id="LOCAL-00002" summary="fix(Database): Made database &amp; requests PostgreSQL syntax compliant&#10;fix(Docker): Fixed connexion failure with postgres">
+      <option name="closed" value="true" />
+      <created>1763098172377</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1763098172377</updated>
+    </task>
+    <task id="LOCAL-00003" summary="feat(Frontend): Added Nginx docker image for frontend with default page&#10;feat(DB): Added full DB scheme&#10;fix(DatabaseManager): Removed useless scheme init as its initialized by docker">
+      <option name="closed" value="true" />
+      <created>1763143854283</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1763143854283</updated>
+    </task>
+    <task id="LOCAL-00004" summary="feat(Frontend): Added cards, lists &amp; boards components&#10;feat(Frontend): Board page containing requested board&#10;feat(Frontend): Added board cards display on /app">
+      <option name="closed" value="true" />
+      <created>1764265643587</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1764265643587</updated>
+    </task>
+    <task id="LOCAL-00005" summary="feat(Auth): Added login/register frontend routes&#10;feat(Frontend): Added changing title depending on what page the user is on">
+      <option name="closed" value="true" />
+      <created>1764329184350</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1764329184350</updated>
+    </task>
+    <task id="LOCAL-00006" summary="feat(Auth): Added login/register backend routes&#10;feat(API): Added header API secret middleware checker">
+      <option name="closed" value="true" />
+      <created>1764345815818</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1764345815818</updated>
+    </task>
+    <task id="LOCAL-00007" summary="feat(Auth): Added password hash stored in db">
+      <option name="closed" value="true" />
+      <created>1764852150425</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1764852150425</updated>
+    </task>
+    <task id="LOCAL-00008" summary="feat(Auth): Added Json Web Token sent to user on login">
+      <option name="closed" value="true" />
+      <created>1764865288341</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1764865288341</updated>
+    </task>
+    <task id="LOCAL-00009" summary="feat(Frontend+API): Added board fetching logic and improved board-related features&#10;&#10;- Implemented board fetching functions (`fetchBoards`, `fetchUserBoards`, `fetchMemberBoards`) in the frontend.&#10;- Integrated axios for API requests with API key header support.&#10;- Updated board and member board display logic on the frontend.&#10;- Enhanced routing and added dynamic board linking.&#10;- Adjusted backend to improve board fetch API and middleware logic.&#10;- Updated database schema to replace `owner` role with `admin` and added API refinements.">
+      <option name="closed" value="true" />
+      <created>1765473234948</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1765473234948</updated>
+    </task>
+    <task id="LOCAL-00010" summary="feat(Auth+Frontend): Completed login/register functionality and added UI behavior&#10;&#10;- Implemented fully functional login and register forms on the frontend with validation.&#10;- Enhanced backend routes for login/register to use separate credentials models.&#10;- Integrated user authentication flow via JWT in frontend layout, redirecting unauthorized users.&#10;- Added reusable header and footer components to standardize layout across pages.&#10;- Refactored page wrapper styles, introduced new authentication UI, and updated global theme variables.&#10;- Improved consistency of backend status responses by standardizing `statusOk` model usage.&#10;- Added `.dockerignore` files for backend and frontend.">
+      <option name="closed" value="true" />
+      <created>1765561514330</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1765561514330</updated>
+    </task>
+    <task id="LOCAL-00011" summary="feat(Frontend): Enhanced board display layout and added styling updates&#10;&#10;- Added CSS classes (`app-content`, `boards`, `boards-owning`, `boards-member`, `boards-list`, `board-item`) to improve structure and layout.&#10;- Updated `page.tsx` to include new class names for better semantic and visual hierarchy.&#10;- Enhanced `globals.css` with flexbox-based styling to organize board lists and items.">
+      <option name="closed" value="true" />
+      <created>1765585398384</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1765585398384</updated>
+    </task>
+    <task id="LOCAL-00012" summary="feat(Testing): Add backend test framework and coverage for core routes&#10;&#10;- Introduced `pytest` with necessary fixtures (`conftest.py`) for testing backend routes using a `FakeDatabaseHandler`.&#10;- Added comprehensive tests for user, board, and authentication routes covering success and failure cases.&#10;- Refactored backend models to separate `UserCreate` and `UserRegisterCredentials` for cleaner validation.&#10;- Updated `DatabaseHandler.execute` to use `Union` typing for better compatibility.">
+      <option name="closed" value="true" />
+      <created>1765727917057</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1765727917057</updated>
+    </task>
+    <task id="LOCAL-00013" summary="feat(CI): Added CI backend test">
+      <option name="closed" value="true" />
+      <created>1765729045167</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1765729045167</updated>
+    </task>
+    <task id="LOCAL-00014" summary="feat(CI): Added mirror gh action">
+      <option name="closed" value="true" />
+      <created>1765730296466</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1765730296466</updated>
+    </task>
+    <task id="LOCAL-00015" summary="mirror: added repo">
+      <option name="closed" value="true" />
+      <created>1765733352136</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1765733352136</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="feat(Server): Added FastAPI server &amp; basic routes&#10;feat(Server): Added Database connector&#10;feat(Deployment): Added docker compose yaml file for easier deployment" />
+    <MESSAGE value="fix(Database): Made database &amp; requests PostgreSQL syntax compliant&#10;fix(Docker): Fixed connexion failure with postgres" />
+    <MESSAGE value="feat(Frontend): Added Nginx docker image for frontend with default page&#10;feat(DB): Added full DB scheme&#10;fix(DatabaseManager): Removed useless scheme init as its initialized by docker" />
+    <MESSAGE value="feat(Frontend): Added cards, lists &amp; boards components&#10;feat(Frontend): Board page containing requested board&#10;feat(Frontend): Added board cards display on /app" />
+    <MESSAGE value="feat(Auth): Added login/register frontend routes&#10;feat(Frontend): Added changing title depending on what page the user is on" />
+    <MESSAGE value="feat(Auth): Added login/register backend routes&#10;feat(API): Added header API secret middleware checker" />
+    <MESSAGE value="feat(Auth): Added password hash stored in db" />
+    <MESSAGE value="feat(Auth): Added Json Web Token sent to user on login" />
+    <MESSAGE value="feat(Frontend+API): Added board fetching logic and improved board-related features&#10;&#10;- Implemented board fetching functions (`fetchBoards`, `fetchUserBoards`, `fetchMemberBoards`) in the frontend.&#10;- Integrated axios for API requests with API key header support.&#10;- Updated board and member board display logic on the frontend.&#10;- Enhanced routing and added dynamic board linking.&#10;- Adjusted backend to improve board fetch API and middleware logic.&#10;- Updated database schema to replace `owner` role with `admin` and added API refinements." />
+    <MESSAGE value="feat(Auth+Frontend): Completed login/register functionality and added UI behavior&#10;&#10;- Implemented fully functional login and register forms on the frontend with validation.&#10;- Enhanced backend routes for login/register to use separate credentials models.&#10;- Integrated user authentication flow via JWT in frontend layout, redirecting unauthorized users.&#10;- Added reusable header and footer components to standardize layout across pages.&#10;- Refactored page wrapper styles, introduced new authentication UI, and updated global theme variables.&#10;- Improved consistency of backend status responses by standardizing `statusOk` model usage.&#10;- Added `.dockerignore` files for backend and frontend." />
+    <MESSAGE value="feat(Frontend): Enhanced board display layout and added styling updates&#10;&#10;- Added CSS classes (`app-content`, `boards`, `boards-owning`, `boards-member`, `boards-list`, `board-item`) to improve structure and layout.&#10;- Updated `page.tsx` to include new class names for better semantic and visual hierarchy.&#10;- Enhanced `globals.css` with flexbox-based styling to organize board lists and items." />
+    <MESSAGE value="feat(Tests): Added unit test using pytest for API routes&#10;" />
+    <MESSAGE value="feat(Testing): Add backend test framework and coverage for core routes&#10;&#10;- Introduced `pytest` with necessary fixtures (`conftest.py`) for testing backend routes using a `FakeDatabaseHandler`.&#10;- Added comprehensive tests for user, board, and authentication routes covering success and failure cases.&#10;- Refactored backend models to separate `UserCreate` and `UserRegisterCredentials` for cleaner validation.&#10;- Updated `DatabaseHandler.execute` to use `Union` typing for better compatibility." />
+    <MESSAGE value="feat(CI): Added CI backend test" />
+    <MESSAGE value="feat(CI): Added mirror gh action" />
+    <MESSAGE value="mirror: added repo" />
+    <option name="LAST_COMMIT_MESSAGE" value="mirror: added repo" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Taskly$Unnamed.coverage" NAME="Unnamed Coverage Results" MODIFIED="1764860605274" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/Taskly$FastAPI.coverage" NAME="FastAPI Coverage Results" MODIFIED="1764329688377" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/Taskly$DatabaseHandler.coverage" NAME="DatabaseHandler Coverage Results" MODIFIED="1763053960001" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend/src/database" />
+  </component>
+</project>
