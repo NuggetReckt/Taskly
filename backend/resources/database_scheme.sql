@@ -1,7 +1,3 @@
--- DATABASE
-CREATE DATABASE taskly ENCODING 'UTF8';
-
-
 ---------------------------
 -- USERS
 ---------------------------
@@ -32,13 +28,14 @@ CREATE TABLE IF NOT EXISTS boards (
 -- BOARD MEMBERSHIPS (permissions)
 -- Roles: owner, editor, viewer
 ---------------------------
-CREATE TYPE board_role AS ENUM ('owner', 'editor', 'viewer');
+CREATE TYPE board_role AS ENUM ('admin', 'editor', 'viewer');
 
 CREATE TABLE IF NOT EXISTS board_members (
     id              SERIAL PRIMARY KEY,
     board_id        INT NOT NULL REFERENCES boards(id) ON DELETE CASCADE,
     user_id         INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    role            board_role DEFAULT 'editor',
+    role            board_role DEFAULT 'viewer',
+    joined_at       TIMESTAMPTZ DEFAULT NOW(),
     UNIQUE(board_id, user_id)
 );
 

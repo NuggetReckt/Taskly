@@ -1,0 +1,5 @@
+.dockerignore
+.gitignore
+Dockerfile
+.venv/
+resources/database_scheme.sql

@@ -1,5 +1,8 @@
+from typing import Union
+
 import psycopg
 from psycopg.rows import dict_row
+from psycopg import sql
 
 
 class DatabaseHandler:
@@ -19,10 +22,13 @@ class DatabaseHandler:
             autocommit=True
         )
 
-    def execute(self, query: str, params=None):
+    def execute(self, query: str, params=None) -> Union[dict, int]:
         if not self.is_connected():
             self.connect()
         cursor = self.client.cursor(row_factory=dict_row)
+
+        if params is not None and not isinstance(params, (list, tuple, dict)):
+            params = (params,)
 
         cursor.execute(query, params)
         if cursor.description is not None:
@@ -33,12 +39,17 @@ class DatabaseHandler:
 
     def update_table_values(self, table: str, id: int, fields: dict):
         cursor = self.client.cursor()
-        set_parts = [f"{key} = %s" for key in fields.keys()]
-        set_string = ", ".join(set_parts)
-        sql = f"UPDATE {table} SET {set_string} WHERE id = %s"
+        set_parts = [
+            sql.SQL("{} = %s").format(sql.Identifier(col))
+            for col in fields.keys()
+        ]
+        set_clause = sql.SQL(", ").join(set_parts)
+        query = sql.SQL("UPDATE {table} SET {set_clause} WHERE id = %s").format(
+            table=sql.Identifier(table),
+            set_clause=set_clause
+        )
         params = list(fields.values()) + [id]
-
-        cursor.execute(sql, params)
+        cursor.execute(query, params)
 
     def disconnect(self):
         self.client.cursor().close()
