@@ -1,0 +1,6 @@
+fastapi[standard]==0.121.3
+python-dotenv==1.2.1
+psycopg[binary]==3.2.12
+bcrypt
+python-jose==3.5.0
+pytest==8.4.2
