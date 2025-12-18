@@ -9,8 +9,10 @@ export interface BoardData {
 export default function Board(data: BoardData) {
     return (
         <a href={"app/board?id=" + data.id}>
-            <h2 className={"board-card"}>{data.title}</h2>
-            <span>{data.owner}</span>
+            <div className="board-card hover:brightness-110 transition-all">
+                <h2 className={"board-card-title"}>{data.title}</h2>
+                <span>{data.owner}</span>
+            </div>
         </a>
     );
 }
