@@ -4,6 +4,7 @@ import React, {useEffect, useState} from "react";
 import * as jose from "jose"
 import {usePathname, useRouter} from "next/navigation";
 import {JWT_SECRET} from "@/app/secrets";
+import "./app.css";
 
 async function isTokenValid(token: string): Promise<boolean> {
     try {
