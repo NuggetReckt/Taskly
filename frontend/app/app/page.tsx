@@ -7,6 +7,9 @@ import {fetchMemberBoards, fetchUserBoards} from "@/app/http/boards";
 export default function Page() {
     const [owningBoards, setOwningBoards] = useState<BoardData[]>([]);
     const [memberBoards, setMemberBoards] = useState<BoardData[]>([]);
+    const [filteredOwningBoards, setFilteredOwningBoards] = useState<BoardData[]>([]);
+    const [filteredMemberBoards, setFilteredMemberBoards] = useState<BoardData[]>([]);
+    const [searchTerm, setSearchTerm] = useState("");
     const [loading, setLoading] = useState(true);
     const userId = 1; // Temporaire
 
@@ -14,6 +17,7 @@ export default function Page() {
         fetchUserBoards(userId)
             .then((data) => {
                 setOwningBoards(data);
+                setFilteredOwningBoards(data);
             })
             .catch((error) => {
                 console.error("Failed to load boards:", error);
@@ -24,6 +28,7 @@ export default function Page() {
         fetchMemberBoards(userId)
             .then((data) => {
                 setMemberBoards(data);
+                setFilteredOwningBoards(data);
             })
             .catch((error) => {
                 console.error("Failed to load boards:", error);
@@ -33,13 +38,32 @@ export default function Page() {
             });
     }, []);
 
+    useEffect(() => {
+        handleSearch(searchTerm);
+    }, [searchTerm, owningBoards, memberBoards]);
+
+    const handleSearch = (term: string) => {
+        const lowerCaseTerm = term.toLowerCase();
+
+        setFilteredOwningBoards(
+            owningBoards.filter((board) =>
+                board.title.toLowerCase().includes(lowerCaseTerm)
+            )
+        );
+        setFilteredMemberBoards(
+            memberBoards.filter((board) =>
+                board.title.toLowerCase().includes(lowerCaseTerm)
+            )
+        );
+    };
+
     if (loading) {
         return (
             <p>Chargement des boards...</p>
         );
     }
 
-    const owningBoardsList = owningBoards.map(board =>
+    const owningBoardsList = filteredOwningBoards.map(board =>
         <li key={"board_" + board.id} className="board-item">
             <Board
                 id={board.id}
@@ -50,7 +74,7 @@ export default function Page() {
             />
         </li>
     );
-    const memberBoardsList = memberBoards.map(board =>
+    const memberBoardsList = filteredMemberBoards.map(board =>
         <li key={"board_" + board.id} className="board-item">
             <Board
                 id={board.id}
@@ -89,7 +113,9 @@ export default function Page() {
                         <circle cx="11" cy="11" r="8"></circle>
                         <path d="m21 21-4.3-4.3"></path>
                     </svg>
-                    <input type="text" placeholder="Search boards"/>
+                    <input type="text" placeholder="Search boards" onChange={(e) => {
+                        setSearchTerm(e.target.value);
+                    }}/>
                 </div>
             </div>
             <div className="boards">
