@@ -2,11 +2,14 @@
 
 :root {
     --margin: 5vw;
+    --secondary-title-color: #111111;
+    --background: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --background: #0f0f0f;
+        --background: #0c0c0c;
+        --secondary-title-color: #d8d3d4;
     }
 }
 
@@ -43,8 +46,11 @@ h1 {
 }
 
 .boards-search-bar > input {
-    border: #27272AFF 1px solid;
-    background-color: #18181BFF;
+    /*border: #27272AFF 1px solid;*/
+    /*background-color: #18181BFF;*/
+
+    border: var(--card-border) 1px solid;
+    background-color: var(--card-bg);
     padding: 4px 12px 4px 40px;
     border-radius: 8px;
     height: 35px;
@@ -52,6 +58,7 @@ h1 {
     outline-style: none;
     min-width: 0;
     width: 100%;
+    box-shadow: var(--card-shadow);
 }
 
 .boards-search-bar > input:focus-visible {
@@ -61,7 +68,7 @@ h1 {
 .boards-list-title {
     font-size: 20px;
     font-weight: normal;
-    color: #d8d3d4;
+    color: var(--secondary-title-color);
     margin-bottom: 16px;
 }
 
@@ -71,8 +78,11 @@ h1 {
     align-items: flex-start;
     justify-content: space-between;
     gap: 25px;
-    border: #27272AFF 1px solid;
-    background-color: #18181BFF;
+    /*border: #27272AFF 1px solid;*/
+    /*background-color: #18181BFF;*/
+    border: var(--card-border) 1px solid;
+    box-shadow: var(--card-shadow);
+    background-color: var(--card-bg);
     border-radius: 16px;
     padding: 16px;
 }

@@ -6,9 +6,12 @@
     --accent-color: #0E6BA8;
     --card-bg: #ffffff;
     --card-border: rgba(0, 0, 0, 0.10);
+    --shadow-color: 0deg 0% 0%;
+    --card-shadow-color: rgba(0, 0, 0, 0.2);
+    --card-shadow: 0 0 15px 1px var(--card-shadow-color);
+    --success: #067647;
     --muted: rgba(0, 0, 0, 0.65);
     --danger: #b42318;
-    --success: #067647;
 }
 
 @theme inline {
@@ -24,12 +27,18 @@
         --foreground: #ffffff;
         --card-bg: #0f0f0f;
         --card-border: rgba(255, 255, 255, 0.12);
+        --card-shadow-color: rgba(0, 0, 0, 0);
         --muted: rgba(255, 255, 255, 0.70);
     }
 }
 
 h1, h2, h3 {
     font-weight: bold;
+}
+
+input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px var(--accent-color);
 }
 
 body {
@@ -56,6 +65,8 @@ body {
     padding: 12px;
     width: 100%;
     background: var(--card-bg);
+    border-bottom: var(--card-border) 1px solid;
+    box-shadow: var(--card-shadow);
 }
 
 .footer-wrapper {
@@ -66,6 +77,8 @@ body {
     padding: 12px;
     width: 100%;
     background: var(--card-bg);
+    border-top: var(--card-border) 1px solid;
+    box-shadow: var(--card-shadow);
 }
 
 /* Auth pages */
@@ -75,6 +88,7 @@ body {
     background: var(--card-bg);
     border: 1px solid var(--card-border);
     border-radius: 12px;
+    box-shadow: var(--card-shadow);
     padding: 18px;
     margin: 24px;
 }
@@ -109,11 +123,6 @@ body {
     background: transparent;
     color: var(--foreground);
     outline: none;
-}
-
-.auth-input:focus {
-    border-color: rgba(44, 112, 186, 0.6);
-    box-shadow: 0 0 0 3px rgba(44, 112, 186, 0.15);
 }
 
 .auth-row {
