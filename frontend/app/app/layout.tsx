@@ -3,10 +3,11 @@
 import React, {useEffect, useState} from "react";
 import * as jose from "jose"
 import {usePathname, useRouter} from "next/navigation";
+import {User, UserContext} from "@/app/components/user";
 import {JWT_SECRET} from "@/app/secrets";
 import "./app.css";
 
-async function isTokenValid(token: string): Promise<boolean> {
+async function isTokenValid(token: string): Promise<User | null> {
     try {
         const key = new TextEncoder().encode(JWT_SECRET);
 
@@ -15,19 +16,27 @@ async function isTokenValid(token: string): Promise<boolean> {
         });
 
         const exp = payload.exp;
-        if (typeof exp !== "number") return false;
+        if (typeof exp !== "number") return null;
         const now = Math.floor(Date.now() / 1000);
-        if (exp <= now) return false;
+        if (exp <= now) return null;
 
-        return true;
+        if (typeof payload.user_id === "number" && typeof payload.email === "string") {
+            return {
+                id: payload.user_id,
+                email: payload.email,
+            };
+        }
+
+        return null;
     } catch {
-        return false;
+        return null;
     }
 }
 
 export default function AppLayout({children}: { children: React.ReactNode }) {
     const router = useRouter();
     const pathname = usePathname();
+    const [user, setUser] = useState<User | null>(null);
     const [checked, setChecked] = useState(false);
 
     useEffect(() => {
@@ -40,13 +49,14 @@ export default function AppLayout({children}: { children: React.ReactNode }) {
                 return;
             }
 
-            const valid = await isTokenValid(token);
-            if (!valid) {
+            const user = await isTokenValid(token);
+            if (!user) {
                 localStorage.removeItem("taskly_jwt");
                 router.replace(`/login?next=${next}`);
                 return;
             }
 
+            setUser(user);
             setChecked(true);
         };
 
@@ -54,5 +64,9 @@ export default function AppLayout({children}: { children: React.ReactNode }) {
     }, [router, pathname]);
 
     if (!checked) return null;
-    return <>{children}</>;
+    return (
+        <UserContext.Provider value={user}>
+            {children}
+        </UserContext.Provider>
+    );
 }
