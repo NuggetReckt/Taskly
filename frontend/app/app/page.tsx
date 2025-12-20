@@ -3,17 +3,21 @@
 import {useState, useEffect} from "react";
 import Board, {BoardData} from "@/app/components/board";
 import {fetchMemberBoards, fetchUserBoards} from "@/app/http/boards";
+import {useUser} from "@/app/components/user";
 
 export default function Page() {
+    const user = useUser();
     const [owningBoards, setOwningBoards] = useState<BoardData[]>([]);
     const [memberBoards, setMemberBoards] = useState<BoardData[]>([]);
     const [filteredOwningBoards, setFilteredOwningBoards] = useState<BoardData[]>([]);
     const [filteredMemberBoards, setFilteredMemberBoards] = useState<BoardData[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [loading, setLoading] = useState(true);
-    const userId = 1; // Temporaire
 
     useEffect(() => {
+        if (!user) return;
+        const userId = user.id;
+
         fetchUserBoards(userId)
             .then((data) => {
                 setOwningBoards(data);
@@ -28,7 +32,7 @@ export default function Page() {
         fetchMemberBoards(userId)
             .then((data) => {
                 setMemberBoards(data);
-                setFilteredOwningBoards(data);
+                setFilteredMemberBoards(data);
             })
             .catch((error) => {
                 console.error("Failed to load boards:", error);
@@ -36,7 +40,7 @@ export default function Page() {
             .finally(() => {
                 setLoading(false);
             });
-    }, []);
+    }, [user]);
 
     useEffect(() => {
         handleSearch(searchTerm);
