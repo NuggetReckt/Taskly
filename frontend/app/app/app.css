@@ -77,18 +77,42 @@ h1 {
     flex-direction: column;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 25px;
-    /*border: #27272AFF 1px solid;*/
-    /*background-color: #18181BFF;*/
     border: var(--card-border) 1px solid;
     box-shadow: var(--card-shadow);
     background-color: var(--card-bg);
     border-radius: 16px;
     padding: 16px;
+    width: 100%;
+    height: 100%;
 }
 
 .board-card-title {
     font-size: 18px;
+}
+
+.board-card-members {
+    width: 100%;
+}
+
+.member-medal {
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    flex-shrink: 0;
+    background-color: var(--accent-color);
+    border-radius: calc(infinity * 1px);
+    border: var(--card-bg) 2px solid;
+    width: 32px;
+    height: 32px;
+}
+
+.member-medal-initials {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    width: 100%;
+    height: 100%;
 }
 
 .create-board-card {

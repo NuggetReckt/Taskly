@@ -17,8 +17,8 @@ def get_users(db: DatabaseHandler = Depends(get_database_handler)):
 
     for user in result:
         users.append(
-            User(id=user['id'], email=user['email'], name=user['name'], avatar_url=user['avatar_url'],
-                 created_at=str(user['created_at']))
+            User(id=user['id'], email=user['email'], first_name=user['first_name'], last_name=user['last_name'],
+                 avatar_url=user['avatar_url'], created_at=str(user['created_at']))
         )
     return UserList(users_count=len(users), users=users)
 
@@ -29,7 +29,7 @@ def get_user(user_id: int, db: DatabaseHandler = Depends(get_database_handler)):
         raise HTTPException(status_code=404, detail="User not found")
 
     user = db.execute("SELECT * FROM users WHERE id = %s", user_id)[0]
-    return User(id=user_id, email=user['email'], name=user['name'], avatar_url=user['avatar_url'],
+    return User(id=user_id, email=user['email'], first_name=user['first_name'], last_name=user['last_name'], avatar_url=user['avatar_url'],
                 created_at=str(user['created_at']))
 
 
@@ -52,8 +52,8 @@ def update_user(user_id: int, user: User, db: DatabaseHandler = Depends(get_data
     if not user_exists(user_id, db):
         raise HTTPException(status_code=404, detail="User not found")
 
-    db.execute("UPDATE users SET email = %s, name = %s, avatar_url = %s, password_hash = %s WHERE id = %s",
-               (user.email, user.name, user.avatar_url, user.password_hash, user_id))
+    db.execute("UPDATE users SET email = %s, first_name = %s, last_name = %s, avatar_url = %s, password_hash = %s WHERE id = %s",
+               (user.email, user.first_name, user.last_name, user.avatar_url, user.password_hash, user_id))
     return statusOk
 
 
@@ -67,8 +67,8 @@ def create_user(user: UserCreate, db: DatabaseHandler = Depends(get_database_han
     salt = bcrypt.gensalt()
     pw_hash = bcrypt.hashpw(pw_bytes, salt)
 
-    db.execute("INSERT INTO users (email, name, avatar_url, password_hash) VALUES (%s, %s, %s, %s)",
-               (user.email, user.name, user.avatar_url, pw_hash.decode('utf-8')))
+    db.execute("INSERT INTO users (email, first_name, last_name, avatar_url, password_hash) VALUES (%s, %s, %s, %s, %s)",
+               (user.email, user.first_name, user.last_name, user.avatar_url, pw_hash.decode('utf-8')))
     return statusOk
 
 

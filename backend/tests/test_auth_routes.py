@@ -2,7 +2,7 @@ def test_register_then_login_success(client):
     # register (calls UsersRoutes.create_user under the hood)
     r = client.post(
         "/register",
-        json={"email": "carol@example.com", "name": "Carol", "password": "pw123"},
+        json={"email": "carol@example.com", "first_name": "Carol", "last_name": "Janet", "password": "pw123"},
     )
     assert r.status_code == 200
     assert r.json()["status"] == "OK"

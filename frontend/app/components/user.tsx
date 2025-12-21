@@ -4,7 +4,7 @@ export interface User {
     id: number;
     email: string;
     firstName?: string;
-    LastName?: string;
+    lastName?: string;
 }
 
 export const UserContext = createContext<User | null>(null);

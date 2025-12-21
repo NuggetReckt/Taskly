@@ -71,7 +71,7 @@ class BoardDetails(BaseModel):
     owner_id: int
     title: str
     description: str
-    labels: list[Label]
+    labels: Optional[list[Label]] = None
     lists: Optional[list[List]] = None
     cards: Optional[list[Card]] = None
     members: Optional[list[BoardMember]] = None
