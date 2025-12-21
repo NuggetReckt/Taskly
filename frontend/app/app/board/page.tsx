@@ -1,8 +1,10 @@
 "use client"
 
+import {useState, useEffect} from "react";
 import BoardView, {BoardViewData} from "@/app/components/boardView";
 import {ListData} from "@/app/components/list";
 import {useSearchParams} from "next/navigation";
+import {router} from "next/dist/client";
 // import {metadata} from "@/app/layout";
 
 export default function Page() {
@@ -10,6 +12,13 @@ export default function Page() {
     const boardId = params.get('id')
 
     //TODO: get board by id
+    useEffect(() => {
+
+    }, []);
+
+    if (!boardId) {
+        router.replace(`/app`);
+    }
 
     console.log(boardId)
 
@@ -33,14 +42,14 @@ export default function Page() {
             ]
         }
     ]
-    const board: BoardViewData = {description: "", owner_id: 0, id: 0, title: "Test 1", owner: "bonjoure orevoire", lists: boardLists};
+    const board: BoardViewData = {description: "", id: 0, title: "Test 1", owner: {id: 0, email: "testemail"}, members: [{id: 1, email: "memberemail"},], lists: boardLists};
     // metadata.title = "Taskly - " + board.title;
 
     return (
         <>
             <h1>Board - {board.title}</h1>
             <div>
-                <BoardView id={board.id} title={board.title} owner={board.owner} lists={board.lists} owner_id={board.owner_id}
+                <BoardView id={board.id} title={board.title} owner={board.owner} lists={board.lists} members={board.members}
                            description={board.description}/>
             </div>
         </>

@@ -1,13 +1,13 @@
 import List, {ListData} from "@/app/components/list";
+import {User} from "@/app/components/user";
 
 export interface BoardViewData {
     id: number;
     title: string;
-    owner: string;
-    owner_id: number;
     description: string;
+    owner: User;
+    members: User[];
     lists: ListData[];
-    // members, labels, ...
 }
 
 export default function BoardView(data: BoardViewData) {

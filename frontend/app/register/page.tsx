@@ -11,7 +11,8 @@ export default function Page() {
     const router = useRouter();
 
     const [email, setEmail] = useState("");
-    const [name, setName] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -25,13 +26,14 @@ export default function Page() {
     const canSubmit = useMemo(() => {
         return (
             email.trim().length > 0 &&
-            name.trim().length > 0 &&
+            firstName.trim().length > 0 &&
+            lastName.trim().length > 0 &&
             password.length > 0 &&
             confirmPassword.length > 0 &&
             passwordsMatch &&
             !loading
         );
-    }, [email, name, password, confirmPassword, passwordsMatch, loading]);
+    }, [email, firstName, lastName, password, confirmPassword, passwordsMatch, loading]);
 
     async function onSubmit(e: React.FormEvent) {
         e.preventDefault();
@@ -45,7 +47,7 @@ export default function Page() {
 
         setLoading(true);
         try {
-            await register({email: email.trim(), name: name.trim(), password});
+            await register({email: email.trim(), first_name: firstName.trim(), last_name: lastName.trim(), password});
             setSuccess("Account created. Redirecting to login...");
             setTimeout(() => router.push("/login"), 600);
         } catch (err: any) {
@@ -73,18 +75,33 @@ export default function Page() {
                     />
                 </label>
 
-                <label className="auth-field">
-                    <span className="auth-label">Name</span>
-                    <input
-                        className="auth-input"
-                        type="text"
-                        autoComplete="name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="Your name"
-                        required
-                    />
-                </label>
+                <div className="auth-row auth-row-names">
+                    <label className="auth-field">
+                        <span className="auth-label">First Name</span>
+                        <input
+                            className="auth-input"
+                            type="text"
+                            autoComplete="name"
+                            value={firstName}
+                            onChange={(e) => setFirstName(e.target.value)}
+                            placeholder="Your first name"
+                            required
+                        />
+                    </label>
+
+                    <label className="auth-field">
+                        <span className="auth-label">Last Name</span>
+                        <input
+                            className="auth-input"
+                            type="text"
+                            autoComplete="name"
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
+                            placeholder="Your last name"
+                            required
+                        />
+                    </label>
+                </div>
 
                 <label className="auth-field">
                     <span className="auth-label">Password</span>

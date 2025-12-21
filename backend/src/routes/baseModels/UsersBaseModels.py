@@ -6,7 +6,8 @@ from pydantic import BaseModel
 class User(BaseModel):
     id: Optional[int] = None
     email: str
-    name: str
+    first_name: str
+    last_name: str
     avatar_url: Optional[str] = None
     password_hash: Optional[str] = None
     created_at: Optional[str] = None
@@ -19,13 +20,15 @@ class UserLoginCredentials(BaseModel):
 
 class UserRegisterCredentials(BaseModel):
     email: str
-    name: str
+    first_name: str
+    last_name: str
     password: str
 
 
 class UserCreate(BaseModel):
     email: str
-    name: str
+    first_name: str
+    last_name: str
     password: str
     avatar_url: Optional[str] = None
 

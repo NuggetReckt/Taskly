@@ -73,8 +73,7 @@ export default function Page() {
                 id={board.id}
                 title={board.title}
                 owner={board.owner}
-                owner_id={board.owner_id}
-                description={board.description}
+                members={board.members}
             />
         </li>
     );
@@ -84,8 +83,7 @@ export default function Page() {
                 id={board.id}
                 title={board.title}
                 owner={board.owner}
-                owner_id={board.owner_id}
-                description={board.description}
+                members={board.members}
             />
         </li>
     );

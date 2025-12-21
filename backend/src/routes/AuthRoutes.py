@@ -18,7 +18,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
 @router.post("/register", response_model=Status)
 def register(creds: UserRegisterCredentials, db: DatabaseHandler = Depends(get_database_handler)):
-    user: UserCreate = UserCreate(email=creds.email, name=creds.name, password=creds.password)
+    user: UserCreate = UserCreate(email=creds.email, first_name=creds.first_name, last_name=creds.last_name, password=creds.password)
     return create_user(user, db)
 
 

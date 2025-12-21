@@ -50,12 +50,13 @@ class FakeDatabaseHandler:
             email = params[0]
             return [u for u in self._users if u["email"] == email]
 
-        if q.startswith("insert into users (email, name, avatar_url, password_hash) values (%s, %s, %s, %s)"):
-            email, name, avatar_url, password_hash = params
+        if q.startswith("insert into users (email, first_name, last_name, avatar_url, password_hash) values (%s, %s, %s, %s, %s)"):
+            email, first_name, last_name, avatar_url, password_hash = params
             new_user = {
                 "id": self._user_id_seq,
                 "email": email,
-                "name": name,
+                "first_name": first_name,
+                "last_name": last_name,
                 "avatar_url": avatar_url,
                 "password_hash": password_hash,
                 "created_at": "2025-01-01T00:00:00",
@@ -64,13 +65,14 @@ class FakeDatabaseHandler:
             self._users.append(new_user)
             return 1
 
-        if q.startswith("update users set email = %s, name = %s, avatar_url = %s, password_hash = %s where id = %s"):
-            email, name, avatar_url, password_hash, user_id = params
+        if q.startswith("update users set email = %s, first_name = %s, last_name = %s, avatar_url = %s, password_hash = %s where id = %s"):
+            email, first_name, last_name, avatar_url, password_hash, user_id = params
             updated = 0
             for u in self._users:
                 if u["id"] == user_id:
                     u["email"] = email
-                    u["name"] = name
+                    u["first_name"] = first_name
+                    u["last_name"] = last_name
                     u["avatar_url"] = avatar_url
                     u["password_hash"] = password_hash
                     updated = 1

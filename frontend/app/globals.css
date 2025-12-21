@@ -109,6 +109,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 6px;
+    width: 100%;
 }
 
 .auth-label {
@@ -130,6 +131,15 @@ body {
     align-items: center;
     justify-content: flex-start;
     gap: 10px;
+}
+
+.auth-row-names {
+    gap: 0 !important;
+    justify-content: space-between !important;
+}
+
+.auth-row-names > label {
+    max-width: 48% !important;
 }
 
 .auth-hint {
