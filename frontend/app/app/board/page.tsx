@@ -1,57 +1,52 @@
 "use client"
 
-import {useState, useEffect} from "react";
+import React, {useState, useEffect} from "react";
 import BoardView, {BoardViewData} from "@/app/components/boardView";
 import {ListData} from "@/app/components/list";
-import {useSearchParams} from "next/navigation";
-import {router} from "next/dist/client";
+import {useSearchParams, useRouter} from "next/navigation";
+import {useUser} from "@/app/components/user";
+import {fetchBoardDetails, fetchUserBoards} from "@/app/http/boards";
 // import {metadata} from "@/app/layout";
 
 export default function Page() {
     const params = useSearchParams()
     const boardId = params.get('id')
+    const user = useUser();
+    const router = useRouter();
+    const [loading, setLoading] = useState(true);
+    const [boardView, setBoardView] = useState<BoardViewData>();
 
-    //TODO: get board by id
     useEffect(() => {
+        if (!user) return;
+        if (!boardId) {
+            router.replace(`/app`);
+            return;
+        }
 
+        fetchBoardDetails(parseInt(boardId))
+            .then((data) => {
+                setBoardView(data);
+            })
+            .catch((error) => {
+                console.error("Failed to load boards:", error);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     }, []);
 
-    if (!boardId) {
-        router.replace(`/app`);
+    if (loading || !boardView) {
+        return (
+            <p>Chargement des boards...</p>
+        );
     }
-
-    console.log(boardId)
-
-    const boardLists: ListData[] = [
-        {
-            pos: 0, title: "List 1", cards: [
-                {pos: 0, title: "Card 1", description: "Etiam proin inceptos non luctus montes a hac feugiat ullamcorper molestie"},
-                {pos: 1, title: "Card 2", description: "Etiam proin inceptos non luctus montes a hac feugiat ullamcorper molestie"}
-            ]
-        },
-        {
-            pos: 1, title: "List 2", cards: [
-                {pos: 0, title: "Card 1", description: "Etiam proin inceptos non luctus montes a hac feugiat ullamcorper molestie"},
-                {pos: 1, title: "Card 2", description: "Etiam proin inceptos non luctus montes a hac feugiat ullamcorper molestie"},
-                {pos: 2, title: "Card 2", description: "Etiam proin inceptos non luctus montes a hac feugiat ullamcorper molestie"}
-            ]
-        },
-        {
-            pos: 2, title: "List 3", cards: [
-                {pos: 0, title: "Card 1", description: "Etiam proin inceptos non luctus montes a hac feugiat ullamcorper molestie"}
-            ]
-        }
-    ]
-    const board: BoardViewData = {description: "", id: 0, title: "Test 1", owner: {id: 0, email: "testemail"}, members: [{id: 1, email: "memberemail"},], lists: boardLists};
     // metadata.title = "Taskly - " + board.title;
 
+    console.log(boardView)
     return (
-        <>
-            <h1>Board - {board.title}</h1>
-            <div>
-                <BoardView id={board.id} title={board.title} owner={board.owner} lists={board.lists} members={board.members}
-                           description={board.description}/>
-            </div>
-        </>
+        <div>
+            <BoardView id={boardView.id} title={boardView.title} owner={boardView.owner} lists={boardView.lists} members={boardView.members}
+                       description={boardView.description} labels={boardView.labels}/>
+        </div>
     );
 }

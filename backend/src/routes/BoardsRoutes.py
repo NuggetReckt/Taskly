@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 
 from . import user_exists
+from .baseModels import Label
 from .baseModels.DefaultBaseModels import Status, statusOk
-from .baseModels.BoardsBaseModels import Board, BoardList, BoardDetails, BoardMember, BoardMemberList
+from .baseModels.BoardsBaseModels import Board, BoardList, BoardDetails, BoardMember, BoardMemberList, List, Card
 from main import get_database_handler
 from database import DatabaseHandler
 
@@ -27,8 +28,29 @@ def get_board(board_id: int, db: DatabaseHandler = Depends(get_database_handler)
         raise HTTPException(status_code=404, detail="Board not found")
 
     board = db.execute("SELECT * FROM boards WHERE id = %s", board_id)[0]
+    labels = db.execute("SELECT * FROM labels WHERE board_id = %s", board_id)
+    lists = db.execute("SELECT * FROM lists WHERE board_id = %s", board_id)
+
+    boardLabels: list[Label] = []
+    boardLists: list[List] = []
+    members: list[BoardMember] = get_board_members(board_id, db).members
+
+    for label in labels:
+        boardLabels.append(
+            Label(board_id=board_id, name=label['name'], color=label['color'])
+        )
+    for boardList in lists:
+        cards = db.execute("SELECT * FROM cards WHERE list_id = %s", board_id)
+        listCards: list[Card] = []
+
+        for card in cards:
+            # TODO: Add card desc, labels, assignees, ...
+            continue
+
+        boardLists.append(List(board_id=board_id, title=boardList['title'], position=boardList['position'], cards=listCards))
+
     return BoardDetails(id=board_id, owner_id=board['owner_id'], title=board['title'],
-                        description=board['description'], )
+                        description=board['description'], labels=boardLabels, lists=boardLists, members=members)
 
 
 @router.put("/board/{board_id}")
@@ -102,9 +124,9 @@ def remove_board_member(board_id: int, user_id: int, db: DatabaseHandler = Depen
 
 @router.post("/board")
 def create_board(board: Board, db: DatabaseHandler = Depends(get_database_handler)):
-    db.execute("INSERT INTO boards (owner_id, title, description) VALUES (%s, %s, %s)",
-               (board.owner_id, board.title, board.description))
-    return statusOk
+    result = db.execute("INSERT INTO boards (owner_id, title, description) VALUES (%s, %s, %s) RETURNING id",
+                        (board.owner_id, board.title, board.description))
+    return {"id": result[0]['id']}
 
 
 @router.delete("/board/{board_id}")

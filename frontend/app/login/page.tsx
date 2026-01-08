@@ -1,15 +1,12 @@
 "use client";
 
-import {useMemo, useState} from "react";
-import {useRouter} from "next/navigation";
+import React, {Suspense, useMemo, useState} from "react";
+import {useRouter, useSearchParams} from "next/navigation";
 //import {metadata} from "@/app/layout";
 import {login} from "@/app/http/auth";
 
-export default function Page() {
-    //metadata.title = "Taskly - Login";
-
+function LoginContent() {
     const router = useRouter();
-
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -21,6 +18,9 @@ export default function Page() {
         return email.trim().length > 0 && password.length > 0 && !loading;
     }, [email, password, loading]);
 
+    const searchParams = useSearchParams();
+    let nextPage = searchParams.get('next');
+
     async function onSubmit(e: React.FormEvent) {
         e.preventDefault();
         setError(null);
@@ -29,7 +29,11 @@ export default function Page() {
         try {
             const token = await login({email: email.trim(), password});
             localStorage.setItem("taskly_jwt", token);
-            router.push("/app");
+            console.log(nextPage)
+
+            if (!nextPage)
+                nextPage = "/app";
+            router.push(nextPage);
         } catch (err: any) {
             setError(err?.message ?? "Login failed");
         } finally {
@@ -38,7 +42,6 @@ export default function Page() {
     }
 
     return (
-
         <div className="auth-card">
             <h1 className="auth-title">Login</h1>
 
@@ -96,5 +99,15 @@ export default function Page() {
                 No account? <a className="auth-link" href="/register">Register</a>
             </p>
         </div>
+    );
+}
+
+export default function Page() {
+    //metadata.title = "Taskly - Login";
+
+    return (
+        <Suspense fallback={<div>Loading login...</div>}>
+            <LoginContent/>
+        </Suspense>
     );
 }
