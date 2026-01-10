@@ -1,9 +1,11 @@
 import {client} from "@/app/http/client";
 import {BoardData} from "@/app/components/board";
 import {getBoardMembers, getBoardMembersAsUsers, getUserById} from "@/app/http/users";
-import {BoardCardData, BoardLabelData, BoardMemberData, BoardViewData} from "@/app/components/boardView";
+import {BoardMemberData, BoardViewData} from "@/app/components/boardView";
 import {User} from "@/app/components/user";
 import {ListData} from "@/app/components/list";
+import {LabelData} from "@/app/components/label";
+import {CardData} from "@/app/components/card";
 
 
 export async function fetchBoards(): Promise<BoardData[]> {
@@ -78,21 +80,31 @@ export async function fetchBoardDetails(boardId: number): Promise<BoardViewData>
 
         const owner: User = await getUserById(board['owner_id']);
         let members: BoardMemberData[] = await getBoardMembers(boardId);
-        let labels: BoardLabelData[] = board['labels'].map((label: any): BoardLabelData => {
+        let labels: LabelData[] = board['labels'].map((label: any): LabelData => {
             return {
                 name: label.name, color: label.color
             }
         });
         let lists: ListData[] = board['lists'].map((list: any): ListData => {
-            const cards = list.cards.map((card: any): BoardCardData => {
-                const assignees: BoardMemberData[] = [];
-                const labels: BoardLabelData[] = card.labels.map((label: any): BoardLabelData => {
+            const cards = list.cards.map((card: any): CardData => {
+                const assignees: BoardMemberData[] = card.assignees.map((assignee: any): BoardMemberData => {
+                    let member: BoardMemberData = {role: "admin", user: owner};
+                    members.forEach((m: BoardMemberData) => {
+                        if (m.user.id == assignee) {
+                            member = m;
+                        }
+                    });
                     return {
-                        name: label.name, color: label.color
+                        role: member.role, user: member.user
+                    }
+                })
+                const cardLabels: LabelData[] = card.labels.map((label: any): LabelData => {
+                    return {
+                        name: labels[label].name, color: labels[label].color
                     }
                 });
                 return {
-                    assignees: assignees, desc: card.desc, labels: labels, title: card.description
+                    pos: card.position, assignees: assignees, desc: card.description, labels: cardLabels, title: card.title
                 }
             });
             return {

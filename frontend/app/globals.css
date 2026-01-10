@@ -36,6 +36,10 @@ h1, h2, h3 {
     font-weight: bold;
 }
 
+span, p {
+    font-weight: normal;
+}
+
 input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
     border-color: var(--accent-color);
     box-shadow: 0 0 0 2px var(--accent-color);
