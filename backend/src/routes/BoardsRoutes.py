@@ -44,8 +44,20 @@ def get_board(board_id: int, db: DatabaseHandler = Depends(get_database_handler)
         listCards: list[Card] = []
 
         for card in cards:
-            # TODO: Add card desc, labels, assignees, ...
-            continue
+            card_id: int = int(card['id'])
+            labels = db.execute("SELECT label_id FROM card_labels WHERE card_id = %s AND board_id = %s", (card_id, board_id))
+            assignees = db.execute("SELECT user_id FROM card_assignees WHERE card_id = %s AND board_id = %s", (card_id, board_id))
+
+            cardLabels: list[int] = []
+            cardAssignees: list[int] = []
+
+            for label in labels:
+                cardLabels.append(label['label_id'])
+            for assignee in assignees:
+                cardAssignees.append(assignee['user_id'])
+
+            listCards.append(Card(list_id=card['list_id'], board_id=board_id, title=card['title'], position=card['position'],
+                                  description=card['description'], labels=cardLabels, assignees=cardAssignees))
 
         boardLists.append(List(board_id=board_id, title=boardList['title'], position=boardList['position'], cards=listCards))
 

@@ -58,6 +58,7 @@ CREATE TABLE IF NOT EXISTS lists (
 ---------------------------
 CREATE TABLE IF NOT EXISTS cards (
     id              SERIAL PRIMARY KEY,
+    board_id        INT NOT NULL REFERENCES boards(id) ON DELETE CASCADE,
     list_id         INT NOT NULL REFERENCES lists(id) ON DELETE CASCADE,
     title           VARCHAR(255) NOT NULL,
     description     TEXT,
@@ -73,6 +74,7 @@ CREATE TABLE IF NOT EXISTS cards (
 ---------------------------
 CREATE TABLE IF NOT EXISTS card_assignees (
     id              SERIAL PRIMARY KEY,
+    board_id        INT NOT NULL REFERENCES boards(id) ON DELETE CASCADE,
     card_id         INT NOT NULL REFERENCES cards(id) ON DELETE CASCADE,
     user_id         INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     UNIQUE(card_id, user_id)
@@ -95,6 +97,7 @@ CREATE TABLE IF NOT EXISTS labels (
 ---------------------------
 CREATE TABLE IF NOT EXISTS card_labels (
     id              SERIAL PRIMARY KEY,
+    board_id        INT NOT NULL REFERENCES boards(id) ON DELETE CASCADE,
     card_id         INT NOT NULL REFERENCES cards(id) ON DELETE CASCADE,
     label_id        INT NOT NULL REFERENCES labels(id) ON DELETE CASCADE,
     UNIQUE(card_id, label_id)
@@ -106,6 +109,7 @@ CREATE TABLE IF NOT EXISTS card_labels (
 ---------------------------
 CREATE TABLE IF NOT EXISTS comments (
     id              SERIAL PRIMARY KEY,
+    board_id        INT NOT NULL REFERENCES boards(id) ON DELETE CASCADE,
     card_id         INT NOT NULL REFERENCES cards(id) ON DELETE CASCADE,
     author_id       INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     content         TEXT NOT NULL,
@@ -118,8 +122,9 @@ CREATE TABLE IF NOT EXISTS comments (
 ---------------------------
 CREATE TABLE IF NOT EXISTS activity_log (
     id              SERIAL PRIMARY KEY,
-    card_id         INT REFERENCES cards(id) ON DELETE CASCADE,
-    user_id         INT REFERENCES users(id) ON DELETE SET NULL,
+    board_id        INT NOT NULL REFERENCES boards(id) ON DELETE CASCADE,
+    card_id         INT NOT NULL REFERENCES cards(id) ON DELETE CASCADE,
+    user_id         INT NOT NULL REFERENCES users(id) ON DELETE SET NULL,
     action          TEXT NOT NULL,       -- e.g. "moved card", "updated title"
     metadata        JSONB,               -- optional structured data
     created_at      TIMESTAMPTZ DEFAULT NOW()

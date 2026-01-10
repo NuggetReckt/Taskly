@@ -6,6 +6,7 @@ import {ListData} from "@/app/components/list";
 import {useSearchParams, useRouter} from "next/navigation";
 import {useUser} from "@/app/components/user";
 import {fetchBoardDetails, fetchUserBoards} from "@/app/http/boards";
+import "./board.css"
 // import {metadata} from "@/app/layout";
 
 export default function Page() {
@@ -35,16 +36,20 @@ export default function Page() {
             });
     }, []);
 
-    if (loading || !boardView) {
+    if (loading) {
         return (
-            <p>Chargement des boards...</p>
+            <p>Chargement du board...</p>
+        );
+    }
+    if (!boardView) {
+        return (
+            <p>Une erreur est survenue lors du chargement du board</p>
         );
     }
     // metadata.title = "Taskly - " + board.title;
 
-    console.log(boardView)
     return (
-        <div>
+        <div className="board-wrapper">
             <BoardView id={boardView.id} title={boardView.title} owner={boardView.owner} lists={boardView.lists} members={boardView.members}
                        description={boardView.description} labels={boardView.labels}/>
         </div>

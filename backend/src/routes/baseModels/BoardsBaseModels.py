@@ -24,6 +24,7 @@ class Label(BaseModel):
 
 class Comment(BaseModel):
     card_id: Optional[int] = None
+    board_id: Optional[int] = None
     author_id: int
     content: str
     created_at: Optional[str] = None
@@ -31,10 +32,11 @@ class Comment(BaseModel):
 
 class Card(BaseModel):
     list_id: Optional[int] = None
+    board_id: Optional[int] = None
     title: str
     position: int
     description: str
-    labels: Optional[list[Label]] = None
+    labels: Optional[list[int]] = None
     assignees: Optional[list[int]] = None
 
 
