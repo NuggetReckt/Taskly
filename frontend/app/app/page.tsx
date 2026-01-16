@@ -17,7 +17,7 @@ export default function Page() {
     const [loading, setLoading] = useState(true);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [newBoardTitle, setNewBoardTitle] = useState("");
+    const [newBoardTitle, setNewBoardTitle] = useState(user?.firstName + "'s board");
     const [creating, setCreating] = useState(false);
     const [error, setError] = useState<string | null>(null);
 

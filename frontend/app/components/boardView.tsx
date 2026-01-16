@@ -1,6 +1,8 @@
 import List, {ListData} from "@/app/components/list";
-import {User} from "@/app/components/user";
+import {User, useUser} from "@/app/components/user";
 import {LabelData} from "@/app/components/label";
+import React, {useState} from "react";
+import {createList} from "@/app/http/lists";
 
 export interface BoardMemberData {
     user: User;
@@ -18,6 +20,41 @@ export interface BoardViewData {
 }
 
 export default function BoardView(data: BoardViewData) {
+    const user = useUser();
+    const [currentListPos, setCurrentListPos] = useState(data.lists.length);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [newListTitle, setNewListTitle] = useState("");
+    const [creating, setCreating] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const handleCreateListClick = () => {
+        setIsModalOpen(true);
+    };
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
+    const onCreateList = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!user || !newListTitle.trim()) return;
+
+        setCreating(true);
+        setError(null);
+
+        try {
+            const result = await createList(data.id, newListTitle.trim(), currentListPos);
+            handleCloseModal();
+            if (result && result.id) {
+                setCurrentListPos(currentListPos + 1);
+                // Refresh lists
+            }
+        } catch (err: any) {
+            setError(err?.message ?? "Failed to create list");
+        } finally {
+            setCreating(false);
+        }
+    };
+
     const listItems = data.lists.map(list =>
         <li key={"list_" + list.pos} className="list-wrapper">
             <List pos={list.pos} title={list.title} cards={list.cards}/>
@@ -25,8 +62,59 @@ export default function BoardView(data: BoardViewData) {
     );
     //TODO: order lists by pos
 
+    if (listItems.length === 0) listItems.push(
+        <li key={"list_0"} className="list-wrapper create-first-list">
+            <button className="card-add-btn" onClick={handleCreateListClick}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-plus size-4">
+                    <path d="M5 12h14"></path>
+                    <path d="M12 5v14"></path>
+                </svg>
+                <span>Create your first list</span>
+            </button>
+        </li>
+    )
+
     return (
         <div className="board-content">
+            {isModalOpen && (
+                <div className="modal-overlay" onClick={handleCloseModal}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <div className="auth-card">
+                            <div className="modal-header">
+                                <h1 className="auth-title">Create List</h1>
+                                <button className="modal-close" onClick={handleCloseModal}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                                         strokeLinejoin="round" className="lucide lucide-x size-5">
+                                        <path d="M18 6 6 18"></path>
+                                        <path d="m6 6 12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <form className="auth-form" onSubmit={onCreateList}>
+                                <label className="auth-field">
+                                    <span className="auth-label">List Title</span>
+                                    <input
+                                        className="auth-input"
+                                        type="text"
+                                        value={newListTitle}
+                                        onChange={(e) => setNewListTitle(e.target.value)}
+                                        placeholder="My new list"
+                                        required
+                                        autoFocus
+                                    />
+                                </label>
+                                {error && <p className="auth-error">{error}</p>}
+                                <button className="auth-button" type="submit"
+                                        disabled={creating || !newListTitle.trim()}>
+                                    {creating ? "Creating..." : "Create List"}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
             <div className="board-header">
                 <h1>{data.title}</h1>
                 <div className="header-tools">
