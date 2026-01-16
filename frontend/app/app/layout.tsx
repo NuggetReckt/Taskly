@@ -6,6 +6,7 @@ import {usePathname, useRouter} from "next/navigation";
 import {User, UserContext} from "@/app/components/user";
 import {JWT_SECRET} from "@/app/secrets";
 import "./app.css";
+import {client} from "@/app/http/client";
 
 async function isTokenValid(token: string): Promise<User | null> {
     try {
@@ -21,12 +22,15 @@ async function isTokenValid(token: string): Promise<User | null> {
         if (exp <= now) return null;
 
         if (typeof payload.user_id === "number" && typeof payload.email === "string") {
+            const res = await client.get("user/" + payload.user_id);
+
             return {
                 id: payload.user_id,
                 email: payload.email,
+                firstName: res.data.first_name,
+                lastName: res.data.last_name
             };
         }
-
         return null;
     } catch {
         return null;
