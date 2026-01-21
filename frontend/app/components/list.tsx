@@ -38,10 +38,11 @@ export default function List(data: ListData) {
 
         try {
             const result = await createCard(1, 1, newCardTitle.trim(), newCardDesc.trim(), currentCardPos);
+            // TODO: Get boardId & listId
             handleCloseModal();
             if (result && result.id) {
                 setCurrentCardPos(currentCardPos + 1);
-                // Refresh cards
+                // TODO: Refresh cards
             }
         } catch (err: any) {
             setError(err?.message ?? "Failed to create list");
