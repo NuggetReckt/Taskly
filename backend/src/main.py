@@ -84,6 +84,9 @@ class APIKeyMiddleware(BaseHTTPMiddleware):
                 "/openapi.json" or request.url.path.startswith("/favicon.ico")):
             return await call_next(request)
 
+        if request.url.path == "/":
+            return await call_next(request)
+
         api_key = request.headers.get("X-API-KEY")
         expected = env.get("API_SECRET")
         if not expected:

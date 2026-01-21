@@ -21,6 +21,8 @@
     width: 100%;
     height: 100%;
     gap: 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .board-header {
@@ -30,6 +32,7 @@
     align-items: center;
     background-color: var(--card-bg);
     padding: 16px var(--app-margin);
+    flex-shrink: 0;
 }
 
 .board-header > h1 {
@@ -79,9 +82,11 @@
 
 /* Lists */
 .lists-wrapper {
-    width: fit-content;
+    width: 100%;
     height: 100%;
-    margin: 0 var(--app-margin);
+    overflow-x: auto;
+    padding: 0 var(--app-margin);
+    flex-grow: 1;
 }
 
 .lists {
@@ -89,6 +94,8 @@
     flex-wrap: nowrap;
     gap: 50px;
     height: inherit;
+    width: max-content;
+    padding-bottom: 12px;
 }
 
 .list-wrapper {
