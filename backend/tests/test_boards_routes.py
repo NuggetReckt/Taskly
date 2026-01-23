@@ -8,7 +8,7 @@ def test_create_board_then_get_boards(client):
     payload = {"owner_id": 1, "title": "Board A", "description": "Desc"}
     r = client.post("/board", json=payload)
     assert r.status_code == 200
-    assert r.json()["status"] == "OK"
+    assert r.json()["id"] == 1
 
     r = client.get("/boards")
     assert r.status_code == 200
