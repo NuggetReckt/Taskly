@@ -6,6 +6,8 @@ import {useUser} from "@/app/components/user";
 import {createCard} from "@/app/http/cards";
 
 export interface ListData {
+    id: number;
+    boardId: number;
     pos: number;
     title: string;
     cards: CardData[];
@@ -20,7 +22,6 @@ export default function List(data: ListData) {
     const [newCardDesc, setNewCardDesc] = useState("");
     const [creating, setCreating] = useState(false);
     const [error, setError] = useState<string | null>(null);
-
 
     const handleCreateCardClick = () => {
         setIsModalOpen(true);
@@ -37,8 +38,7 @@ export default function List(data: ListData) {
         setError(null);
 
         try {
-            const result = await createCard(1, 1, newCardTitle.trim(), newCardDesc.trim(), currentCardPos);
-            // TODO: Get boardId & listId
+            const result = await createCard(data.boardId, data.id, newCardTitle.trim(), newCardDesc.trim(), currentCardPos);
             handleCloseModal();
             if (result && result.id) {
                 setCurrentCardPos(currentCardPos + 1);
@@ -57,6 +57,10 @@ export default function List(data: ListData) {
         </li>
     );
     //TODO: order cards by pos
+
+    let createCardLabel = "Add a card";
+    if (cardItems.length === 0)
+        createCardLabel = "Add your first card";
     cardItems.push(
         <li key={"list_" + data.pos + "_button"} className="card-add">
             <button className="card-add-btn" onClick={handleCreateCardClick}>
@@ -65,7 +69,7 @@ export default function List(data: ListData) {
                     <path d="M5 12h14"></path>
                     <path d="M12 5v14"></path>
                 </svg>
-                <span>Add a card</span>
+                <span>{createCardLabel}</span>
             </button>
         </li>
     )

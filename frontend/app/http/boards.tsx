@@ -6,6 +6,7 @@ import {User} from "@/app/components/user";
 import {ListData} from "@/app/components/list";
 import {LabelData} from "@/app/components/label";
 import {CardData} from "@/app/components/card";
+import {list} from "postcss";
 
 
 export async function fetchBoards(): Promise<BoardData[]> {
@@ -108,7 +109,7 @@ export async function fetchBoardDetails(boardId: number): Promise<BoardViewData>
                 }
             });
             return {
-                cards: cards, pos: list.position, title: list.title
+                id: list['id'], boardId: board['id'], cards: cards, pos: list.position, title: list.title
             }
         });
 
