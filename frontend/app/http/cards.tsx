@@ -11,7 +11,7 @@ export async function createCard(boardId: number, listId: number, title: string,
         });
         return response.data;
     } catch (error) {
-        console.error("Error creating list:", error);
+        console.error("Error creating card:", error);
         throw error;
     }
 }

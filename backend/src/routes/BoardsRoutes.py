@@ -59,7 +59,7 @@ def get_board(board_id: int, db: DatabaseHandler = Depends(get_database_handler)
             listCards.append(Card(list_id=card['list_id'], board_id=board_id, title=card['title'], position=card['position'],
                                   description=card['description'], labels=cardLabels, assignees=cardAssignees))
 
-        boardLists.append(List(board_id=board_id, title=boardList['title'], position=boardList['position'], cards=listCards))
+        boardLists.append(List(id=boardList['id'], board_id=board_id, title=boardList['title'], position=boardList['position'], cards=listCards))
 
     return BoardDetails(id=board_id, owner_id=board['owner_id'], title=board['title'],
                         description=board['description'], labels=boardLabels, lists=boardLists, members=members)
@@ -74,6 +74,7 @@ def update_board(board_id: int, board: Board, db: DatabaseHandler = Depends(get_
     return statusOk
 
 
+# Board members
 @router.get("/board/{board_id}/members")
 def get_board_members(board_id: int, db: DatabaseHandler = Depends(get_database_handler)):
     if not board_exists(board_id, db):
@@ -135,6 +136,7 @@ def remove_board_member(board_id: int, user_id: int, db: DatabaseHandler = Depen
     return statusOk
 
 
+# Board Labels
 @router.get("/board/{board_id}/labels")
 def get_board_labels(board_id: int, db: DatabaseHandler = Depends(get_database_handler)):
     if not board_exists(board_id, db):
@@ -191,6 +193,38 @@ def remove_board_label(board_id: int, label_id: int, db: DatabaseHandler = Depen
     return statusOk
 
 
+# Board Lists
+@router.get("/board/{board_id}/lists")
+def get_board_lists(board_id: int, db: DatabaseHandler = Depends(get_database_handler)):
+    if not board_exists(board_id, db):
+        raise HTTPException(status_code=404, detail="Board not found")
+
+    lists: list[List] = []
+    result = db.execute("SELECT * FROM lists WHERE board_id = %s", board_id)
+
+    for l in result:
+        cards: list[int] = []
+        cardIds = db.execute("SELECT * FROM cards WHERE list_id = %s", l['id'])
+        for cardId in cardIds:
+            cards.append(cardId)
+
+        lists.append(List(board_id=l['board_id'], title=l['title'], position=l['position'], cards=cards))
+    return lists
+
+
+@router.post("/board/{board_id}/list")
+def add_board_list(board_list: List, db: DatabaseHandler = Depends(get_database_handler)):
+    if board_list.board_id is None:
+        raise HTTPException(status_code=400, detail="Board id is required")
+    if not board_exists(board_list.board_id, db):
+        raise HTTPException(status_code=404, detail="Board not found")
+
+    result = db.execute("INSERT INTO lists (board_id, title, position) VALUES (%s, %s, %s) RETURNING id",
+                        (board_list.board_id, board_list.title, board_list.position))
+    return {"id": result[0]['id']}
+
+
+# Board Cards
 @router.get("/board/{board_id}/cards")
 def get_board_cards(board_id: int, db: DatabaseHandler = Depends(get_database_handler)):
     if not board_exists(board_id, db):
@@ -218,17 +252,19 @@ def get_board_cards(board_id: int, db: DatabaseHandler = Depends(get_database_ha
 
 
 @router.post("/board/{board_id}/card")
-def add_board_card(card: Card, db: DatabaseHandler = Depends(get_database_handler)):
+def add_board_card(board_id: int, card: Card, db: DatabaseHandler = Depends(get_database_handler)):
     if card.board_id is None:
         raise HTTPException(status_code=400, detail="Board id is required")
     if card.list_id is None:
         raise HTTPException(status_code=400, detail="List id is required")
 
-    if not board_exists(card.board_id, db):
+    if not board_exists(board_id, db):
         raise HTTPException(status_code=404, detail="Board not found")
+    if not list_exists(card.board_id, card.list_id, db):
+        raise HTTPException(status_code=404, detail="List not found")
 
     result = db.execute("INSERT INTO cards (board_id, list_id, title, description, position) VALUES (%s, %s, %s, %s, %s) RETURNING id",
-                        (card.board_id, card.list_id, card.title, card.description, card.position))
+                        (board_id, card.list_id, card.title, card.description, card.position))
     return {"id": result[0]['id']}
 
 

@@ -92,7 +92,7 @@
 .lists {
     display: flex;
     flex-wrap: nowrap;
-    gap: 50px;
+    gap: 30px;
     height: inherit;
     width: max-content;
     padding-bottom: 12px;
@@ -110,8 +110,16 @@
 
 .create-first-list {
     padding: 0;
-    height: 120px;
+    height: 80px;
     border: var(--card-border) 2px dashed;
+    color: #9f9fa9;
+    transition: all .25s;
+}
+
+.create-first-list:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    cursor: pointer;
 }
 
 .list {
