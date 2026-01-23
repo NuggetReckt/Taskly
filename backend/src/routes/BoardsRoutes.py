@@ -314,7 +314,7 @@ def edit_board_card(board_id: int, card_id: int, card: Card, db: DatabaseHandler
     if not card_exists(board_id, card_id, db):
         raise HTTPException(status_code=404, detail="Card not found")
 
-    db.execute("UPDATE cards SET title = %s, description = %s, position WHERE board_id = %s AND card_id = %s",
+    db.execute("UPDATE cards SET title = %s, description = %s, position = %s WHERE board_id = %s AND id = %s",
                (card.title, card.description, card.position, board_id, card_id))
     return statusOk
 
@@ -326,7 +326,7 @@ def remove_board_card(board_id: int, card_id: int, db: DatabaseHandler = Depends
     if not card_exists(board_id, card_id, db):
         raise HTTPException(status_code=404, detail="Card not found")
 
-    db.execute("DELETE FROM cards WHERE board_id = %s AND card_id = %s", (board_id, card_id))
+    db.execute("DELETE FROM cards WHERE board_id = %s AND id = %s", (board_id, card_id))
     return statusOk
 
 
