@@ -17,10 +17,12 @@ class FakeDatabaseHandler:
         self._users = []
         self._boards = []
         self._board_members = []
+        self._cards = []
 
         self._user_id_seq = 1
         self._board_id_seq = 1
         self._board_member_id_seq = 1
+        self._card_id_seq = 1
 
     def connect(self):
         self._connected = True
@@ -99,8 +101,9 @@ class FakeDatabaseHandler:
 
         if q.startswith("insert into boards (owner_id, title, description) values (%s, %s, %s)"):
             owner_id, title, description = params
+            new_id = self._board_id_seq
             new_board = {
-                "id": self._board_id_seq,
+                "id": new_id,
                 "owner_id": owner_id,
                 "title": title,
                 "description": description,
@@ -108,6 +111,8 @@ class FakeDatabaseHandler:
             }
             self._board_id_seq += 1
             self._boards.append(new_board)
+            if "returning id" in q:
+                return [{"id": new_id}]
             return 1
 
         if q.startswith("delete from boards where id = %s"):
@@ -141,6 +146,28 @@ class FakeDatabaseHandler:
                 if not (m["board_id"] == board_id and m["user_id"] == user_id)
             ]
             return 1 if len(self._board_members) != before else 0
+
+        # ---------- CARDS ----------
+        if q.startswith("select * from cards where board_id = %s and card_id = %s"):
+            board_id, card_id = params
+            return [c for c in self._cards if c["board_id"] == board_id and c["id"] == card_id]
+
+        if q.startswith("insert into cards (board_id, list_id, title, description, position) values (%s, %s, %s, %s, %s)"):
+            board_id, list_id, title, description, position = params
+            new_id = self._card_id_seq
+            new_card = {
+                "id": new_id,
+                "board_id": board_id,
+                "list_id": list_id,
+                "title": title,
+                "description": description,
+                "position": position,
+            }
+            self._card_id_seq += 1
+            self._cards.append(new_card)
+            if "returning id" in q:
+                return [{"id": new_id}]
+            return 1
 
         # ---------- MEMBER BOARDS QUERY (the big JOIN) ----------
         if "from boards b inner join board_members bm on b.id = bm.board_id" in q:
