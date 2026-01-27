@@ -330,6 +330,87 @@ def remove_board_card(board_id: int, card_id: int, db: DatabaseHandler = Depends
     return statusOk
 
 
+@router.get("/board/{board_id}/card/{card_id}/assignees")
+def get_board_car_assignees(board_id: int, card_id: int, db: DatabaseHandler = Depends(get_database_handler)):
+    if not board_exists(board_id, db):
+        raise HTTPException(status_code=404, detail="Board not found")
+    if not card_exists(board_id, card_id, db):
+        raise HTTPException(status_code=404, detail="Card not found")
+
+    cardAssignees: list[int] = []
+    assignees = db.execute("SELECT * FROM card_assignees WHERE board_id = %s AND card_id = %s", (board_id, card_id))
+    for assignee in assignees:
+        cardAssignees.append(assignee['user_id'])
+    return cardAssignees
+
+
+@router.post("/board/{board_id}/card/{card_id}/assignee")
+def add_board_car_assignee(board_id: int, card_id: int, user_id: int, db: DatabaseHandler = Depends(get_database_handler)):
+    if not board_exists(board_id, db):
+        raise HTTPException(status_code=404, detail="Board not found")
+    if not card_exists(board_id, card_id, db):
+        raise HTTPException(status_code=404, detail="Card not found")
+    if not user_id or not user_exists(user_id, db):
+        raise HTTPException(status_code=404, detail="User not found")
+
+    db.execute("INSERT INTO card_assignees (board_id, card_id, user_id) VALUES (%s, %s, %s)",
+               (board_id, card_id, user_id))
+    return statusOk
+
+
+@router.delete("/board/{board_id}/card/{card_id}/assignee/{user_id}")
+def remove_board_card_assignee(board_id: int, card_id: int, user_id: int, db: DatabaseHandler = Depends(get_database_handler)):
+    if not board_exists(board_id, db):
+        raise HTTPException(status_code=404, detail="Board not found")
+    if not card_exists(board_id, card_id, db):
+        raise HTTPException(status_code=404, detail="Card not found")
+    if not user_exists(user_id, db):
+        raise HTTPException(status_code=404, detail="User not found")
+
+    db.execute("DELETE FROM card_assignees WHERE board_id = %s AND card_id = %s", (board_id, card_id))
+    return statusOk
+
+
+@router.get("/board/{board_id}/card/{card_id}/labels")
+def get_board_card_labels(board_id: int, card_id: int, db: DatabaseHandler = Depends(get_database_handler)):
+    if not board_exists(board_id, db):
+        raise HTTPException(status_code=404, detail="Board not found")
+    if not card_exists(board_id, card_id, db):
+        raise HTTPException(status_code=404, detail="Card not found")
+
+    cardLabels: list[int] = []
+    labels = db.execute("SELECT * FROM card_labels WHERE board_id = %s AND card_id = %s", (board_id, card_id))
+    for label in labels:
+        cardLabels.append(label['label_id'])
+    return cardLabels
+
+
+@router.post("/board/{board_id}/card/{card_id}/label")
+def add_board_card_label(board_id: int, card_id: int, label_id: int, db: DatabaseHandler = Depends(get_database_handler)):
+    if not board_exists(board_id, db):
+        raise HTTPException(status_code=404, detail="Board not found")
+    if not card_exists(board_id, card_id, db):
+        raise HTTPException(status_code=404, detail="Card not found")
+    if not label_id or not label_exists(board_id, label_id, db):
+        raise HTTPException(status_code=404, detail="Label not found")
+
+    db.execute("INSERT INTO card_labels (board_id, card_id, label_id) VALUES (%s, %s, %s)", (board_id, card_id, label_id))
+    return statusOk
+
+
+@router.delete("/board/{board_id}/card/{card_id}/label/{label_id}")
+def add_board_card_label(board_id: int, card_id: int, label_id: int, db: DatabaseHandler = Depends(get_database_handler)):
+    if not board_exists(board_id, db):
+        raise HTTPException(status_code=404, detail="Board not found")
+    if not card_exists(board_id, card_id, db):
+        raise HTTPException(status_code=404, detail="Card not found")
+    if not label_exists(board_id, label_id, db):
+        raise HTTPException(status_code=404, detail="Label not found")
+
+    db.execute("DELETE FROM card_labels WHERE board_id = %s AND card_id = %s AND label_id = %s)", (board_id, card_id, label_id))
+    return statusOk
+
+
 @router.post("/board")
 def create_board(board: Board, db: DatabaseHandler = Depends(get_database_handler)):
     result = db.execute("INSERT INTO boards (owner_id, title, description) VALUES (%s, %s, %s) RETURNING id",
