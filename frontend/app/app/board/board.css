@@ -129,9 +129,23 @@
     gap: 10px;
 }
 
-.list > h2 {
+.list-header-title {
     font-size: 20px;
     font-weight: 500;
+}
+
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.list-header-btn {
+    padding: 4px 8px;
+}
+
+.list-header-btn > svg {
+    height: 20px;
 }
 
 /* Cards */
