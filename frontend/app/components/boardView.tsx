@@ -55,12 +55,11 @@ export default function BoardView(data: BoardViewData) {
         }
     };
 
-    const listItems = data.lists.map(list =>
+    const listItems = data.lists.sort((a, b) => a.pos - b.pos).map(list =>
         <li key={"list_" + list.pos} className="list-wrapper">
             <List id={list.id} boardId={list.boardId} pos={list.pos} title={list.title} cards={list.cards}/>
         </li>
     );
-    //TODO: order lists by pos
 
     let createListLabel = "Create a new list";
     if (listItems.length === 0)

@@ -35,6 +35,18 @@ export async function fetchBoardList(boardId: number, listId: number): Promise<a
     }
 }
 
+export async function updateList(boardId: number, listId: number, title: string, position: number): Promise<any> {
+    try {
+        const response = await client.put("board/" + boardId + "/list/" + listId, {
+            title: title,
+            position: position
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error updating list:", error);
+    }
+}
+
 export async function deleteList(boardId: number, listId: number): Promise<any> {
     try {
         const response = await client.delete("board/" + boardId + "/list/" + listId);
