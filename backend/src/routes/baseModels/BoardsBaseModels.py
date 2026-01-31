@@ -17,12 +17,14 @@ class BoardMemberList(BaseModel):
 
 
 class Label(BaseModel):
+    id: Optional[int] = None
     board_id: Optional[int] = None
     name: str
     color: str
 
 
 class Comment(BaseModel):
+    id: Optional[int] = None
     card_id: Optional[int] = None
     board_id: Optional[int] = None
     author_id: int
@@ -31,6 +33,7 @@ class Comment(BaseModel):
 
 
 class Card(BaseModel):
+    id: Optional[int] = None
     list_id: Optional[int] = None
     board_id: Optional[int] = None
     title: str
@@ -41,10 +44,11 @@ class Card(BaseModel):
 
 
 class List(BaseModel):
+    id: Optional[int] = None
     board_id: Optional[int] = None
     title: str
     position: int
-    cards: list[Card]
+    cards: Optional[list[Card]] = None
     created_at: Optional[str] = None
 
 

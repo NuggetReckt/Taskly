@@ -33,13 +33,13 @@ export default function Card(data: CardData) {
 
     return (
         <div className="card">
-            <div className="card-labels">
+            {labels.length >= 1 && (<div className="card-labels">
                 {labels}
-            </div>
+            </div>)}
             <h1 className="card-title">{data.title}</h1>
-            <ul className="assignees flex -space-x-2">
+            {assignees.length >= 1 && (<ul className="assignees flex -space-x-2">
                 {assignees}
-            </ul>
+            </ul>)}
         </div>
     );
 }

@@ -46,7 +46,7 @@ export default function BoardView(data: BoardViewData) {
             handleCloseModal();
             if (result && result.id) {
                 setCurrentListPos(currentListPos + 1);
-                // Refresh lists
+                // TODO: Refresh lists
             }
         } catch (err: any) {
             setError(err?.message ?? "Failed to create list");
@@ -55,22 +55,24 @@ export default function BoardView(data: BoardViewData) {
         }
     };
 
-    const listItems = data.lists.map(list =>
+    const listItems = data.lists.sort((a, b) => a.pos - b.pos).map(list =>
         <li key={"list_" + list.pos} className="list-wrapper">
-            <List pos={list.pos} title={list.title} cards={list.cards}/>
+            <List id={list.id} boardId={list.boardId} pos={list.pos} title={list.title} cards={list.cards}/>
         </li>
     );
-    //TODO: order lists by pos
 
-    if (listItems.length === 0) listItems.push(
-        <li key={"list_0"} className="list-wrapper create-first-list">
+    let createListLabel = "Create a new list";
+    if (listItems.length === 0)
+        createListLabel = "Create your first list";
+    listItems.push(
+        <li key={"list_create"} className="list-wrapper create-first-list">
             <button className="card-add-btn" onClick={handleCreateListClick}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                      strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-plus size-4">
                     <path d="M5 12h14"></path>
                     <path d="M12 5v14"></path>
                 </svg>
-                <span>Create your first list</span>
+                <span>{createListLabel}</span>
             </button>
         </li>
     )
