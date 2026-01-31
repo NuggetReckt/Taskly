@@ -2,6 +2,8 @@ import List, {ListData} from "@/app/components/list";
 import {User, useUser} from "@/app/components/user";
 import {LabelData} from "@/app/components/label";
 import React, {useState} from "react";
+import {createLabel} from "@/app/http/boards";
+import {createCard} from "@/app/http/cards";
 import {createList} from "@/app/http/lists";
 
 export interface BoardMemberData {
@@ -23,15 +25,72 @@ export default function BoardView(data: BoardViewData) {
     const user = useUser();
     const [currentListPos, setCurrentListPos] = useState(data.lists.length);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isPlusModalOpen, setIsPlusModalOpen] = useState(false);
+    const [isLabelModalOpen, setIsLabelModalOpen] = useState(false);
+    const [isCardModalOpen, setIsCardModalOpen] = useState(false);
     const [newListTitle, setNewListTitle] = useState("");
+    const [newLabelName, setNewLabelName] = useState("");
+    const [newLabelColor, setNewLabelColor] = useState("#000000");
+    const [newCardTitle, setNewCardTitle] = useState("");
+    const [newCardDesc, setNewCardDesc] = useState("");
+    const [newCardListId, setNewCardListId] = useState<number | null>(null);
     const [creating, setCreating] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     const handleCreateListClick = () => {
         setIsModalOpen(true);
     };
+    const handlePlusClick = () => {
+        if (isPlusModalOpen) {
+            setIsPlusModalOpen(false);
+        } else {
+            setIsPlusModalOpen(true);
+        }
+    }
     const handleCloseModal = () => {
         setIsModalOpen(false);
+        setIsPlusModalOpen(false);
+        setIsLabelModalOpen(false);
+        setIsCardModalOpen(false);
+        setError(null);
+    };
+
+    const onCreateLabel = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!user || !newLabelName.trim()) return;
+
+        setCreating(true);
+        setError(null);
+
+        try {
+            await createLabel(data.id, newLabelName.trim(), newLabelColor);
+            handleCloseModal();
+            window.location.reload(); /* TODO: TROUVER MEILLEUR MOYEN DE REFRESH LE BOARD */
+        } catch (err: any) {
+            setError(err?.message ?? "Failed to create label");
+        } finally {
+            setCreating(false);
+        }
+    };
+
+    const onCreateCard = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!user || !newCardTitle.trim() || newCardListId === null) return;
+
+        setCreating(true);
+        setError(null);
+
+        try {
+            const list = data.lists.find(l => l.id === newCardListId);
+            const pos = list ? list.cards.length : 0;
+            await createCard(data.id, newCardListId, newCardTitle.trim(), newCardDesc.trim(), pos);
+            handleCloseModal();
+            window.location.reload(); /* TODO: TROUVER MEILLEUR MOYEN DE REFRESH LE BOARD */
+        } catch (err: any) {
+            setError(err?.message ?? "Failed to create card");
+        } finally {
+            setCreating(false);
+        }
     };
 
     const onCreateList = async (e: React.FormEvent) => {
@@ -46,7 +105,7 @@ export default function BoardView(data: BoardViewData) {
             handleCloseModal();
             if (result && result.id) {
                 setCurrentListPos(currentListPos + 1);
-                // TODO: Refresh lists
+                window.location.reload(); /* TODO: TROUVER MEILLEUR MOYEN DE REFRESH LE BOARD */
             }
         } catch (err: any) {
             setError(err?.message ?? "Failed to create list");
@@ -117,6 +176,115 @@ export default function BoardView(data: BoardViewData) {
                     </div>
                 </div>
             )}
+            {isLabelModalOpen && (
+                <div className="modal-overlay" onClick={handleCloseModal}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <div className="auth-card">
+                            <div className="modal-header">
+                                <h1 className="auth-title">Create Label</h1>
+                                <button className="modal-close" onClick={handleCloseModal}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                                         strokeLinejoin="round" className="lucide lucide-x size-5">
+                                        <path d="M18 6 6 18"></path>
+                                        <path d="m6 6 12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <form className="auth-form" onSubmit={onCreateLabel}>
+                                <label className="auth-field">
+                                    <span className="auth-label">Label Name</span>
+                                    <input
+                                        className="auth-input"
+                                        type="text"
+                                        value={newLabelName}
+                                        onChange={(e) => setNewLabelName(e.target.value)}
+                                        placeholder="Label name"
+                                        required
+                                        autoFocus
+                                    />
+                                </label>
+                                <label className="auth-field">
+                                    <span className="auth-label">Label Color</span>
+                                    <input
+                                        className="auth-input"
+                                        type="color"
+                                        value={newLabelColor}
+                                        onChange={(e) => setNewLabelColor(e.target.value)}
+                                        required
+                                    />
+                                </label>
+                                {error && <p className="auth-error">{error}</p>}
+                                <button className="auth-button" type="submit"
+                                        disabled={creating || !newLabelName.trim()}>
+                                    {creating ? "Creating..." : "Create Label"}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {isCardModalOpen && (
+                <div className="modal-overlay" onClick={handleCloseModal}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <div className="auth-card">
+                            <div className="modal-header">
+                                <h1 className="auth-title">Create Card</h1>
+                                <button className="modal-close" onClick={handleCloseModal}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                                         strokeLinejoin="round" className="lucide lucide-x size-5">
+                                        <path d="M18 6 6 18"></path>
+                                        <path d="m6 6 12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <form className="auth-form" onSubmit={onCreateCard}>
+                                <label className="auth-field">
+                                    <span className="auth-label">Card Title</span>
+                                    <input
+                                        className="auth-input"
+                                        type="text"
+                                        value={newCardTitle}
+                                        onChange={(e) => setNewCardTitle(e.target.value)}
+                                        placeholder="Card title"
+                                        required
+                                        autoFocus
+                                    />
+                                </label>
+                                <label className="auth-field">
+                                    <span className="auth-label">Description</span>
+                                    <textarea
+                                        className="auth-input"
+                                        value={newCardDesc}
+                                        onChange={(e) => setNewCardDesc(e.target.value)}
+                                        placeholder="Card description"
+                                    />
+                                </label>
+                                <label className="auth-field">
+                                    <span className="auth-label">List</span>
+                                    <select
+                                        className="auth-input"
+                                        value={newCardListId ?? ""}
+                                        onChange={(e) => setNewCardListId(Number(e.target.value))}
+                                        required
+                                    >
+                                        <option value="" disabled>Select a list</option>
+                                        {data.lists.map(list => (
+                                            <option key={list.id} value={list.id}>{list.title}</option>
+                                        ))}
+                                    </select>
+                                </label>
+                                {error && <p className="auth-error">{error}</p>}
+                                <button className="auth-button" type="submit"
+                                        disabled={creating || !newCardTitle.trim() || newCardListId === null}>
+                                    {creating ? "Creating..." : "Create Card"}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
             <div className="board-header">
                 <h1>{data.title}</h1>
                 <div className="header-tools">
@@ -129,13 +297,33 @@ export default function BoardView(data: BoardViewData) {
                         </svg>
                         <input type="text" data-slot="input" placeholder="Search cards..."/>
                     </div>
-                    <button data-slot="button" className="tool-button">
+                    <button data-slot="button" className="tool-button" onClick={handlePlusClick}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                              strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-plus size-5">
                             <path d="M5 12h14"></path>
                             <path d="M12 5v14"></path>
                         </svg>
                     </button>
+                    {isPlusModalOpen && (
+                        <div className="plus-modal">
+                            <button onClick={() => {
+                                setIsLabelModalOpen(true);
+                                setIsPlusModalOpen(false);
+                            }}>Create label
+                            </button>
+                            <button onClick={() => {
+                                setIsModalOpen(true);
+                                setIsPlusModalOpen(false);
+                            }}>Create list
+                            </button>
+                            <button onClick={() => {
+                                setIsCardModalOpen(true);
+                                setIsPlusModalOpen(false);
+                                if (data.lists.length > 0) setNewCardListId(data.lists[0].id);
+                            }}>Create card
+                            </button>
+                        </div>
+                    )}
                     <a href="/app" className="tool-button">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"

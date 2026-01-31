@@ -127,3 +127,16 @@ export async function fetchBoardDetails(boardId: number): Promise<BoardViewData>
         throw error;
     }
 }
+
+export async function createLabel(boardId: number, name: string, color: string): Promise<any> {
+    try {
+        const response = await client.post(`board/${boardId}/label`, {
+            name: name,
+            color: color
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error creating label:", error);
+        throw error;
+    }
+}

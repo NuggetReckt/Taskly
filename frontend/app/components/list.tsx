@@ -135,13 +135,12 @@ export default function List(data: ListData) {
                                     />
                                 </label>
                                 <label className="auth-field">
-                                    <span className="auth-label">Card Desc</span>
-                                    <input
+                                    <span className="auth-label">Description</span>
+                                    <textarea
                                         className="auth-input"
-                                        type="text"
                                         value={newCardDesc}
                                         onChange={(e) => setNewCardDesc(e.target.value)}
-                                        placeholder=""
+                                        placeholder="Card description"
                                     />
                                 </label>
                                 {error && <p className="auth-error">{error}</p>}
