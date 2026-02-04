@@ -37,7 +37,7 @@ def get_board(board_id: int, db: DatabaseHandler = Depends(get_database_handler)
 
     for label in labels:
         boardLabels.append(
-            Label(board_id=board_id, name=label['name'], color=label['color'])
+            Label(id=label['id'], board_id=board_id, name=label['name'], color=label['color'])
         )
     for boardList in lists:
         listId: int = int(boardList['id'])
@@ -334,7 +334,8 @@ def get_board_card(board_id: int, card_id: int, db: DatabaseHandler = Depends(ge
     assignees = db.execute("SELECT * FROM card_assignees WHERE board_id = %s AND card_id = %s", (board_id, result[0]['id']))
     for assignee in assignees:
         cardAssignees.append(assignee['user_id'])
-    return Card(list_id=result[0]['list_id'], board_id=result[0]['board_id'], title=result[0]['title'], description=result[0]['description'],
+    return Card(list_id=result[0]['list_id'], board_id=result[0]['board_id'], title=result[0]['title'],
+                description=result[0]['description'],
                 position=result[0]['position'], assignees=cardAssignees, labels=cardLabels)
 
 
@@ -352,7 +353,7 @@ def get_board_card_assignees(board_id: int, card_id: int, db: DatabaseHandler = 
     return cardAssignees
 
 
-@router.post("/board/{board_id}/card/{card_id}/assignee")
+@router.post("/board/{board_id}/card/{card_id}/assignee/{user_id}")
 def add_board_card_assignee(board_id: int, card_id: int, user_id: int, db: DatabaseHandler = Depends(get_database_handler)):
     if not board_exists(board_id, db):
         raise HTTPException(status_code=404, detail="Board not found")
@@ -393,7 +394,7 @@ def get_board_card_labels(board_id: int, card_id: int, db: DatabaseHandler = Dep
     return cardLabels
 
 
-@router.post("/board/{board_id}/card/{card_id}/label")
+@router.post("/board/{board_id}/card/{card_id}/label/{label_id}")
 def add_board_card_label(board_id: int, card_id: int, label_id: int, db: DatabaseHandler = Depends(get_database_handler)):
     if not board_exists(board_id, db):
         raise HTTPException(status_code=404, detail="Board not found")
@@ -407,7 +408,7 @@ def add_board_card_label(board_id: int, card_id: int, label_id: int, db: Databas
 
 
 @router.delete("/board/{board_id}/card/{card_id}/label/{label_id}")
-def add_board_card_label(board_id: int, card_id: int, label_id: int, db: DatabaseHandler = Depends(get_database_handler)):
+def remove_board_card_label(board_id: int, card_id: int, label_id: int, db: DatabaseHandler = Depends(get_database_handler)):
     if not board_exists(board_id, db):
         raise HTTPException(status_code=404, detail="Board not found")
     if not card_exists(board_id, card_id, db):
@@ -415,7 +416,7 @@ def add_board_card_label(board_id: int, card_id: int, label_id: int, db: Databas
     if not label_exists(board_id, label_id, db):
         raise HTTPException(status_code=404, detail="Label not found")
 
-    db.execute("DELETE FROM card_labels WHERE board_id = %s AND card_id = %s AND label_id = %s)", (board_id, card_id, label_id))
+    db.execute("DELETE FROM card_labels WHERE board_id = %s AND card_id = %s AND label_id = %s", (board_id, card_id, label_id))
     return statusOk
 
 

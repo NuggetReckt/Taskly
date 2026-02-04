@@ -1,10 +1,12 @@
 import List, {ListData} from "@/app/components/list";
 import {User, useUser} from "@/app/components/user";
-import {LabelData} from "@/app/components/label";
+import Label, {LabelData} from "@/app/components/label";
 import React, {useState} from "react";
 import {createLabel} from "@/app/http/boards";
-import {createCard} from "@/app/http/cards";
+import {addCardAssignee, addCardLabel, createCard, removeCardAssignee, removeCardLabel, updateCard} from "@/app/http/cards";
 import {createList} from "@/app/http/lists";
+import {CardData} from "@/app/components/card";
+import MemberMedal from "@/app/components/memberMedal";
 
 export interface BoardMemberData {
     user: User;
@@ -34,6 +36,12 @@ export default function BoardView(data: BoardViewData) {
     const [newCardTitle, setNewCardTitle] = useState("");
     const [newCardDesc, setNewCardDesc] = useState("");
     const [newCardListId, setNewCardListId] = useState<number | null>(null);
+    const [selectedCard, setSelectedCard] = useState<CardData | null>(null);
+    const [editingCardTitle, setEditingCardTitle] = useState("");
+    const [editingCardDesc, setEditingCardDesc] = useState("");
+    const [isLabelSelectorOpen, setIsLabelSelectorOpen] = useState(false);
+    const [isAssigneeSelectorOpen, setIsAssigneeSelectorOpen] = useState(false);
+    const [newComment, setNewComment] = useState("");
     const [creating, setCreating] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -52,7 +60,76 @@ export default function BoardView(data: BoardViewData) {
         setIsPlusModalOpen(false);
         setIsLabelModalOpen(false);
         setIsCardModalOpen(false);
+        setSelectedCard(null);
+        setIsLabelSelectorOpen(false);
+        setIsAssigneeSelectorOpen(false);
         setError(null);
+    };
+
+    const handleCardClick = (card: CardData) => {
+        setSelectedCard(card);
+        setEditingCardTitle(card.title);
+        setEditingCardDesc(card.desc);
+    };
+
+    const onSaveCard = async () => {
+        if (!selectedCard) return;
+        setCreating(true);
+        try {
+            await updateCard(data.id, selectedCard.id, editingCardTitle, editingCardDesc, selectedCard.pos);
+            handleCloseModal();
+            window.location.reload();
+        } catch (err: any) {
+            setError(err?.message ?? "Failed to update card");
+        } finally {
+            setCreating(false);
+        }
+    };
+
+    const onAddLabelToCard = async (label: LabelData) => {
+        if (!selectedCard || !label.id) return;
+        try {
+            await addCardLabel(data.id, selectedCard.id, label.id);
+            const updatedCard = {...selectedCard, labels: [...selectedCard.labels, label]};
+            setSelectedCard(updatedCard);
+            setIsLabelSelectorOpen(false);
+        } catch (err: any) {
+            setError(err?.message ?? "Failed to add label");
+        }
+    };
+
+    const onRemoveLabelFromCard = async (labelId: number) => {
+        if (!selectedCard) return;
+        try {
+            await removeCardLabel(data.id, selectedCard.id, labelId);
+            const updatedCard = {...selectedCard, labels: selectedCard.labels.filter(l => l.id !== labelId)};
+            setSelectedCard(updatedCard);
+        } catch (err: any) {
+            setError(err?.message ?? "Failed to remove label");
+        }
+    };
+
+    const onAddAssigneeToCard = async (member: BoardMemberData) => {
+        if (!selectedCard) return;
+        try {
+            await addCardAssignee(data.id, selectedCard.id, member.user.id);
+            const updatedCard = {...selectedCard, assignees: [...selectedCard.assignees, member]};
+            setSelectedCard(updatedCard);
+            setIsAssigneeSelectorOpen(false);
+        } catch (err: any) {
+            setError(err?.message ?? "Failed to add assignee");
+        }
+    };
+
+    const onRemoveAssigneeFromCard = async (userId: number) => {
+        if (!selectedCard) return;
+        try {
+            await removeCardAssignee(data.id, selectedCard.id, userId);
+            const updatedCard = {...selectedCard, assignees: selectedCard.assignees.filter(a => a.user.id !== userId)};
+            setSelectedCard(updatedCard);
+        } catch (err: any) {
+            setError(err?.message ?? "Failed to remove assignee");
+        }
     };
 
     const onCreateLabel = async (e: React.FormEvent) => {
@@ -116,7 +193,7 @@ export default function BoardView(data: BoardViewData) {
 
     const listItems = data.lists.sort((a, b) => a.pos - b.pos).map(list =>
         <li key={"list_" + list.pos} className="list-wrapper">
-            <List id={list.id} boardId={list.boardId} pos={list.pos} title={list.title} cards={list.cards}/>
+            <List id={list.id} boardId={list.boardId} pos={list.pos} title={list.title} cards={list.cards} onCardClick={handleCardClick}/>
         </li>
     );
 
@@ -355,6 +432,112 @@ export default function BoardView(data: BoardViewData) {
             <div className="lists-wrapper">
                 <ul className="lists">{listItems}</ul>
             </div>
+            {selectedCard && (
+                <div className="modal-overlay" onClick={handleCloseModal}>
+                    <div className="modal-content card-details-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <input
+                                className="modal-title-input"
+                                value={editingCardTitle}
+                                onChange={(e) => setEditingCardTitle(e.target.value)}
+                            />
+                            <button className="modal-close" onClick={handleCloseModal}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                                     strokeLinejoin="round" className="lucide lucide-x size-5">
+                                    <path d="M18 6 6 18"></path>
+                                    <path d="m6 6 12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div className="modal-body">
+                            <div className="modal-section">
+                                <h3 className="section-title">Description</h3>
+                                <textarea
+                                    className="description-textarea"
+                                    value={editingCardDesc}
+                                    onChange={(e) => setEditingCardDesc(e.target.value)}
+                                    placeholder="Add a description..."
+                                />
+                            </div>
+
+                            <div className="modal-section">
+                                <h3 className="section-title">Labels</h3>
+                                <div className="labels-list">
+                                    {selectedCard.labels.map(label => (
+                                        <div key={label.id} className="label-item-wrapper">
+                                            <Label name={label.name} color={label.color}/>
+                                            <button className="remove-btn" onClick={() => label.id && onRemoveLabelFromCard(label.id)}>-
+                                            </button>
+                                        </div>
+                                    ))}
+                                    <div className="relative">
+                                        <button className="add-btn" onClick={() => setIsLabelSelectorOpen(!isLabelSelectorOpen)}>+</button>
+                                        {isLabelSelectorOpen && (
+                                            <div className="selector-dropdown">
+                                                {data.labels.filter(l => !selectedCard.labels.find(sl => sl.id === l.id)).map(label => (
+                                                    <div key={label.id} className="selector-item" onClick={() => onAddLabelToCard(label)}>
+                                                        <Label name={label.name} color={label.color}/>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="modal-section">
+                                <h3 className="section-title">Assignees</h3>
+                                <div className="assignees-list">
+                                    {selectedCard.assignees.map(assignee => (
+                                        <div key={assignee.user.id} className="assignee-item-wrapper">
+                                            <MemberMedal member={assignee.user}/>
+                                            <button className="remove-btn" onClick={() => onRemoveAssigneeFromCard(assignee.user.id)}>-
+                                            </button>
+                                        </div>
+                                    ))}
+                                    <div className="relative">
+                                        <button className="add-btn" onClick={() => setIsAssigneeSelectorOpen(!isAssigneeSelectorOpen)}>+
+                                        </button>
+                                        {isAssigneeSelectorOpen && (
+                                            <div className="selector-dropdown">
+                                                {data.members.filter(m => !selectedCard.assignees.find(sa => sa.user.id === m.user.id)).map(member => (
+                                                    <div key={member.user.id} className="selector-item"
+                                                         onClick={() => onAddAssigneeToCard(member)}>
+                                                        <MemberMedal member={member.user}/>
+                                                        <span>{member.user.firstName} {member.user.lastName}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="modal-section">
+                                <h3 className="section-title">Comments</h3>
+                                <div className="comment-input-wrapper">
+                                    <textarea
+                                        className="comment-textarea"
+                                        value={newComment}
+                                        onChange={(e) => setNewComment(e.target.value)}
+                                        placeholder="Write a comment..."
+                                    />
+                                    <button className="auth-button" onClick={() => {/* Add comment logic if needed */
+                                    }}>Add Comment
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            {error && <p className="auth-error">{error}</p>}
+                            <button className="auth-button" onClick={onSaveCard} disabled={creating}>
+                                {creating ? "Saving..." : "Save Changes"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

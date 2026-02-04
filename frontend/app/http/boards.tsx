@@ -83,29 +83,28 @@ export async function fetchBoardDetails(boardId: number): Promise<BoardViewData>
         let members: BoardMemberData[] = await getBoardMembers(boardId);
         let labels: LabelData[] = board['labels'].map((label: any): LabelData => {
             return {
-                name: label.name, color: label.color
+                id: label.id, name: label.name, color: label.color
             }
         });
         let lists: ListData[] = board['lists'].map((list: any): ListData => {
             const cards = list.cards.map((card: any): CardData => {
-                const assignees: BoardMemberData[] = card.assignees.map((assignee: any): BoardMemberData => {
-                    let member: BoardMemberData = {role: "admin", user: owner};
-                    members.forEach((m: BoardMemberData) => {
-                        if (m.user.id == assignee) {
-                            member = m;
-                        }
-                    });
+                const cardLabels: LabelData[] = card.labels.map((labelId: any): LabelData => {
+                    const label = labels.find(l => l.id === labelId);
                     return {
-                        role: member.role, user: member.user
-                    }
-                })
-                const cardLabels: LabelData[] = card.labels.map((label: any): LabelData => {
-                    return {
-                        name: labels[label].name, color: labels[label].color
+                        id: labelId,
+                        name: label?.name || "Unknown",
+                        color: label?.color || "#000000"
                     }
                 });
+                const cardAssignees: BoardMemberData[] = card.assignees.map((assigneeId: any): BoardMemberData => {
+                    let member = members.find(m => m.user.id == assigneeId);
+                    if (!member && owner.id == assigneeId) {
+                        member = {role: "admin", user: owner};
+                    }
+                    return member || {role: "member", user: {id: assigneeId, firstName: "Unknown", lastName: "User", email: ""}};
+                });
                 return {
-                    pos: card.position, assignees: assignees, desc: card.description, labels: cardLabels, title: card.title
+                    id: card.id, pos: card.position, assignees: cardAssignees, desc: card.description, labels: cardLabels, title: card.title
                 }
             });
             return {
@@ -113,6 +112,7 @@ export async function fetchBoardDetails(boardId: number): Promise<BoardViewData>
             }
         });
 
+        members.push({user: owner, role: "owner"});
         return {
             id: board['id'],
             title: board['title'],
