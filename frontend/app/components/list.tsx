@@ -11,7 +11,7 @@ export interface ListData {
     pos: number;
     title: string;
     cards: CardData[];
-    //...
+    onCardClick?: (card: CardData) => void;
 }
 
 export default function List(data: ListData) {
@@ -84,7 +84,7 @@ export default function List(data: ListData) {
 
     const cardItems = data.cards.sort((a, b) => a.pos - b.pos).map(card =>
         <li key={"list_" + data.pos + "_card_" + card.pos} className="card-wrapper">
-            <Card pos={card.pos} title={card.title} desc={card.desc} assignees={card.assignees} labels={card.labels}/>
+            <Card id={card.id} pos={card.pos} title={card.title} desc={card.desc} assignees={card.assignees} labels={card.labels} onClick={() => data.onCardClick?.(card)}/>
         </li>
     );
 

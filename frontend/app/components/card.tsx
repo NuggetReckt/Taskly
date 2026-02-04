@@ -4,6 +4,7 @@ import Label, {LabelData} from "@/app/components/label";
 import MemberMedal from "@/app/components/memberMedal";
 
 export interface CardData {
+    id: number;
     pos: number;
     title: string;
     desc: string;
@@ -18,21 +19,21 @@ export interface BoardCardCommentData {
 }
 
 export interface BoardCardDetailsData {
+    id: number;
     card: CardData;
     comments: BoardCardCommentData[];
-    // TODO: add comments, activity log...
 }
 
-export default function Card(data: CardData) {
+export default function Card(data: CardData & { onClick?: () => void }) {
     const labels = data.labels.map(label =>
-        <Label key={label.name} name={label.name} color={label.color}/>
+        <Label key={label.name} name={label.name} color={label.color} min={true}/>
     );
     const assignees = data.assignees.map(assignee =>
         <MemberMedal key={"medal_" + assignee.user.id} member={assignee.user}/>
     )
 
     return (
-        <div className="card">
+        <div className="card" onClick={data.onClick} style={{cursor: data.onClick ? 'pointer' : 'default'}}>
             {labels.length >= 1 && (<div className="card-labels">
                 {labels}
             </div>)}

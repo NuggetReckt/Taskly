@@ -171,7 +171,7 @@
 .card {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 14px;
 }
 
 .card-wrapper:hover {
@@ -217,8 +217,13 @@
 }
 
 .label {
-    padding: 2px 8px;
+    display: flex;
+    padding: 4px 8px;
     border-radius: 8px;
+}
+
+.label-min {
+    padding: .15em 16px;
 }
 
 .label-text {
@@ -253,4 +258,169 @@
 
 .plus-modal button:hover {
     background-color: #212020;
+}
+
+/* Card Details Modal */
+.card-details-modal {
+    max-width: 700px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    padding: 18px;
+    margin: 24px;
+}
+
+.modal-title-input {
+    font-size: 24px;
+    font-weight: bold;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: inherit;
+    width: 100%;
+    padding: 4px;
+}
+
+.modal-title-input:focus {
+    background: #212020;
+    border-color: var(--accent-color);
+    outline: none;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 16px 0;
+}
+
+.modal-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #9f9fa9;
+}
+
+.description-textarea {
+    width: 100%;
+    min-height: 100px;
+    background: #212020;
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 12px;
+    color: inherit;
+    resize: vertical;
+}
+
+.labels-list, .assignees-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+
+.label-item-wrapper, .assignee-item-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.remove-btn {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.label-item-wrapper:hover .remove-btn, .assignee-item-wrapper:hover .remove-btn {
+    opacity: 1;
+}
+
+.add-btn {
+    background: #212020;
+    border: 1px dashed #9f9fa9;
+    border-radius: 8px;
+    padding: 4px 12px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.add-btn:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+
+.selector-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+    z-index: 10;
+    min-width: 200px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.selector-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.selector-item:hover {
+    background: #212020;
+}
+
+.comment-input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.comment-textarea {
+    width: 100%;
+    min-height: 60px;
+    background: #212020;
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 12px;
+    color: inherit;
+    resize: vertical;
+}
+
+.modal-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 16px;
+    border-top: 1px solid var(--card-border);
 }
