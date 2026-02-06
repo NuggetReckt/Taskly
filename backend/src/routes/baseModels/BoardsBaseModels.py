@@ -80,3 +80,8 @@ class BoardDetails(BaseModel):
     labels: Optional[list[Label]] = None
     lists: Optional[list[List]] = None
     members: Optional[list[BoardMember]] = None
+
+
+class MoveRequest(BaseModel):
+    new_position: int
+    list_id: Optional[int] = None

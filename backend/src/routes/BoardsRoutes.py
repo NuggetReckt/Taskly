@@ -3,8 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from main import get_database_handler
 
 from . import user_exists
-from .baseModels import Label
-from .baseModels.BoardsBaseModels import Board, BoardList, BoardDetails, BoardMember, BoardMemberList, List, Card
+from .baseModels.BoardsBaseModels import *
 from .baseModels.DefaultBaseModels import statusOk
 
 router = APIRouter()
@@ -135,7 +134,7 @@ def remove_board_member(board_id: int, user_id: int, db: DatabaseHandler = Depen
 @router.get("/board/{board_id}/labels")
 def get_board_labels(board_id: int, db: DatabaseHandler = Depends(get_database_handler)):
     if not board_exists(board_id, db):
-        raise HTlocalhostTPException(status_code=404, detail="Board not found")
+        raise HTTPException(status_code=404, detail="Board not found")
 
     labels: list[Label] = []
     result = db.execute("SELECT * FROM labels WHERE board_id = %s", board_id)
@@ -248,6 +247,45 @@ def remove_board_list(board_id: int, list_id: int, db: DatabaseHandler = Depends
         raise HTTPException(status_code=404, detail="List not found")
 
     db.execute("DELETE FROM lists WHERE id = %s AND board_id = %s", (list_id, board_id))
+    return statusOk
+
+
+@router.put("/board/{board_id}/list/{list_id}/move")
+def move_list(board_id: int, list_id: int, data: MoveRequest, db: DatabaseHandler = Depends(get_database_handler)):
+    if not board_exists(board_id, db):
+        raise HTTPException(status_code=404, detail="Board not found")
+    if not list_exists(board_id, list_id, db):
+        raise HTTPException(status_code=404, detail="List not found")
+
+    lists = db.execute("SELECT * FROM lists WHERE board_id = %s", board_id)
+
+    from_pos = -1
+    for l in lists:
+        if l['id'] == list_id:
+            from_pos = l['position']
+            break
+
+    print(f"moving {list_id} to position {data.new_position} (current: {from_pos})")
+
+    if from_pos == -1:
+        raise HTTPException(status_code=500, detail="An error occurred while moving list")
+
+    for l in lists:
+        if l['id'] == list_id:
+            continue
+
+        pos = l['position']
+        if from_pos < data.new_position:
+            if from_pos < pos <= data.new_position:
+                pos -= 1
+        elif from_pos > data.new_position:
+            if data.new_position <= pos < from_pos:
+                pos += 1
+
+        db.execute("UPDATE lists SET position = %s WHERE board_id = %s AND id = %s", (pos, board_id, l['id']))
+
+    db.execute("UPDATE lists SET position = %s WHERE board_id = %s AND id = %s", (data.new_position, board_id, list_id))
+
     return statusOk
 
 
@@ -420,6 +458,26 @@ def remove_board_card_label(board_id: int, card_id: int, label_id: int, db: Data
     return statusOk
 
 
+@router.put("/board/{board_id}/card/{card_id}/move")
+def move_card(board_id: int, card_id: int, data: MoveRequest, db: DatabaseHandler = Depends(get_database_handler)):
+    if not board_exists(board_id, db):
+        raise HTTPException(status_code=404, detail="Board not found")
+    if not card_exists(board_id, card_id, db):
+        raise HTTPException(status_code=404, detail="Card not found")
+    if data.list_id is not None and not list_exists(board_id, data.list_id, db):
+        raise HTTPException(status_code=404, detail="List not found")
+
+    # TODO: Position recalculation logic
+    print(data.new_position)
+    if data.list_id is None:
+        # Changing card position in the current list
+        return statusOk
+    print(data.list_id)
+    # Changing card position + card status (list)
+    return statusOk
+
+
+# Board
 @router.post("/board")
 def create_board(board: Board, db: DatabaseHandler = Depends(get_database_handler)):
     result = db.execute("INSERT INTO boards (owner_id, title, description) VALUES (%s, %s, %s) RETURNING id",
@@ -436,6 +494,7 @@ def delete_board(board_id: int, db: DatabaseHandler = Depends(get_database_handl
     return statusOk
 
 
+# Utilities
 def get_board_cards_for_list(board_id: int, list_id: int, db: DatabaseHandler) -> list[Card]:
     if not board_exists(board_id, db):
         raise HTTPException(status_code=404, detail="Board not found")
