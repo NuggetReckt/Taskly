@@ -1,7 +1,7 @@
 import Card from "@/app/components/card";
 import {CardData} from "@/app/components/card";
 import React, {useState} from "react";
-import {createList, updateList} from "@/app/http/lists";
+import {updateList} from "@/app/http/lists";
 import {useUser} from "@/app/components/user";
 import {createCard} from "@/app/http/cards";
 
@@ -84,7 +84,8 @@ export default function List(data: ListData) {
 
     const cardItems = data.cards.sort((a, b) => a.pos - b.pos).map(card =>
         <li key={"list_" + data.pos + "_card_" + card.pos} className="card-wrapper">
-            <Card id={card.id} pos={card.pos} title={card.title} desc={card.desc} assignees={card.assignees} labels={card.labels} onClick={() => data.onCardClick?.(card)}/>
+            <Card id={card.id} pos={card.pos} title={card.title} desc={card.desc} assignees={card.assignees} labels={card.labels}
+                  onClick={() => data.onCardClick?.(card)}/>
         </li>
     );
 

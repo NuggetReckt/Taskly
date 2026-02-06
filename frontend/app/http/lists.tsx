@@ -47,6 +47,19 @@ export async function updateList(boardId: number, listId: number, title: string,
     }
 }
 
+export async function moveList(boardId: number, listId: number, newPosition: number): Promise<any> {
+    console.log("Moved list:", listId, " to pos: ", newPosition);
+    
+    try {
+        const response = await client.put("board/" + boardId + "/list/" + listId + "/move", {
+            new_position: newPosition
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error moving list:", error);
+    }
+}
+
 export async function deleteList(boardId: number, listId: number): Promise<any> {
     try {
         const response = await client.delete("board/" + boardId + "/list/" + listId);

@@ -4,9 +4,10 @@ import Label, {LabelData} from "@/app/components/label";
 import React, {useState} from "react";
 import {createLabel} from "@/app/http/boards";
 import {addCardAssignee, addCardLabel, createCard, removeCardAssignee, removeCardLabel, updateCard} from "@/app/http/cards";
-import {createList} from "@/app/http/lists";
+import {createList, moveList} from "@/app/http/lists";
 import {CardData} from "@/app/components/card";
 import MemberMedal from "@/app/components/memberMedal";
+import {DndContext} from "@dnd-kit/core";
 
 export interface BoardMemberData {
     user: User;
@@ -43,6 +44,7 @@ export default function BoardView(data: BoardViewData) {
     const [isAssigneeSelectorOpen, setIsAssigneeSelectorOpen] = useState(false);
     const [newComment, setNewComment] = useState("");
     const [creating, setCreating] = useState(false);
+    const [parent, setParent] = useState(null);
     const [error, setError] = useState<string | null>(null);
 
     const handleCreateListClick = () => {
@@ -178,7 +180,8 @@ export default function BoardView(data: BoardViewData) {
         setError(null);
 
         try {
-            const result = await createList(data.id, newListTitle.trim(), currentListPos);
+            setCurrentListPos(data.lists.length)
+            const result = await createList(data.id, newListTitle.trim(), currentListPos + 1);
             handleCloseModal();
             if (result && result.id) {
                 setCurrentListPos(currentListPos + 1);
@@ -191,9 +194,26 @@ export default function BoardView(data: BoardViewData) {
         }
     };
 
+    function handleListDragEnd(event: any) {
+        const {over} = event;
+
+        // If the item is dropped over a container, set it as the parent
+        // otherwise reset the parent to `null`
+        setParent(over ? over.id : null);
+
+        if (over == null) return;
+
+        if (over.id != null) {
+            moveList(data.id, over.id, 4).then(r => {
+                // window.location.reload(); /* TODO: TROUVER MEILLEUR MOYEN DE REFRESH LE BOARD */
+            });
+        }
+    }
+
     const listItems = data.lists.sort((a, b) => a.pos - b.pos).map(list =>
         <li key={"list_" + list.pos} className="list-wrapper">
-            <List id={list.id} boardId={list.boardId} pos={list.pos} title={list.title} cards={list.cards} onCardClick={handleCardClick}/>
+            <List id={list.id} boardId={list.boardId} pos={list.pos} title={list.title} cards={list.cards}
+                  onCardClick={handleCardClick}/>
         </li>
     );
 
@@ -429,9 +449,11 @@ export default function BoardView(data: BoardViewData) {
                     </button>
                 </div>
             </div>
-            <div className="lists-wrapper">
-                <ul className="lists">{listItems}</ul>
-            </div>
+            <DndContext onDragEnd={handleListDragEnd}>
+                <div className="lists-wrapper">
+                    <ul className="lists">{listItems}</ul>
+                </div>
+            </DndContext>
             {selectedCard && (
                 <div className="modal-overlay" onClick={handleCloseModal}>
                     <div className="modal-content card-details-modal" onClick={(e) => e.stopPropagation()}>

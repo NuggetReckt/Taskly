@@ -2,10 +2,9 @@
 
 import React, {useState, useEffect} from "react";
 import BoardView, {BoardViewData} from "@/app/components/boardView";
-import {ListData} from "@/app/components/list";
 import {useSearchParams, useRouter} from "next/navigation";
 import {useUser} from "@/app/components/user";
-import {fetchBoardDetails, fetchUserBoards} from "@/app/http/boards";
+import {fetchBoardDetails} from "@/app/http/boards";
 import "./board.css"
 // import {metadata} from "@/app/layout";
 
