@@ -3,12 +3,10 @@
 :root {
     --margin: 5vw;
     --secondary-title-color: #111111;
-    --background: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --background: #0c0c0c;
         --secondary-title-color: #d8d3d4;
     }
 }
