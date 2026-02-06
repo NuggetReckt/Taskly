@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-    --background: radial-gradient(circle, #0E6BA8 0%, #A6E1FA 100%);
+    --background: #ffffff;
     --foreground: black;
     --accent-color: #0E6BA8;
     --card-bg: #ffffff;
@@ -23,7 +23,7 @@
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --background: radial-gradient(circle, #0E6BA8 0%, #0A2472 100%);
+        --background: #0c0c0c;
         --foreground: #ffffff;
         --card-bg: #0f0f0f;
         --card-border: rgba(255, 255, 255, 0.12);
