@@ -167,6 +167,10 @@ body {
     cursor: not-allowed;
 }
 
+.btn-danger {
+    background: var(--danger);
+}
+
 .auth-error {
     margin: 0;
     color: var(--danger);

@@ -12,7 +12,6 @@
 .board-wrapper {
     width: 100%;
     height: 100%;
-    margin-bottom: 28px;
 }
 
 .board-content {
@@ -20,7 +19,6 @@
     flex-direction: column;
     width: 100%;
     height: 100%;
-    gap: 20px;
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -34,6 +32,7 @@
     padding: 16px var(--app-margin);
     flex-shrink: 0;
     position: relative;
+    box-shadow: var(--card-shadow);
 }
 
 .board-header > h1 {
@@ -61,7 +60,7 @@
     min-width: 0;
     width: 100%;
     height: 36px;
-    background-color: #212020;
+    background-color: var(--input-bg);
 }
 
 .tool-searchbar > input:focus-visible {
@@ -86,7 +85,7 @@
     width: 100%;
     height: 100%;
     overflow-x: auto;
-    padding: 0 var(--app-margin);
+    padding: var(--app-margin);
     flex-grow: 1;
 }
 
@@ -97,6 +96,17 @@
     height: inherit;
     width: max-content;
     padding-bottom: 12px;
+}
+
+.list-draggable {
+    /*transition: transform .15s linear;*/
+}
+
+.list-droppable {
+    position: fixed;
+    z-index: -10;
+    height: 200px;
+    width: 320px;
 }
 
 .list-wrapper {
@@ -282,7 +292,8 @@
     border-radius: 4px;
     color: inherit;
     width: 100%;
-    padding: 4px;
+    height: 100%;
+    padding: 0;
 }
 
 .modal-title-input:focus {
@@ -313,7 +324,7 @@
 .description-textarea {
     width: 100%;
     min-height: 100px;
-    background: #212020;
+    background: var(--input-bg);
     border: 1px solid var(--card-border);
     border-radius: 8px;
     padding: 12px;
@@ -358,7 +369,7 @@
 }
 
 .add-btn {
-    background: #212020;
+    background: var(--input-bg);
     border: 1px dashed #9f9fa9;
     border-radius: 8px;
     padding: 4px 12px;
@@ -409,7 +420,7 @@
 .comment-textarea {
     width: 100%;
     min-height: 60px;
-    background: #212020;
+    background: var(--input-bg);
     border: 1px solid var(--card-border);
     border-radius: 8px;
     padding: 12px;

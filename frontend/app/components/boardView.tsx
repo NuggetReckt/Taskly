@@ -7,7 +7,8 @@ import {addCardAssignee, addCardLabel, createCard, removeCardAssignee, removeCar
 import {createList, moveList} from "@/app/http/lists";
 import {CardData} from "@/app/components/card";
 import MemberMedal from "@/app/components/memberMedal";
-import {DndContext} from "@dnd-kit/core";
+import {DndContext, KeyboardSensor, MouseSensor, PointerSensor, TouchSensor, useSensor, useSensors} from "@dnd-kit/core";
+import Droppable from "@/app/components/Droppable";
 
 export interface BoardMemberData {
     user: User;
@@ -31,6 +32,7 @@ export default function BoardView(data: BoardViewData) {
     const [isPlusModalOpen, setIsPlusModalOpen] = useState(false);
     const [isLabelModalOpen, setIsLabelModalOpen] = useState(false);
     const [isCardModalOpen, setIsCardModalOpen] = useState(false);
+    const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [newListTitle, setNewListTitle] = useState("");
     const [newLabelName, setNewLabelName] = useState("");
     const [newLabelColor, setNewLabelColor] = useState("#000000");
@@ -43,13 +45,33 @@ export default function BoardView(data: BoardViewData) {
     const [isLabelSelectorOpen, setIsLabelSelectorOpen] = useState(false);
     const [isAssigneeSelectorOpen, setIsAssigneeSelectorOpen] = useState(false);
     const [newComment, setNewComment] = useState("");
+    const [searchQuery, setSearchQuery] = useState("");
     const [creating, setCreating] = useState(false);
-    const [parent, setParent] = useState(null);
     const [error, setError] = useState<string | null>(null);
+    const pointerSensor = useSensor(PointerSensor, {
+        activationConstraint: {
+            distance: 0.01
+        }
+    })
+    const mouseSensor = useSensor(MouseSensor)
+    const touchSensor = useSensor(TouchSensor)
+    const keyboardSensor = useSensor(KeyboardSensor)
+
+    const sensors = useSensors(
+        mouseSensor,
+        touchSensor,
+        keyboardSensor,
+        pointerSensor
+    )
 
     const handleCreateListClick = () => {
         setIsModalOpen(true);
     };
+
+    const handleShareClick = () => {
+        setIsShareModalOpen(true)
+    }
+
     const handlePlusClick = () => {
         if (isPlusModalOpen) {
             setIsPlusModalOpen(false);
@@ -65,6 +87,7 @@ export default function BoardView(data: BoardViewData) {
         setSelectedCard(null);
         setIsLabelSelectorOpen(false);
         setIsAssigneeSelectorOpen(false);
+        setIsShareModalOpen(false);
         setError(null);
     };
 
@@ -73,6 +96,17 @@ export default function BoardView(data: BoardViewData) {
         setEditingCardTitle(card.title);
         setEditingCardDesc(card.desc);
     };
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(e.target.value);
+    };
+
+    const filteredLists = data.lists.map(list => ({
+        ...list,
+        cards: list.cards.filter(card =>
+            card.title.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+    }));
 
     const onSaveCard = async () => {
         if (!selectedCard) return;
@@ -195,25 +229,23 @@ export default function BoardView(data: BoardViewData) {
     };
 
     function handleListDragEnd(event: any) {
-        const {over} = event;
+        const {active, over} = event;
 
-        // If the item is dropped over a container, set it as the parent
-        // otherwise reset the parent to `null`
-        setParent(over ? over.id : null);
+        const current = active.data.current
 
-        if (over == null) return;
+        if (!over) return;
+        console.log("Moving " + active.id + " into " + over.pos)
 
-        if (over.id != null) {
-            moveList(data.id, over.id, 4).then(r => {
-                // window.location.reload(); /* TODO: TROUVER MEILLEUR MOYEN DE REFRESH LE BOARD */
-            });
-        }
+        /*moveList(data.id, active.id, over.pos).then(r => {
+            window.location.reload(); /!* TODO: TROUVER MEILLEUR MOYEN DE REFRESH LE BOARD *!/
+        });*/
     }
 
-    const listItems = data.lists.sort((a, b) => a.pos - b.pos).map(list =>
-        <li key={"list_" + list.pos} className="list-wrapper">
+    const listItems = filteredLists.sort((a, b) => a.pos - b.pos).map(list =>
+        <li key={"list_" + list.pos}>
+            <Droppable type={"list_droppable"} id={list.id} pos={list.pos}/>
             <List id={list.id} boardId={list.boardId} pos={list.pos} title={list.title} cards={list.cards}
-                  onCardClick={handleCardClick}/>
+                  onCardClick={handleCardClick} onListDragEnd={handleListDragEnd}/>
         </li>
     );
 
@@ -382,6 +414,26 @@ export default function BoardView(data: BoardViewData) {
                     </div>
                 </div>
             )}
+            {isShareModalOpen && (
+                <div className="modal-overlay" onClick={handleCloseModal}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <div className="auth-card">
+                            <div className="modal-header">
+                                <h1 className="auth-title">Share Board</h1>
+                                <button className="modal-close" onClick={handleCloseModal}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                                         strokeLinejoin="round" className="lucide lucide-x size-5">
+                                        <path d="M18 6 6 18"></path>
+                                        <path d="m6 6 12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            {/* TODO: verify if an invite already exists for this board. If it exists, display it directly. If not display a "Create Invite" button*/}
+                        </div>
+                    </div>
+                </div>
+            )}
             <div className="board-header">
                 <h1>{data.title}</h1>
                 <div className="header-tools">
@@ -392,7 +444,8 @@ export default function BoardView(data: BoardViewData) {
                             <circle cx="11" cy="11" r="8"></circle>
                             <path d="m21 21-4.3-4.3"></path>
                         </svg>
-                        <input type="text" data-slot="input" placeholder="Search cards..."/>
+                        <input type="text" data-slot="input" placeholder="Search cards..." value={searchQuery}
+                               onChange={handleSearchChange}/>
                     </div>
                     <button data-slot="button" className="tool-button" onClick={handlePlusClick}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -430,7 +483,7 @@ export default function BoardView(data: BoardViewData) {
                                 d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                         </svg>
                     </a>
-                    <button data-slot="button" className="tool-button">
+                    <button data-slot="button" className="tool-button" onClick={handleShareClick}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 16 16"
                              className="lucide lucide-house size-5">
                             <path fill="currentcolor" fillRule="evenodd"
@@ -449,7 +502,7 @@ export default function BoardView(data: BoardViewData) {
                     </button>
                 </div>
             </div>
-            <DndContext onDragEnd={handleListDragEnd}>
+            <DndContext onDragEnd={handleListDragEnd} sensors={sensors}>
                 <div className="lists-wrapper">
                     <ul className="lists">{listItems}</ul>
                 </div>
