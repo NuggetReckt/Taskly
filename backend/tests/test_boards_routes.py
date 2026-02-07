@@ -229,7 +229,7 @@ def test_board_cards_flow(client):
     user_id = client.get("/users").json()["users"][0]["id"]
 
     # add assignee
-    r = client.post(f"/board/{board_id}/card/{card_id}/assignee", params={"user_id": user_id})
+    r = client.post(f"/board/{board_id}/card/{card_id}/assignee/{user_id}")
     assert r.status_code == 200
     assert r.json()["status"] == "OK"
 
@@ -256,7 +256,7 @@ def test_board_cards_flow(client):
     label_id = r.json()["id"]
 
     # add label to card
-    r = client.post(f"/board/{board_id}/card/{card_id}/label", params={"label_id": label_id})
+    r = client.post(f"/board/{board_id}/card/{card_id}/label/{label_id}")
     assert r.status_code == 200
     assert r.json()["status"] == "OK"
 

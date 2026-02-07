@@ -3,11 +3,13 @@
 :root {
     --margin: 5vw;
     --secondary-title-color: #111111;
+    --input-bg: #f4f4f4;
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
         --secondary-title-color: #d8d3d4;
+        --input-bg: #212020;
     }
 }
 
@@ -90,7 +92,6 @@
 }
 
 .member-medal {
-    position: relative;
     display: flex;
     overflow: hidden;
     flex-shrink: 0;

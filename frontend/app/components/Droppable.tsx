@@ -1,17 +1,26 @@
-import React from 'react';
-import {useDroppable} from '@dnd-kit/core';
+import {useDroppable} from "@dnd-kit/core";
+import React from "react";
 
-export default function Droppable(props: any) {
+interface Props {
+    type: string
+    id: number,
+    pos: number
+}
+
+export default function Droppable(props: Props) {
     const {isOver, setNodeRef} = useDroppable({
         id: props.id,
+        data: {
+            supports: ['droppable'],
+            pos: props.pos,
+        },
     });
     const style = {
         color: isOver ? 'green' : undefined,
     };
 
     return (
-        <div ref={setNodeRef} style={style}>
-            {props.children}
+        <div className={"list-droppable"} ref={setNodeRef} style={style}>
         </div>
     );
 }
