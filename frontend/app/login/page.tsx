@@ -3,10 +3,12 @@
 import React, {Suspense, useMemo, useState} from "react";
 import {useRouter, useSearchParams} from "next/navigation";
 //import {metadata} from "@/app/layout";
-import {login} from "@/app/http/auth";
+import {isTokenValid, login} from "@/app/http/auth";
+import {useSetUser} from "@/app/components/user";
 
 function LoginContent() {
     const router = useRouter();
+    const setUser = useSetUser();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -29,7 +31,12 @@ function LoginContent() {
         try {
             const token = await login({email: email.trim(), password});
             localStorage.setItem("taskly_jwt", token);
-            console.log(nextPage)
+            const validatedUser = await isTokenValid(token);
+            if (!validatedUser) {
+                localStorage.removeItem("taskly_jwt");
+                throw new Error("Failed to load user data");
+            }
+            setUser?.(validatedUser);
 
             if (!nextPage)
                 nextPage = "/app";

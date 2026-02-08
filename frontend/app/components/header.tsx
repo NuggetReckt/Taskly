@@ -1,24 +1,58 @@
 import Image from 'next/image'
+import {useUser} from "@/app/components/user";
+import MemberMedal from "@/app/components/memberMedal";
+import {useState} from "react";
 
 export default function Header() {
+    const [isUserModalOpen, setUserModalOpen] = useState(false);
+    const user = useUser();
+    let logged: boolean = false;
+
+    const handleUserClick = () => {
+        if (isUserModalOpen) {
+            setUserModalOpen(false);
+        } else {
+            setUserModalOpen(true);
+        }
+    };
+
+    const handleLogoutClick = () => {
+        localStorage.removeItem("taskly_jwt");
+        window.location.reload();
+    };
+
+    if (user != null)
+        logged = true;
+
     return (
         <header className="header-wrapper">
             <div className={"header-section"}>
-                <a href="/" className={"footer-logo"}>
-                    <Image src={"/logo.png"} alt={"logo"} width={46} height={46}/>
+                <a href="/" className={"header-logo"}>
+                    <Image src={"/logo.png"} alt={"logo"} width={38} height={38}/>
                     <h1>Taskly</h1>
                 </a>
             </div>
             <div className={"header-section"}>
                 <ul className={"header-links"}>
-                    <li className={"header-link"}><a href="#">Features</a></li>
-                    <li className={"header-link"}><a href="#">Pricing</a></li>
-                    <li className={"header-link"}><a href="#">Open Source</a></li>
+                    <li className={"header-link"}><a href="/#">Features</a></li>
+                    <li className={"header-link"}><a href="/#">Pricing</a></li>
+                    <li className={"header-link"}><a href="/#">Open Source</a></li>
                     <li className={"header-link"}>
-                        <a href="/login" className={"login-btn"}>Login</a>
+                        {logged && user && (
+                            <button className={"header-user-btn"} onClick={handleUserClick}>
+                                <MemberMedal member={user} size={"m"}/>
+                            </button>
+                        ) || (
+                            <a href="/login" className={"login-btn"}>Login</a>
+                        )}
                     </li>
                 </ul>
             </div>
+            {isUserModalOpen && (
+                <div className="user-modal">
+                    <button className={"logout-btn"} onClick={handleLogoutClick}>Logout</button>
+                </div>
+            )}
         </header>
     );
 }

@@ -1,7 +1,6 @@
 @import "../globals.css";
 
 :root {
-    --margin: 5vw;
     --secondary-title-color: #111111;
     --input-bg: #f4f4f4;
 }
@@ -89,26 +88,6 @@
 
 .board-card-members {
     width: 100%;
-}
-
-.member-medal {
-    display: flex;
-    overflow: hidden;
-    flex-shrink: 0;
-    background-color: var(--accent-color);
-    border-radius: calc(infinity * 1px);
-    border: var(--card-bg) 2px solid;
-    width: 32px;
-    height: 32px;
-}
-
-.member-medal-initials {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #ffffff;
-    width: 100%;
-    height: 100%;
 }
 
 .create-board-card {
