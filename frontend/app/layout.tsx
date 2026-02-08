@@ -22,7 +22,6 @@ const geistMono = Geist_Mono({
 export default function RootLayout({children,}: Readonly<{ children: React.ReactNode; }>) {
     const [user, setUser] = useState<UserState>(undefined);
     const lastTokenRef = useRef<string | null>(null);
-    const pathname = usePathname();
 
     useEffect(() => {
         document.title = "Taskly"; /* TEMPORAIRE */
@@ -54,7 +53,7 @@ export default function RootLayout({children,}: Readonly<{ children: React.React
             setUser(validatedUser);
         };
         run();
-    }, [pathname, user]);
+    }, [user]);
 
     return (
         <html lang="en">

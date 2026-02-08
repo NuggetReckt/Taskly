@@ -2,10 +2,14 @@ import Image from 'next/image'
 import {useUser} from "@/app/components/user";
 import MemberMedal from "@/app/components/memberMedal";
 import {useState} from "react";
+import {usePathname} from "next/navigation";
 
 export default function Header() {
     const [isUserModalOpen, setUserModalOpen] = useState(false);
     const user = useUser();
+    const pathname = usePathname();
+
+    let inApp: boolean = false;
     let logged: boolean = false;
 
     const handleUserClick = () => {
@@ -23,6 +27,8 @@ export default function Header() {
 
     if (user != null)
         logged = true;
+    if (pathname.startsWith("/app"))
+        inApp = true;
 
     return (
         <header className="header-wrapper">
@@ -37,6 +43,9 @@ export default function Header() {
                     <li className={"header-link"}><a href="/#">Features</a></li>
                     <li className={"header-link"}><a href="/#">Pricing</a></li>
                     <li className={"header-link"}><a href="/#">Open Source</a></li>
+                    {logged && user && !inApp && (
+                        <li className={"header-link"}><a href="/app" className={"login-btn"}>Open App</a></li>
+                    )}
                     <li className={"header-link"}>
                         {logged && user && (
                             <button className={"header-user-btn"} onClick={handleUserClick}>
