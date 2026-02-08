@@ -5,6 +5,10 @@
     --foreground: black;
     --accent-color: #0E6BA8;
     --card-bg: #ffffff;
+    --text-primary: black;
+    --text-secondary: #323232;
+    --text-third: #6e6e6e;
+    --text-fourth: #a1a1a1;
     --card-border: rgba(0, 0, 0, 0.10);
     --shadow-color: 0deg 0% 0%;
     --card-shadow-color: rgba(0, 0, 0, 0.2);
@@ -12,6 +16,7 @@
     --success: #067647;
     --muted: rgba(0, 0, 0, 0.65);
     --danger: #b42318;
+    --margin: 50px;
 }
 
 @theme inline {
@@ -26,6 +31,10 @@
         --background: #0c0c0c;
         --foreground: #ffffff;
         --card-bg: #0f0f0f;
+        --text-primary: white;
+        --text-secondary: #d8d3d4;
+        --text-third: #71717b;
+        --text-fourth: #2a2627;
         --card-border: rgba(255, 255, 255, 0.12);
         --card-shadow-color: rgba(0, 0, 0, 0);
         --muted: rgba(255, 255, 255, 0.70);
@@ -61,28 +70,168 @@ body {
     height: inherit;
 }
 
+/* Header */
 .header-wrapper {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 12px;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px var(--margin);
     width: 100%;
     background: var(--card-bg);
     border-bottom: var(--card-border) 1px solid;
     box-shadow: var(--card-shadow);
 }
 
+.header-logo, .footer-logo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    font-size: 18px;
+}
+
+.header-links {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 24px;
+}
+
+.header-link {
+    color: var(--text-secondary);
+    transition: color .25s ease;
+    font-weight: bold;
+}
+
+.header-link:hover {
+    color: var(--text-primary);
+}
+
+.login-btn, .logout-btn {
+    padding: 8px 16px;
+    font-weight: bold;
+    background-color: #f3f3f3;
+    color: var(--accent-color);
+    transition: all .5s ease;
+    border-radius: 8px;
+}
+
+.logout-btn {
+    background-color: var(--danger);
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px 8px;
+}
+
+.login-btn:hover {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.logout-btn:hover {
+    background-color: white;
+    color: var(--danger);
+}
+
+.header-user-btn {
+    cursor: pointer;
+}
+
+.user-modal {
+    position: absolute;
+    top: 50px;
+    right: calc(var(--margin) - 25px);
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    z-index: 100;
+}
+
+/* Footer */
 .footer-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 12px;
+    justify-content: space-between;
+    padding: 48px var(--margin);
     width: 100%;
     background: var(--card-bg);
     border-top: var(--card-border) 1px solid;
     box-shadow: var(--card-shadow);
+}
+
+.footer-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.footer-top {
+
+}
+
+.footer-bottom {
+    border-top: var(--text-fourth) 1px solid;
+    color: var(--text-third);
+    margin-top: 38px;
+    padding-top: 38px;
+    font-size: 14px;
+}
+
+.footer-logo {
+    font-size: 16px;
+    gap: 10px;
+}
+
+.footer-subsection {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 200px;
+}
+
+.footer-subsection-header {
+    font-size: 18px;
+}
+
+.footer-subsection-content {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.footer-subsection-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.footer-subsection-link > a {
+    transition: color .25s ease;
+}
+
+.footer-subsection-link > a:hover {
+    color: var(--text-primary);
+}
+
+.footer-gh-link {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+    color: var(--text-primary);
+    transition: color .25s ease;
+}
+
+.footer-gh-link:hover {
+    color: var(--accent-color);
 }
 
 /* Auth pages */
@@ -196,6 +345,40 @@ body {
 
 .auth-link:hover {
     text-decoration: underline;
+}
+
+/* Member medals */
+.member-medal {
+    display: flex;
+    overflow: hidden;
+    flex-shrink: 0;
+    background-color: var(--accent-color);
+    border-radius: calc(infinity * 1px);
+    border: var(--card-bg) 2px solid;
+}
+
+.member-medal-s {
+    width: 32px;
+    height: 32px;
+}
+
+.member-medal-m {
+    width: 38px;
+    height: 38px;
+}
+
+.member-medal-l {
+    width: 46px;
+    height: 46px;
+}
+
+.member-medal-initials {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    width: 100%;
+    height: 100%;
 }
 
 /* Modal */
