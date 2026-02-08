@@ -1,9 +1,12 @@
-import React from "react";
-import type {Metadata} from "next";
+"use client"
+
+import React, {useEffect, useState} from "react";
 import {Geist, Geist_Mono} from "next/font/google";
 import "./globals.css";
 import Footer from "@/app/components/footer";
 import Header from "@/app/components/header";
+import {User, UserContext} from "@/app/components/user";
+import {isTokenValid} from "@/app/http/auth";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -15,21 +18,36 @@ const geistMono = Geist_Mono({
     subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-    title: "Taskly",
-    description: "desc",
-};
+export default function RootLayout({children,}: Readonly<{ children: React.ReactNode; }>) {
+    const [user, setUser] = useState<User | null>(null);
 
-export default function RootLayout(
-    {children,}: Readonly<{ children: React.ReactNode; }>
-) {
+    useEffect(() => {
+        document.title = "Taskly"; /* TEMPORAIRE */
+
+        const run = async () => {
+            const token = localStorage.getItem("taskly_jwt");
+
+            if (!token) return;
+
+            const user = await isTokenValid(token);
+            if (!user) {
+                localStorage.removeItem("taskly_jwt");
+                return;
+            }
+            setUser(user);
+        };
+        run();
+    }, []);
+
     return (
         <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <div className="page-wrapper">
-            <Header/>
-            {children}
-            <Footer/>
+            <UserContext.Provider value={user}>
+                <Header/>
+                {children}
+                <Footer/>
+            </UserContext.Provider>
         </div>
         </body>
         </html>

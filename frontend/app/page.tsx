@@ -1,4 +1,4 @@
-import {metadata} from "@/app/layout";
+import {metadata} from "@/app/metadata";
 
 export default function Home() {
     metadata.title = "Taskly"
