@@ -6,7 +6,6 @@ import {useSearchParams, useRouter} from "next/navigation";
 import {useUser} from "@/app/components/user";
 import {fetchBoardDetails} from "@/app/http/boards";
 import "./board.css"
-// import {metadata} from "@/app/layout";
 
 export default function Page() {
     const params = useSearchParams()
@@ -15,9 +14,14 @@ export default function Page() {
     const router = useRouter();
     const [loading, setLoading] = useState(true);
     const [boardView, setBoardView] = useState<BoardViewData>();
+    const [error, setError] = useState("");
 
     useEffect(() => {
-        if (!user) return;
+        if (!user) {
+            setLoading(false);
+            setError("Error while loading user data.");
+            return;
+        }
         if (!boardId) {
             router.replace(`/app`);
             return;
@@ -28,21 +32,24 @@ export default function Page() {
                 setBoardView(data);
             })
             .catch((error) => {
-                console.error("Failed to load boards:", error);
+                setError(error);
             })
             .finally(() => {
                 setLoading(false);
             });
-    }, []);
+    }, [boardId, router, user]);
 
-    if (loading) {
+    if (error) {
         return (
-            <p>Chargement du board...</p>
+            <div className={"text-center text-red-700"}>
+                <p>An error occurred while trying to load board:</p>
+                <p>{error}</p>
+            </div>
         );
     }
-    if (!boardView) {
+    if (loading || !boardView) {
         return (
-            <p>Une erreur est survenue lors du chargement du board</p>
+            <p>Chargement du board...</p>
         );
     }
     // metadata.title = "Taskly - " + board.title;

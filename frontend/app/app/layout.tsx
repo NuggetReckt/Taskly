@@ -12,14 +12,14 @@ export default function AppLayout({children}: { children: React.ReactNode }) {
     const user = useUser();
 
     useEffect(() => {
+        if (user === undefined) {
+            return;
+        }
+
         const next = encodeURIComponent(pathname || "/app");
-        const token = localStorage.getItem("taskly_jwt");
 
         if (!user) {
-            if (token) {
-                setChecked(true);
-                return;
-            }
+            setChecked(false);
             router.replace(`/login?next=${next}`);
             return;
         }

@@ -141,7 +141,7 @@ body {
 
 .user-modal {
     position: absolute;
-    top: 50px;
+    top: 55px;
     right: calc(var(--margin) - 25px);
     background: var(--card-bg);
     border: 1px solid var(--card-border);
@@ -171,10 +171,6 @@ body {
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
-}
-
-.footer-top {
-
 }
 
 .footer-bottom {
@@ -363,13 +359,13 @@ body {
 }
 
 .member-medal-m {
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
 }
 
 .member-medal-l {
-    width: 46px;
-    height: 46px;
+    width: 48px;
+    height: 48px;
 }
 
 .member-medal-initials {

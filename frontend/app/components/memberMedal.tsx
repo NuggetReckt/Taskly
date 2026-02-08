@@ -6,34 +6,35 @@ export interface MemberMedalData {
 }
 
 export default function MemberMedal(data: MemberMedalData) {
-    let className = "member-medal"
+    let className: string;
+    let textSize: string = "text-xs";
 
-    if (data.size != null) {
-        switch (data.size) {
-            case "s":
-                className += " member-medal-s text-xs"
-                break;
-            case "m":
-                className += " member-medal-m text-s"
-                break;
-            case "l":
-                className += " member-medal-l text-m"
-                break;
-            default:
-                className += " member-medal-s text-xs"
-                break;
-        }
+    switch (data.size) {
+        case "s":
+            className = "member-medal-s";
+            break;
+        case "m":
+            className = "member-medal-m";
+            textSize = "text-s";
+            break;
+        case "l":
+            className = "member-medal-l";
+            textSize = "text-m";
+            break;
+        default:
+            className = "member-medal-s";
+            break;
     }
 
     return (
-        <div className={className}>
-            {getUserInitials(data.member)}
+        <div className={"member-medal " + className}>
+            {getUserInitials(data.member, textSize)}
         </div>
     )
 }
 
-function getUserInitials(user: User) {
-    let displayName = "";
+function getUserInitials(user: User, size: string) {
+    let displayName: string;
 
     if (!user.firstName || !user.lastName) {
         displayName = user.email.charAt(0);
@@ -41,5 +42,5 @@ function getUserInitials(user: User) {
         let s = user.firstName?.charAt(0) + user.lastName?.charAt(0);
         displayName = s.toUpperCase();
     }
-    return <span className="member-medal-initials">{displayName}</span>;
+    return <span className={"member-medal-initials " + size}>{displayName}</span>;
 }
