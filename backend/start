@@ -1,12 +1,39 @@
 #!/usr/bin/env bash
 
-echo "Setting up python environment and project dependencies..."
+MODE="run" # default fastapi mode
 
-python3 -m venv .venv
-source .venv/bin/activate
+# --- Parse arguments ---
+if [[ "$1" == "--dev" ]]; then
+    MODE="dev"
+fi
+
+# --- Virtual env checks ---
+
+# Detect if already inside a venv
+if [[ -z "$VIRTUAL_ENV" ]]; then
+    # Not inside a virtualenv, ensure .venv dir exists
+    if [[ ! -d ".venv" ]]; then
+        echo "Creating virtual environment..."
+        python3 -m venv .venv
+    else
+        echo "Using existing virtual environment..."
+    fi
+
+    echo "Activating virtual environment..."
+    source .venv/bin/activate
+else
+    echo "Virtual environment already active: $VIRTUAL_ENV"
+fi
+
+# --- Install dependencies ---
+echo "Installing dependencies..."
 python3 -m pip install --upgrade pip
 pip install -r requirements.txt
 
-echo "Starting server..."
-
-fastapi run src/main.py
+# --- Start FastAPI ---
+echo "Starting FastAPI in $MODE mode..."
+if [[ "$MODE" == "dev" ]]; then
+    fastapi dev src/main.py
+else
+    fastapi run src/main.py
+fi
