@@ -45,9 +45,9 @@ CREATE TABLE IF NOT EXISTS board_members (
 ---------------------------
 CREATE TABLE IF NOT EXISTS board_invites (
     id              SERIAL PRIMARY KEY,
-    board_id        INT NOT NULL REFERENCES boards(id) ON DELETE CASCADE
+    board_id        INT NOT NULL REFERENCES boards(id) ON DELETE CASCADE,
     invite_code     VARCHAR(255) NOT NULL,
-    UNIQUE(board_id, user_id)
+    UNIQUE(board_id)
 );
 
 ---------------------------
