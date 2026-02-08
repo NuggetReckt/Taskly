@@ -1,4 +1,4 @@
-import {createContext, useContext} from "react";
+import {Dispatch, SetStateAction, createContext, useContext} from "react";
 
 export interface User {
     id: number;
@@ -7,8 +7,19 @@ export interface User {
     lastName?: string;
 }
 
-export const UserContext = createContext<User | null>(null);
+export type UserState = User | null | undefined;
+
+export type UserContextValue = {
+    user: UserState;
+    setUser: Dispatch<SetStateAction<UserState>>;
+};
+
+export const UserContext = createContext<UserContextValue | undefined>(undefined);
 
 export function useUser() {
-    return useContext(UserContext);
+    return useContext(UserContext)?.user;
+}
+
+export function useSetUser() {
+    return useContext(UserContext)?.setUser;
 }
