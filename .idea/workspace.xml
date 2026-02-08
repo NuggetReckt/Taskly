@@ -4,65 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc50de9-dfc5-44f4-abd8-4356aa24684d" name="Changes" comment="feat(Header): Added &quot;Open App&quot; button if not in app in the header links">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.dockerignore" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.dockerignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/resources/database_scheme.sql" beforeDir="false" afterPath="$PROJECT_DIR$/backend/resources/database_scheme.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/database/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/database/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/routes/AuthRoutes.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/routes/AuthRoutes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/routes/BoardsRoutes.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/routes/BoardsRoutes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/routes/TestRoutes.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/routes/TestRoutes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/routes/UsersRoutes.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/routes/UsersRoutes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/routes/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/routes/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/routes/baseModels/BoardsBaseModels.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/routes/baseModels/BoardsBaseModels.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/routes/baseModels/DefaultBaseModels.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/routes/baseModels/DefaultBaseModels.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/routes/baseModels/UsersBaseModels.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/routes/baseModels/UsersBaseModels.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/routes/baseModels/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/routes/baseModels/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/start" beforeDir="false" afterPath="$PROJECT_DIR$/backend/start" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/tests/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/tests/conftest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/tests/test_auth_routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/tests/test_auth_routes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/tests/test_boards_routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/tests/test_boards_routes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/tests/test_users_routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/tests/test_users_routes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/.dockerignore" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.dockerignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/app/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/app/app.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/app/board/board.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/app/board/board.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/app/board/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/app/board/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/components/Droppable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/components/Droppable.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/components/FooterSubSection.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/components/FooterSubSection.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/components/board.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/components/board.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/components/boardView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/components/boardView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/components/card.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/components/card.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/components/footer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/components/footer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/components/header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/components/header.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/components/label.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/components/label.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/components/list.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/components/list.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/components/memberMedal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/components/memberMedal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/components/user.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/components/user.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/globals.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/http/auth.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/http/auth.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/http/boards.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/http/boards.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/http/cards.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/http/cards.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/http/client.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/http/client.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/http/lists.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/http/lists.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/http/users.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/http/users.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/login/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/login/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/metadata.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/metadata.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/register/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/register/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/eslint.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/eslint.config.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/next.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/next.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/postcss.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/postcss.config.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tsconfig.json" afterDir="false" />
-    </list>
+    <list default="true" id="4cc50de9-dfc5-44f4-abd8-4356aa24684d" name="Changes" comment="fix(Line Separators): Set Line Separators to LF and not CRLF for project files&#10;fix(DB): Fixed synthax issues in db scheme" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -381,7 +323,15 @@
       <option name="project" value="LOCAL" />
       <updated>1765733352136</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="fix(Line Separators): Set Line Separators to LF and not CRLF for project files&#10;fix(DB): Fixed synthax issues in db scheme">
+      <option name="closed" value="true" />
+      <created>1770563712558</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1770563712558</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -404,7 +354,8 @@
     <MESSAGE value="feat(CI): Added CI backend test" />
     <MESSAGE value="feat(CI): Added mirror gh action" />
     <MESSAGE value="mirror: added repo" />
-    <option name="LAST_COMMIT_MESSAGE" value="mirror: added repo" />
+    <MESSAGE value="fix(Line Separators): Set Line Separators to LF and not CRLF for project files&#10;fix(DB): Fixed synthax issues in db scheme" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix(Line Separators): Set Line Separators to LF and not CRLF for project files&#10;fix(DB): Fixed synthax issues in db scheme" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Taskly$Unnamed.coverage" NAME="Unnamed Coverage Results" MODIFIED="1764860605274" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
