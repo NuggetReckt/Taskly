@@ -467,13 +467,58 @@ def move_card(board_id: int, card_id: int, data: MoveRequest, db: DatabaseHandle
     if data.list_id is not None and not list_exists(board_id, data.list_id, db):
         raise HTTPException(status_code=404, detail="List not found")
 
-    # TODO: Position recalculation logic
-    print(data.new_position)
-    if data.list_id is None:
-        # Changing card position in the current list
+    result = db.execute("SELECT list_id, position FROM cards WHERE board_id = %s AND id = %s", (board_id, card_id))
+    if not result:
+        raise HTTPException(status_code=404, detail="Card not found")
+
+    from_list_id = result[0]['list_id']
+    from_pos = result[0]['position']
+    target_list_id = data.list_id if data.list_id is not None else from_list_id
+
+    if target_list_id == from_list_id:
+        cards = db.execute("SELECT id, position FROM cards WHERE board_id = %s AND list_id = %s", (board_id, from_list_id))
+        max_position = max(len(cards) - 1, 0)
+        new_position = max(0, min(data.new_position, max_position))
+        if new_position == from_pos:
+            return statusOk
+
+        for c in cards:
+            if c['id'] == card_id:
+                continue
+            pos = c['position']
+            if from_pos < new_position:
+                if from_pos < pos <= new_position:
+                    pos -= 1
+            elif from_pos > new_position:
+                if new_position <= pos < from_pos:
+                    pos += 1
+            db.execute("UPDATE cards SET position = %s WHERE board_id = %s AND id = %s", (pos, board_id, c['id']))
+
+        db.execute("UPDATE cards SET position = %s WHERE board_id = %s AND id = %s", (new_position, board_id, card_id))
         return statusOk
-    print(data.list_id)
-    # Changing card position + card status (list)
+
+    old_list_cards = db.execute("SELECT id, position FROM cards WHERE board_id = %s AND list_id = %s", (board_id, from_list_id))
+    for c in old_list_cards:
+        if c['id'] == card_id:
+            continue
+        pos = c['position']
+        if pos > from_pos:
+            pos -= 1
+            db.execute("UPDATE cards SET position = %s WHERE board_id = %s AND id = %s", (pos, board_id, c['id']))
+
+    new_list_cards = db.execute("SELECT id, position FROM cards WHERE board_id = %s AND list_id = %s", (board_id, target_list_id))
+    max_position = len(new_list_cards)
+    new_position = max(0, min(data.new_position, max_position))
+    for c in new_list_cards:
+        pos = c['position']
+        if pos >= new_position:
+            pos += 1
+            db.execute("UPDATE cards SET position = %s WHERE board_id = %s AND id = %s", (pos, board_id, c['id']))
+
+    db.execute(
+        "UPDATE cards SET list_id = %s, position = %s WHERE board_id = %s AND id = %s",
+        (target_list_id, new_position, board_id, card_id)
+    )
     return statusOk
 
 

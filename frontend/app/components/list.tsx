@@ -4,7 +4,7 @@ import React, {useState} from "react";
 import {deleteList, updateList} from "@/app/http/lists";
 import {useUser} from "@/app/components/user";
 import {createCard} from "@/app/http/cards";
-import {useDraggable} from "@dnd-kit/core";
+import {useDraggable, useDroppable} from "@dnd-kit/core";
 
 export interface ListData {
     id: number;
@@ -13,8 +13,6 @@ export interface ListData {
     title: string;
     cards: CardData[];
     onCardClick?: (card: CardData) => void;
-    onListDragEnd?: (event: any) => void;
-    onCardDragEnd?: (event: any) => void;
 }
 
 export default function List(data: ListData) {
@@ -29,13 +27,27 @@ export default function List(data: ListData) {
     const [updating, setUpdating] = useState(false);
     const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const {attributes, listeners, setNodeRef, transform} = useDraggable({
-        id: data.id,
+    const {attributes, listeners, setNodeRef: setDraggableNodeRef, transform} = useDraggable({
+        id: `list-${data.id}`,
         data: {
-            supports: ['list_droppable'],
+            type: "list",
+            listId: data.id,
             pos: data.pos
         },
     });
+    const {setNodeRef: setDroppableNodeRef, isOver} = useDroppable({
+        id: `list-drop-${data.id}`,
+        data: {
+            type: "list",
+            listId: data.id,
+            pos: data.pos,
+            cardsCount: data.cards.length
+        }
+    });
+    const setNodeRef = (node: HTMLDivElement | null) => {
+        setDroppableNodeRef(node);
+        setDraggableNodeRef(node);
+    };
     const style = transform ? {
         transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
     } : undefined;
@@ -59,7 +71,7 @@ export default function List(data: ListData) {
             handleCloseCreateModal();
             if (result && result.id) {
                 setCurrentCardPos(currentCardPos + 1);
-                // TODO: Refresh cards
+                window.location.reload(); /* TODO: TROUVER MEILLEUR MOYEN DE REFRESH LE BOARD */
             }
         } catch (err: any) {
             setError(err?.message ?? "Failed to create list");
@@ -115,8 +127,9 @@ export default function List(data: ListData) {
     };
 
     const cardItems = data.cards.sort((a, b) => a.pos - b.pos).map(card =>
-        <li key={"list_" + data.pos + "_card_" + card.pos} className="card-wrapper">
-            <Card id={card.id} pos={card.pos} title={card.title} desc={card.desc} assignees={card.assignees} labels={card.labels}
+        <li key={"list_" + data.pos + "_card_" + card.pos}>
+            <Card id={card.id} listId={data.id} pos={card.pos} title={card.title} desc={card.desc} assignees={card.assignees}
+                  labels={card.labels}
                   onClick={() => data.onCardClick?.(card)}/>
         </li>
     );
@@ -244,7 +257,7 @@ export default function List(data: ListData) {
                                 </svg>
                             </button>
                         </div>
-                        <div className="cards-wrapper">
+                        <div className="cards-wrapper" style={{outline: isOver ? "2px dashed #5b94ff" : undefined}}>
                             <ul className="cards">{cardItems}</ul>
                         </div>
                     </div>

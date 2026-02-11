@@ -3,12 +3,11 @@ import {User, useUser} from "@/app/components/user";
 import Label, {LabelData} from "@/app/components/label";
 import React, {useState} from "react";
 import {createLabel} from "@/app/http/boards";
-import {addCardAssignee, addCardLabel, createCard, removeCardAssignee, removeCardLabel, updateCard} from "@/app/http/cards";
+import {addCardAssignee, addCardLabel, createCard, moveCard, removeCardAssignee, removeCardLabel, updateCard} from "@/app/http/cards";
 import {createList, moveList} from "@/app/http/lists";
 import {CardData} from "@/app/components/card";
 import MemberMedal from "@/app/components/memberMedal";
-import {DndContext, KeyboardSensor, MouseSensor, PointerSensor, TouchSensor, useSensor, useSensors} from "@dnd-kit/core";
-import Droppable from "@/app/components/Droppable";
+import {DndContext, DragEndEvent, KeyboardSensor, MouseSensor, PointerSensor, TouchSensor, useSensor, useSensors} from "@dnd-kit/core";
 
 export interface BoardMemberData {
     user: User;
@@ -228,24 +227,47 @@ export default function BoardView(data: BoardViewData) {
         }
     };
 
-    function handleListDragEnd(event: any) {
+    async function handleDragEnd(event: DragEndEvent) {
         const {active, over} = event;
-
-        const current = active.data.current
-
         if (!over) return;
-        console.log("Moving " + active.id + " into " + over.pos)
+        const activeData: any = active.data.current;
+        const overData: any = over.data.current;
+        if (!activeData || !overData) return;
 
-        /*moveList(data.id, active.id, over.pos).then(r => {
-            window.location.reload(); /!* TODO: TROUVER MEILLEUR MOYEN DE REFRESH LE BOARD *!/
-        });*/
+        if (activeData.type === "list" && overData.type === "list") {
+            if (activeData.listId === overData.listId || activeData.pos === overData.pos) return;
+            await moveList(data.id, activeData.listId, overData.pos);
+            window.location.reload(); /* TODO: TROUVER MEILLEUR MOYEN DE REFRESH LE BOARD */
+            return;
+        }
+
+        if (activeData.type === "card") {
+            let targetListId: number | undefined;
+            let targetPos: number | undefined;
+            if (overData.type === "card") {
+                targetListId = overData.listId;
+                targetPos = overData.pos;
+            } else if (overData.type === "list") {
+                targetListId = overData.listId;
+                targetPos = overData.cardsCount ?? 0;
+            }
+            if (targetListId === undefined || targetPos === undefined) return;
+            if (activeData.listId === targetListId && activeData.pos === targetPos) return;
+
+            await moveCard(
+                data.id,
+                activeData.cardId,
+                targetPos,
+                activeData.listId === targetListId ? undefined : targetListId
+            );
+            window.location.reload(); /* TODO: TROUVER MEILLEUR MOYEN DE REFRESH LE BOARD */
+        }
     }
 
     const listItems = filteredLists.sort((a, b) => a.pos - b.pos).map(list =>
-        <li key={"list_" + list.pos}>
-            <Droppable type={"list_droppable"} id={list.id} pos={list.pos}/>
+        <li key={"list_" + list.id}>
             <List id={list.id} boardId={list.boardId} pos={list.pos} title={list.title} cards={list.cards}
-                  onCardClick={handleCardClick} onListDragEnd={handleListDragEnd}/>
+                  onCardClick={handleCardClick}/>
         </li>
     );
 
@@ -502,7 +524,7 @@ export default function BoardView(data: BoardViewData) {
                     </button>
                 </div>
             </div>
-            <DndContext onDragEnd={handleListDragEnd} sensors={sensors}>
+            <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
                 <div className="lists-wrapper">
                     <ul className="lists">{listItems}</ul>
                 </div>

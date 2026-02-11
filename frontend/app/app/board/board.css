@@ -1,3 +1,13 @@
+:root {
+    --card-item-bg: #fffdfd;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --card-item-bg: #131313;
+    }
+}
+
 /* Board */
 .board-wrapper {
     width: 100%;
@@ -165,7 +175,8 @@
     padding: 12px;
     border: var(--card-border) 1px solid;
     border-radius: 14px;
-    transition: all .15s;
+    transition: border .15s;
+    background-color: var(--card-item-bg);
 }
 
 .card {
