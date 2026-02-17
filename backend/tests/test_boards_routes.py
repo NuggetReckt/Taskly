@@ -47,7 +47,7 @@ def test_board_members_flow(client):
     # add member (success)
     r = client.put(
         f"/board/{board_id}/member",
-        json={"user_id": u1_id, "role": "member"},
+        json={"user_id": u1_id, "role": "editor"},
     )
     assert r.status_code == 200
     assert r.json()["status"] == "OK"
@@ -55,7 +55,7 @@ def test_board_members_flow(client):
     # add member (duplicate) - should fail
     r = client.put(
         f"/board/{board_id}/member",
-        json={"user_id": u1_id, "role": "member"},
+        json={"user_id": u1_id, "role": "editor"},
     )
     assert r.status_code == 400
     assert r.json()["detail"] == "User is already a member of this board"
@@ -63,7 +63,7 @@ def test_board_members_flow(client):
     # add board owner as member - should fail
     r = client.put(
         f"/board/{board_id}/member",
-        json={"user_id": owner_id, "role": "member"},
+        json={"user_id": owner_id, "role": "editor"},
     )
     assert r.status_code == 400
     assert r.json()["detail"] == "User is the board owner"

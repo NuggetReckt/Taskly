@@ -80,6 +80,89 @@
     cursor: pointer;
 }
 
+.invites {
+
+}
+
+.invites-list {
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px;
+    gap: 10px;
+}
+
+.no-invites {
+    margin: 10px 0;
+    font-size: 15px;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.invite-card {
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 22px 18px;
+    border-radius: 12px;
+    border: var(--card-border) 1px solid;
+    background-color: var(--card-item-bg);
+}
+
+.invite-link-copy-btn {
+    cursor: pointer;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background-color: var(--accent-color);
+    transition: all .25s ease;
+    font-weight: bold;
+}
+
+.invite-link-copy-btn:hover {
+    background-color: white;
+    color: var(--accent-color);
+}
+
+.invites-create-field {
+    border-top: var(--card-border) 1px solid;
+    padding-top: 10px;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.invite-permission-select {
+    border: var(--accent-color) 2px solid;
+    border-radius: 6px;
+    padding: 2px 6px;
+}
+
+.invites-create-permission > h2 {
+    /*margin-bottom: 2px;*/
+}
+
+.create-invite-btn {
+    padding: 10px 8px;
+    background-color: var(--accent-color);
+    color: var(--text-primary);
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.25s ease;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.create-invite-btn:hover {
+    background-color: white;
+    color: var(--accent-color);
+}
+
 /* Lists */
 .lists-wrapper {
     width: 100%;
@@ -340,7 +423,7 @@
     align-items: center;
 }
 
-.label-item-wrapper, .assignee-item-wrapper {
+.label-item-wrapper, .assignee-item-wrapper, .invite-card-wrapper {
     position: relative;
     display: flex;
     align-items: center;
@@ -365,7 +448,7 @@
     transition: opacity 0.2s;
 }
 
-.label-item-wrapper:hover .remove-btn, .assignee-item-wrapper:hover .remove-btn {
+.label-item-wrapper:hover .remove-btn, .assignee-item-wrapper:hover .remove-btn, .invite-card-wrapper:hover .remove-btn {
     opacity: 1;
 }
 

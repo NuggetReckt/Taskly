@@ -2,12 +2,13 @@ import List, {ListData} from "@/app/components/list";
 import {User, useUser} from "@/app/components/user";
 import Label, {LabelData} from "@/app/components/label";
 import React, {useState} from "react";
-import {createLabel} from "@/app/http/boards";
+import {createInvite, createLabel, deleteInvite, fetchBoardInvites} from "@/app/http/boards";
 import {addCardAssignee, addCardLabel, createCard, moveCard, removeCardAssignee, removeCardLabel, updateCard} from "@/app/http/cards";
 import {createList, moveList} from "@/app/http/lists";
 import {CardData} from "@/app/components/card";
 import MemberMedal from "@/app/components/memberMedal";
 import {DndContext, DragEndEvent, KeyboardSensor, MouseSensor, PointerSensor, TouchSensor, useSensor, useSensors} from "@dnd-kit/core";
+import InviteCard, {BoardInviteData} from "@/app/components/inviteCard";
 
 export interface BoardMemberData {
     user: User;
@@ -43,6 +44,8 @@ export default function BoardView(data: BoardViewData) {
     const [editingCardDesc, setEditingCardDesc] = useState("");
     const [isLabelSelectorOpen, setIsLabelSelectorOpen] = useState(false);
     const [isAssigneeSelectorOpen, setIsAssigneeSelectorOpen] = useState(false);
+    const [invites, setInvites] = useState<BoardInviteData[]>([]);
+    const [inviteCreateRole, setInviteCreateRole] = useState("viewer");
     const [newComment, setNewComment] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
     const [creating, setCreating] = useState(false);
@@ -67,7 +70,9 @@ export default function BoardView(data: BoardViewData) {
         setIsModalOpen(true);
     };
 
-    const handleShareClick = () => {
+    const handleShareClick = async () => {
+        let result = await fetchBoardInvites(data.id);
+        setInvites(result);
         setIsShareModalOpen(true)
     }
 
@@ -78,6 +83,7 @@ export default function BoardView(data: BoardViewData) {
             setIsPlusModalOpen(true);
         }
     }
+
     const handleCloseModal = () => {
         setIsModalOpen(false);
         setIsPlusModalOpen(false);
@@ -98,6 +104,10 @@ export default function BoardView(data: BoardViewData) {
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchQuery(e.target.value);
+    };
+
+    const handleCreateInvitePermissionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setInviteCreateRole(e.target.value);
     };
 
     const filteredLists = data.lists.map(list => ({
@@ -227,6 +237,39 @@ export default function BoardView(data: BoardViewData) {
         }
     };
 
+    const onCreateInvite = async () => {
+        if (!user || inviteCreateRole === "") return;
+
+        try {
+            const result = await createInvite(data.id, inviteCreateRole);
+            if (result) {
+                setInvites(await fetchBoardInvites(data.id))
+            }
+        } catch (err: any) {
+            setError(err?.message ?? "Failed to create invite");
+        } finally {
+            setCreating(false);
+        }
+    }
+
+    const onDeleteInvite = async (inviteId: number) => {
+        if (!user) return;
+
+        try {
+            const result = await deleteInvite(data.id, inviteId);
+            if (result) {
+                console.log(result)
+                setInvites(await fetchBoardInvites(data.id))
+            }
+        } catch (err: any) {
+            setError(err?.message ?? "Failed to create invite");
+        } finally {
+            setCreating(false);
+        }
+    }
+    
+    
+
     async function handleDragEnd(event: DragEndEvent) {
         const {active, over} = event;
         if (!over) return;
@@ -262,6 +305,17 @@ export default function BoardView(data: BoardViewData) {
             );
             window.location.reload(); /* TODO: TROUVER MEILLEUR MOYEN DE REFRESH LE BOARD */
         }
+    }
+
+    function getInvites(invites: BoardInviteData[]) {
+        let items = invites.map(invite => (
+            <li key={"invite_" + invite.id} className={"invite-card-wrapper"}>
+                <InviteCard id={invite.id} boardId={invite.boardId} code={invite.code} role={invite.role}/>
+                <button className="remove-btn" onClick={() => onDeleteInvite(invite.id)}>-
+                </button>
+            </li>
+        ));
+        return items;
     }
 
     const listItems = filteredLists.sort((a, b) => a.pos - b.pos).map(list =>
@@ -451,7 +505,27 @@ export default function BoardView(data: BoardViewData) {
                                     </svg>
                                 </button>
                             </div>
-                            {/* TODO: verify if an invite already exists for this board. If it exists, display it directly. If not display a "Create Invite" button*/}
+                            <div className={"invites"}>
+                                {invites.length === 0 &&
+                                    (<div className={"no-invites"}><span>No invites. Create your first one with the button below.</span>
+                                    </div>)
+                                    ||
+                                    (<ul className={"invites-list"}>
+                                        {getInvites(invites)}
+                                    </ul>)}
+                                <div className={"invites-create-field"}>
+                                    <div className={"invites-create-permission"}>
+                                        <h2>Permission</h2>
+                                        <select name="permissions" id="permissions" className={"invite-permission-select"}
+                                                onChange={handleCreateInvitePermissionChange}>
+                                            <option value="viewer">Viewer (Read-Only)</option>
+                                            <option value="editor">Editor</option>
+                                            <option value="admin">Administrator</option>
+                                        </select>
+                                    </div>
+                                    <button className={"create-invite-btn"} onClick={onCreateInvite}>Create invite</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

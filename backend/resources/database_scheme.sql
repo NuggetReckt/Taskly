@@ -47,7 +47,8 @@ CREATE TABLE IF NOT EXISTS board_invites (
     id              SERIAL PRIMARY KEY,
     board_id        INT NOT NULL REFERENCES boards(id) ON DELETE CASCADE,
     invite_code     VARCHAR(255) NOT NULL,
-    UNIQUE(board_id)
+    role            board_role DEFAULT 'viewer',
+    UNIQUE(id, invite_code)
 );
 
 ---------------------------

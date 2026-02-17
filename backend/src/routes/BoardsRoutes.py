@@ -5,6 +5,8 @@ from main import get_database_handler
 from . import user_exists
 from .baseModels.BoardsBaseModels import *
 from .baseModels.DefaultBaseModels import statusOk
+import string
+import random
 
 router = APIRouter()
 
@@ -21,8 +23,17 @@ def get_boards(db: DatabaseHandler = Depends(get_database_handler)):
     return BoardList(boards_count=len(boards), boards=boards)
 
 
-@router.get("/board/{board_id}", response_model=BoardDetails)
+@router.get("/board/{board_id}", response_model=Board)
 def get_board(board_id: int, db: DatabaseHandler = Depends(get_database_handler)):
+    if not board_exists(board_id, db):
+        raise HTTPException(status_code=404, detail="Board not found")
+
+    board = db.execute("SELECT * FROM boards WHERE id = %s", board_id)[0]
+    return Board(id=board['id'], owner_id=board['owner_id'], title=board['title'], description=board['description'])
+
+
+@router.get("/board/{board_id}/details", response_model=BoardDetails)
+def get_board_details(board_id: int, db: DatabaseHandler = Depends(get_database_handler)):
     if not board_exists(board_id, db):
         raise HTTPException(status_code=404, detail="Board not found")
 
@@ -108,7 +119,7 @@ def add_board_member(board_id: int, member: BoardMember, db: DatabaseHandler = D
     if is_board_member(board_id, member.user_id, db):
         raise HTTPException(status_code=400, detail="User is already a member of this board")
 
-    if member.role not in ["member", "admin"]:
+    if member.role not in ["editor", "admin", "viewer"]:
         raise HTTPException(status_code=400, detail="Invalid role")
 
     db.execute("INSERT INTO board_members (board_id, user_id, role) VALUES (%s, %s, %s)",
@@ -539,6 +550,60 @@ def delete_board(board_id: int, db: DatabaseHandler = Depends(get_database_handl
     return statusOk
 
 
+# Board Invites
+@router.get("/board/invite/{code}")
+def get_board_invite(code: str, db: DatabaseHandler = Depends(get_database_handler)):
+    result = db.execute("SELECT * FROM board_invites WHERE invite_code = %s", code)
+    if not result:
+        raise HTTPException(status_code=404, detail="Invalid invite")
+    return BoardInvite(board_id=result[0]['board_id'], role=result[0]['role'], code=result[0]['invite_code'])
+
+
+@router.get("/board/{board_id}/invites")
+def get_board_invites(board_id: int, db: DatabaseHandler = Depends(get_database_handler)):
+    if not board_exists(board_id, db):
+        raise HTTPException(status_code=404, detail="Board not found")
+
+    result = db.execute("SELECT * FROM board_invites WHERE board_id = %s", board_id)
+
+    invites: list[BoardInvite] = []
+
+    for invite in result:
+        invites.append(
+            BoardInvite(id=invite['id'], board_id=invite['board_id'], role=invite['role'], code=invite['invite_code']))
+    return invites
+
+
+@router.delete("/board/{board_id}/invite/{invite_id}")
+def delete_board_invite(board_id: int, invite_id: int, db: DatabaseHandler = Depends(get_database_handler)):
+    if not board_exists(board_id, db):
+        raise HTTPException(status_code=404, detail="Board not found")
+    if not invite_exists(board_id, invite_id, db):
+        raise HTTPException(status_code=404, detail="Invite not found")
+
+    db.execute("DELETE FROM board_invites WHERE id = %s AND board_id = %s", (invite_id, board_id))
+    return statusOk
+
+
+@router.post("/board/{board_id}/invite")
+def create_board_invite(board_id: int, data: BoardInvite, db: DatabaseHandler = Depends(get_database_handler)):
+    if not board_exists(board_id, db):
+        raise HTTPException(status_code=404, detail="Board not found")
+
+    code = generate_code()
+    attempts: int = 0
+    if invite_code_exists(code, db):
+        while invite_code_exists(code, db):
+            code = generate_code()
+            if attempts >= 3:
+                break
+            attempts += 1
+
+    result = db.execute("INSERT INTO board_invites (board_id, invite_code, role) VALUES (%s, %s, %s) RETURNING invite_code",
+                        (board_id, code, data.role))
+    return {"code": result[0]['invite_code']}
+
+
 # Utilities
 def get_board_cards_for_list(board_id: int, list_id: int, db: DatabaseHandler) -> list[Card]:
     if not board_exists(board_id, db):
@@ -565,6 +630,26 @@ def get_board_cards_for_list(board_id: int, list_id: int, db: DatabaseHandler) -
         cardsList.append(Card(id=card_id, list_id=card['list_id'], board_id=board_id, title=card['title'], position=card['position'],
                               description=card['description'], labels=cardLabels, assignees=cardAssignees))
     return cardsList
+
+
+def invite_code_exists(invite_code: str, db: DatabaseHandler) -> bool:
+    invite = db.execute("SELECT * FROM board_invites WHERE invite_code = %s", invite_code)
+
+    if invite is None or len(invite) == 0:
+        return False
+    return True
+
+
+def generate_code() -> str:
+    return ''.join(random.choices(string.ascii_letters + string.digits, k=12))
+
+
+def invite_exists(board_id: int, invite_id: int, db: DatabaseHandler) -> bool:
+    invite = db.execute("SELECT * FROM board_invites WHERE id = %s AND board_id = %s", (invite_id, board_id))
+
+    if invite is None or len(invite) == 0:
+        return False
+    return True
 
 
 def board_exists(board_id: int, db: DatabaseHandler) -> bool:

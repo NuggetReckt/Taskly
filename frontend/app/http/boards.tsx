@@ -6,7 +6,7 @@ import {User} from "@/app/components/user";
 import {ListData} from "@/app/components/list";
 import {LabelData} from "@/app/components/label";
 import {CardData} from "@/app/components/card";
-import {list} from "postcss";
+import {BoardInviteData} from "@/app/components/inviteCard";
 
 
 export async function fetchBoards(): Promise<BoardData[]> {
@@ -60,23 +60,26 @@ export async function fetchUserBoards(userId: number): Promise<BoardData[]> {
     }
 }
 
-export async function createBoard(ownerId: number, title: string, description: string): Promise<any> {
+export async function fetchBoard(boardId: number): Promise<BoardData> {
     try {
-        const response = await client.post("board", {
-            owner_id: ownerId,
-            title: title,
-            description: description
-        });
-        return response.data;
+        const response = await client.get("board/" + boardId);
+        const board = response.data;
+
+        return {
+            id: board.id,
+            title: board.title,
+            owner: await getUserById(board.owner_id),
+            members: await getBoardMembersAsUsers(board.id)
+        };
     } catch (error) {
-        console.error("Error creating board:", error);
+        console.error("Error fetching boards:", error);
         throw error;
     }
 }
 
 export async function fetchBoardDetails(boardId: number): Promise<BoardViewData> {
     try {
-        const response = await client.get("board/" + boardId);
+        const response = await client.get("board/" + boardId + "/details");
         const board = response.data;
 
         const owner: User = await getUserById(board['owner_id']);
@@ -128,6 +131,20 @@ export async function fetchBoardDetails(boardId: number): Promise<BoardViewData>
     }
 }
 
+export async function createBoard(ownerId: number, title: string, description: string): Promise<any> {
+    try {
+        const response = await client.post("board", {
+            owner_id: ownerId,
+            title: title,
+            description: description
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error creating board:", error);
+        throw error;
+    }
+}
+
 export async function createLabel(boardId: number, name: string, color: string): Promise<any> {
     try {
         const response = await client.post(`board/${boardId}/label`, {
@@ -137,6 +154,71 @@ export async function createLabel(boardId: number, name: string, color: string):
         return response.data;
     } catch (error) {
         console.error("Error creating label:", error);
+        throw error;
+    }
+}
+
+export async function fetchBoardInvite(code: string): Promise<BoardInviteData> {
+    try {
+        const response = await client.get(`board/invite/${code}`);
+        return {
+            id: response.data.id,
+            code: response.data.code,
+            role: response.data.role,
+            boardId: response.data.board_id
+        }
+    } catch (error) {
+        console.error("Error fetching invite:", error);
+        throw error;
+    }
+}
+
+export async function fetchBoardInvites(boardId: number): Promise<BoardInviteData[]> {
+    try {
+        const response = await client.get(`board/${boardId}/invites`);
+        return response.data.map((invite: any): BoardInviteData => {
+            return {
+                id: invite['id'], code: invite['code'], boardId: invite['board_id'], role: invite['role']
+            }
+        });
+    } catch (error) {
+        console.error("Error fetching invite:", error);
+        throw error;
+    }
+}
+
+export async function createInvite(boardId: number, role: string): Promise<string> {
+    try {
+        const response = await client.post(`board/${boardId}/invite`, {
+            role: role,
+            board_id: boardId
+        });
+        return response.data['code'];
+    } catch (error) {
+        console.error("Error fetching invite:", error);
+        throw error;
+    }
+}
+
+export async function deleteInvite(boardId: number, inviteId: number): Promise<string> {
+    try {
+        const response = await client.delete(`board/${boardId}/invite/${inviteId}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching invite:", error);
+        throw error;
+    }
+}
+
+export async function addMemberToBoard(boardId: number, userId: number, role: string): Promise<any> {
+    try {
+        const response = await client.put(`board/${boardId}/member`, {
+            user_id: userId,
+            role: role
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching invite:", error);
         throw error;
     }
 }

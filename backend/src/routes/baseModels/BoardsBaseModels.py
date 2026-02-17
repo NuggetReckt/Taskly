@@ -1,5 +1,4 @@
 from typing import Optional
-
 from pydantic import BaseModel
 
 
@@ -85,3 +84,10 @@ class BoardDetails(BaseModel):
 class MoveRequest(BaseModel):
     new_position: int
     list_id: Optional[int] = None
+
+
+class BoardInvite(BaseModel):
+    id: Optional[int] = None
+    board_id: int
+    role: str
+    code: Optional[str] = None
