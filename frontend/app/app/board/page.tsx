@@ -6,6 +6,7 @@ import {useSearchParams, useRouter} from "next/navigation";
 import {useUser} from "@/app/components/user";
 import {fetchBoardDetails} from "@/app/http/boards";
 import "./board.css"
+import LoadingIcon from "@/app/components/LoadingIcon";
 
 export default function Page() {
     const params = useSearchParams()
@@ -49,7 +50,7 @@ export default function Page() {
     }
     if (loading || !boardView) {
         return (
-            <p>Chargement du board...</p>
+            <LoadingIcon/>
         );
     }
     // metadata.title = "Taskly - " + board.title;

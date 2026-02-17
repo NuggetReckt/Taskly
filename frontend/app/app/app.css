@@ -12,6 +12,11 @@
     }
 }
 
+.loading-img {
+    height: 50px;
+    color: var(--accent-color);
+}
+
 .app-content {
     height: 100%;
     width: 100%;

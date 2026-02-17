@@ -26,6 +26,11 @@ export interface BoardViewData {
 }
 
 export default function BoardView(data: BoardViewData) {
+    const inviteRoleOptions = [
+        {value: "viewer", label: "Viewer (Read-Only)"},
+        {value: "editor", label: "Editor"},
+        {value: "admin", label: "Administrator"}
+    ];
     const user = useUser();
     const [currentListPos, setCurrentListPos] = useState(data.lists.length);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -71,8 +76,11 @@ export default function BoardView(data: BoardViewData) {
     };
 
     const handleShareClick = async () => {
-        let result = await fetchBoardInvites(data.id);
+        const result = await fetchBoardInvites(data.id);
         setInvites(result);
+        const usedRoles = new Set(result.map(invite => invite.role.toLowerCase()));
+        const firstAvailableRole = inviteRoleOptions.find(option => !usedRoles.has(option.value));
+        setInviteCreateRole(firstAvailableRole?.value ?? "");
         setIsShareModalOpen(true)
     }
 
@@ -109,6 +117,10 @@ export default function BoardView(data: BoardViewData) {
     const handleCreateInvitePermissionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setInviteCreateRole(e.target.value);
     };
+
+    const usedInviteRoles = new Set(invites.map(invite => invite.role.toLowerCase()));
+    const availableInviteRoles = inviteRoleOptions.filter(option => !usedInviteRoles.has(option.value));
+    const areAllInviteRolesUsed = availableInviteRoles.length === 0;
 
     const filteredLists = data.lists.map(list => ({
         ...list,
@@ -238,12 +250,16 @@ export default function BoardView(data: BoardViewData) {
     };
 
     const onCreateInvite = async () => {
-        if (!user || inviteCreateRole === "") return;
+        if (!user || inviteCreateRole === "" || areAllInviteRolesUsed) return;
 
         try {
             const result = await createInvite(data.id, inviteCreateRole);
             if (result) {
-                setInvites(await fetchBoardInvites(data.id))
+                const nextInvites = await fetchBoardInvites(data.id);
+                setInvites(nextInvites);
+                const nextUsedRoles = new Set(nextInvites.map(invite => invite.role.toLowerCase()));
+                const nextAvailableRole = inviteRoleOptions.find(option => !nextUsedRoles.has(option.value));
+                setInviteCreateRole(nextAvailableRole?.value ?? "");
             }
         } catch (err: any) {
             setError(err?.message ?? "Failed to create invite");
@@ -259,7 +275,11 @@ export default function BoardView(data: BoardViewData) {
             const result = await deleteInvite(data.id, inviteId);
             if (result) {
                 console.log(result)
-                setInvites(await fetchBoardInvites(data.id))
+                const nextInvites = await fetchBoardInvites(data.id);
+                setInvites(nextInvites);
+                const nextUsedRoles = new Set(nextInvites.map(invite => invite.role.toLowerCase()));
+                const nextAvailableRole = inviteRoleOptions.find(option => !nextUsedRoles.has(option.value));
+                setInviteCreateRole(nextAvailableRole?.value ?? "");
             }
         } catch (err: any) {
             setError(err?.message ?? "Failed to create invite");
@@ -267,8 +287,7 @@ export default function BoardView(data: BoardViewData) {
             setCreating(false);
         }
     }
-    
-    
+
 
     async function handleDragEnd(event: DragEndEvent) {
         const {active, over} = event;
@@ -515,15 +534,22 @@ export default function BoardView(data: BoardViewData) {
                                     </ul>)}
                                 <div className={"invites-create-field"}>
                                     <div className={"invites-create-permission"}>
-                                        <h2>Permission</h2>
+                                        <h2>Roles</h2>
                                         <select name="permissions" id="permissions" className={"invite-permission-select"}
-                                                onChange={handleCreateInvitePermissionChange}>
-                                            <option value="viewer">Viewer (Read-Only)</option>
-                                            <option value="editor">Editor</option>
-                                            <option value="admin">Administrator</option>
+                                                value={inviteCreateRole}
+                                                onChange={handleCreateInvitePermissionChange}
+                                                disabled={areAllInviteRolesUsed}>
+                                            {availableInviteRoles.map(option => (
+                                                <option key={option.value} value={option.value}>{option.label}</option>
+                                            ))}
+                                            {areAllInviteRolesUsed && (
+                                                <option value="">All roles already invited</option>
+                                            )}
                                         </select>
                                     </div>
-                                    <button className={"create-invite-btn"} onClick={onCreateInvite}>Create invite</button>
+                                    <button className={"create-invite-btn"} onClick={onCreateInvite}
+                                            disabled={areAllInviteRolesUsed}>Create invite
+                                    </button>
                                 </div>
                             </div>
                         </div>
