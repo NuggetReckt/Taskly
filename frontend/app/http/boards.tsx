@@ -120,6 +120,7 @@ export async function fetchBoardDetails(boardId: number): Promise<BoardViewData>
             id: board['id'],
             title: board['title'],
             description: board['description'],
+            boardStatus: board['board_status'],
             owner: owner,
             members: members,
             lists: lists,
@@ -219,6 +220,89 @@ export async function addMemberToBoard(boardId: number, userId: number, role: st
         return response.data;
     } catch (error) {
         console.error("Error fetching invite:", error);
+        throw error;
+    }
+}
+
+export async function updateBoard(boardId: number, title: string, description: string): Promise<any> {
+    try {
+        const response = await client.put(`board/${boardId}`, {
+            title: title,
+            description: description
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error updating board:", error);
+        throw error;
+    }
+}
+
+export async function updateBoardMemberRole(boardId: number, userId: number, role: string): Promise<any> {
+    try {
+        const response = await client.put(`board/${boardId}/member/${userId}/role`, {
+            role: role
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error updating board member role:", error);
+        throw error;
+    }
+}
+
+export async function removeBoardMember(boardId: number, userId: number): Promise<any> {
+    try {
+        const response = await client.delete(`board/${boardId}/member`, {
+            params: {
+                user_id: userId
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error removing board member:", error);
+        throw error;
+    }
+}
+
+export async function deleteLabel(boardId: number, labelId: number): Promise<any> {
+    try {
+        const response = await client.delete(`board/${boardId}/label/${labelId}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error deleting board label:", error);
+        throw error;
+    }
+}
+
+export async function transferBoardOwnership(boardId: number, newOwnerId: number): Promise<any> {
+    try {
+        const response = await client.put(`board/${boardId}/ownership`, {
+            new_owner_id: newOwnerId
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error transferring board ownership:", error);
+        throw error;
+    }
+}
+
+export async function updateBoardStatus(boardId: number, boardStatus: "active" | "archived"): Promise<any> {
+    try {
+        const response = await client.put(`board/${boardId}/status`, {
+            board_status: boardStatus
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error updating board status:", error);
+        throw error;
+    }
+}
+
+export async function deleteBoard(boardId: number): Promise<any> {
+    try {
+        const response = await client.delete(`board/${boardId}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error deleting board:", error);
         throw error;
     }
 }

@@ -305,14 +305,31 @@ body {
     color: #fff;
     cursor: pointer;
     font-weight: 600;
+    transition: all .25s ease;
+}
+
+.btn-danger {
+    background: var(--danger);
+}
+
+.auth-button:hover {
+    color: var(--accent-color);
+    background: white;
+}
+
+.btn-danger:hover {
+    color: var(--danger);
+    background: white;
 }
 
 .auth-button:disabled {
     opacity: 0.55;
     cursor: not-allowed;
+    color: white;
+    background: var(--accent-color);
 }
 
-.btn-danger {
+.btn-danger:disabled {
     background: var(--danger);
 }
 

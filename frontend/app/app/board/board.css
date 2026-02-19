@@ -114,6 +114,11 @@
     border-radius: 10px;
 }
 
+.invite-card-role {
+    font-size: 14px;
+    font-weight: bold;
+}
+
 .invite-link-copy-btn {
     cursor: pointer;
     color: white;
@@ -525,4 +530,123 @@
     gap: 12px;
     padding-top: 16px;
     border-top: 1px solid var(--card-border);
+}
+
+/* Board Edit Modal */
+.board-edit-modal {
+    max-width: 980px;
+    width: 95%;
+}
+
+.board-edit-card {
+    max-width: none;
+    max-height: 98vh;
+    overflow-y: auto;
+}
+
+.board-edit-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.board-edit-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.board-edit-section-members, .board-edit-section-labels {
+    width: 100%;
+}
+
+.board-edit-section > h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.board-edit-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.board-edit-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.board-edit-row-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.board-edit-remove-btn {
+    position: static;
+    opacity: 1;
+}
+
+.board-edit-add-label {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.danger-zone {
+    border-color: rgba(180, 35, 24, 0.35);
+}
+
+.danger-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 8px 0;
+    border-top: 1px solid var(--card-border);
+}
+
+.danger-row > div > h3 {
+    margin: 0;
+}
+
+.danger-row > div > p {
+    margin: 2px 0 0;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.danger-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.board-edit-footer {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--card-border);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+@media (max-width: 768px) {
+    .board-edit-row,
+    .danger-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .danger-actions,
+    .board-edit-add-label {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
 }

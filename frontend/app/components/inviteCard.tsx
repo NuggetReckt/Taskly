@@ -35,8 +35,8 @@ export default function InviteCard(data: BoardInviteData) {
 
     return (
         <div className="invite-card">
-            <div className={"invite-card-code"}>{data.code}</div>
-            <div className={"invite-card-role"}>{roleDisplay}</div>
+            <span className={"invite-card-code"}>{data.code}</span>
+            <span className={"invite-card-role"}>{roleDisplay}</span>
             <button className={"invite-link-copy-btn"} onClick={copyURL}>{isCopied && "Copied" || "Copy"}</button>
         </div>
     );

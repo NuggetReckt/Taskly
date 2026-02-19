@@ -15,12 +15,15 @@ CREATE TABLE IF NOT EXISTS users (
 ---------------------------
 -- BOARDS
 ---------------------------
+CREATE TYPE board_status AS ENUM ('active', 'archived');
+
 CREATE TABLE IF NOT EXISTS boards (
     id              SERIAL PRIMARY KEY,
     title           VARCHAR(255) NOT NULL,
     description     TEXT,
     background      TEXT,  -- color or image URL
     owner_id        INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    board_status    board_status NOT NULL DEFAULT 'active',
     created_at      TIMESTAMPTZ DEFAULT NOW()
 );
 

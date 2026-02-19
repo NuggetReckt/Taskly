@@ -108,6 +108,23 @@ class FakeDatabaseHandler:
             owner_id = params[0]
             return [b for b in self._boards if b["owner_id"] == owner_id]
 
+        if q.startswith("insert into boards (owner_id, title, description, board_status) values (%s, %s, %s, %s)"):
+            owner_id, title, description, board_status = params
+            new_id = self._board_id_seq
+            new_board = {
+                "id": new_id,
+                "owner_id": owner_id,
+                "title": title,
+                "description": description,
+                "board_status": board_status,
+                "created_at": "2025-01-01T00:00:00",
+            }
+            self._board_id_seq += 1
+            self._boards.append(new_board)
+            if "returning id" in q:
+                return [{"id": new_id}]
+            return 1
+
         if q.startswith("insert into boards (owner_id, title, description) values (%s, %s, %s)"):
             owner_id, title, description = params
             new_id = self._board_id_seq
@@ -116,6 +133,7 @@ class FakeDatabaseHandler:
                 "owner_id": owner_id,
                 "title": title,
                 "description": description,
+                "board_status": "active",
                 "created_at": "2025-01-01T00:00:00",
             }
             self._board_id_seq += 1
@@ -123,6 +141,31 @@ class FakeDatabaseHandler:
             if "returning id" in q:
                 return [{"id": new_id}]
             return 1
+
+        if q.startswith("update boards set title = %s, description = %s where id = %s"):
+            title, description, board_id = params
+            for b in self._boards:
+                if b["id"] == board_id:
+                    b["title"] = title
+                    b["description"] = description
+                    return 1
+            return 0
+
+        if q.startswith("update boards set owner_id = %s where id = %s"):
+            owner_id, board_id = params
+            for b in self._boards:
+                if b["id"] == board_id:
+                    b["owner_id"] = owner_id
+                    return 1
+            return 0
+
+        if q.startswith("update boards set board_status = %s where id = %s"):
+            board_status, board_id = params
+            for b in self._boards:
+                if b["id"] == board_id:
+                    b["board_status"] = board_status
+                    return 1
+            return 0
 
         if q.startswith("delete from boards where id = %s"):
             board_id = params[0]
@@ -158,6 +201,14 @@ class FakeDatabaseHandler:
                 if not (m["board_id"] == board_id and m["user_id"] == user_id)
             ]
             return 1 if len(self._board_members) != before else 0
+
+        if q.startswith("update board_members set role = %s where board_id = %s and user_id = %s"):
+            role, board_id, user_id = params
+            for m in self._board_members:
+                if m["board_id"] == board_id and m["user_id"] == user_id:
+                    m["role"] = role
+                    return 1
+            return 0
 
         # ---------- LABELS ----------
         if q.startswith("select * from labels where board_id = %s and id = %s"):

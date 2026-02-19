@@ -58,7 +58,7 @@ export default function Page() {
     return (
         <div className="board-wrapper">
             <BoardView id={boardView.id} title={boardView.title} owner={boardView.owner} lists={boardView.lists} members={boardView.members}
-                       description={boardView.description} labels={boardView.labels}/>
+                       description={boardView.description} labels={boardView.labels} boardStatus={boardView.boardStatus}/>
         </div>
     );
 }

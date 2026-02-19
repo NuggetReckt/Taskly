@@ -18,7 +18,13 @@ def get_boards(db: DatabaseHandler = Depends(get_database_handler)):
 
     for board in result:
         boards.append(
-            Board(id=board['id'], owner_id=board['owner_id'], title=board['title'], description=board['description'])
+            Board(
+                id=board['id'],
+                owner_id=board['owner_id'],
+                title=board['title'],
+                description=board['description'],
+                board_status=board['board_status']
+            )
         )
     return BoardList(boards_count=len(boards), boards=boards)
 
@@ -29,7 +35,13 @@ def get_board(board_id: int, db: DatabaseHandler = Depends(get_database_handler)
         raise HTTPException(status_code=404, detail="Board not found")
 
     board = db.execute("SELECT * FROM boards WHERE id = %s", board_id)[0]
-    return Board(id=board['id'], owner_id=board['owner_id'], title=board['title'], description=board['description'])
+    return Board(
+        id=board['id'],
+        owner_id=board['owner_id'],
+        title=board['title'],
+        description=board['description'],
+        board_status=board['board_status']
+    )
 
 
 @router.get("/board/{board_id}/details", response_model=BoardDetails)
@@ -56,15 +68,54 @@ def get_board_details(board_id: int, db: DatabaseHandler = Depends(get_database_
             List(id=boardList['id'], board_id=board_id, title=boardList['title'], position=boardList['position'], cards=cards))
 
     return BoardDetails(id=board_id, owner_id=board['owner_id'], title=board['title'],
-                        description=board['description'], labels=boardLabels, lists=boardLists, members=members)
+                        description=board['description'], board_status=board['board_status'],
+                        labels=boardLabels, lists=boardLists, members=members)
 
 
 @router.put("/board/{board_id}")
-def update_board(board_id: int, board: Board, db: DatabaseHandler = Depends(get_database_handler)):
+def update_board(board_id: int, board: BoardUpdate, db: DatabaseHandler = Depends(get_database_handler)):
+    if not board_exists(board_id, db):
+        raise HTTPException(status_code=404, detail="Board not found")
+    ensure_board_writable(board_id, db)
+
+    db.execute("UPDATE boards SET title = %s, description = %s WHERE id = %s", (board.title, board.description, board_id))
+    return statusOk
+
+
+@router.put("/board/{board_id}/status")
+def update_board_status(board_id: int, data: BoardStatusUpdate, db: DatabaseHandler = Depends(get_database_handler)):
     if not board_exists(board_id, db):
         raise HTTPException(status_code=404, detail="Board not found")
 
-    db.execute("UPDATE boards SET title = %s, description = %s WHERE id = %s", (board.title, board.description, board_id))
+    db.execute("UPDATE boards SET board_status = %s WHERE id = %s", (data.board_status, board_id))
+    return statusOk
+
+
+@router.put("/board/{board_id}/ownership")
+def transfer_board_ownership(board_id: int, data: BoardTransferOwnershipRequest,
+                             db: DatabaseHandler = Depends(get_database_handler)):
+    if not board_exists(board_id, db):
+        raise HTTPException(status_code=404, detail="Board not found")
+    ensure_board_writable(board_id, db)
+    if not user_exists(data.new_owner_id, db):
+        raise HTTPException(status_code=404, detail="User not found")
+
+    board = db.execute("SELECT * FROM boards WHERE id = %s", board_id)[0]
+    current_owner_id = board['owner_id']
+    if data.new_owner_id == current_owner_id:
+        raise HTTPException(status_code=400, detail="User is already the board owner")
+    if not is_board_member(board_id, data.new_owner_id, db):
+        raise HTTPException(status_code=400, detail="New owner must already be a board member")
+
+    db.execute("UPDATE boards SET owner_id = %s WHERE id = %s", (data.new_owner_id, board_id))
+    db.execute("DELETE FROM board_members WHERE board_id = %s AND user_id = %s", (board_id, data.new_owner_id))
+
+    if not is_board_member(board_id, current_owner_id, db):
+        db.execute("INSERT INTO board_members (board_id, user_id, role) VALUES (%s, %s, %s)",
+                   (board_id, current_owner_id, "admin"))
+    else:
+        db.execute("UPDATE board_members SET role = %s WHERE board_id = %s AND user_id = %s",
+                   ("admin", board_id, current_owner_id))
     return statusOk
 
 
@@ -91,7 +142,7 @@ def get_member_boards(user_id: int, db: DatabaseHandler = Depends(get_database_h
 
     boards: list[Board] = []
     result = db.execute("""
-                        SELECT DISTINCT b.id, b.owner_id, b.title, b.description, b.created_at
+                        SELECT DISTINCT b.id, b.owner_id, b.title, b.description, b.board_status, b.created_at
                         FROM boards b
                                  INNER JOIN board_members bm ON b.id = bm.board_id
                         WHERE bm.user_id = %s
@@ -101,7 +152,13 @@ def get_member_boards(user_id: int, db: DatabaseHandler = Depends(get_database_h
 
     for board in result:
         boards.append(
-            Board(id=board['id'], owner_id=board['owner_id'], title=board['title'], description=board['description'])
+            Board(
+                id=board['id'],
+                owner_id=board['owner_id'],
+                title=board['title'],
+                description=board['description'],
+                board_status=board['board_status']
+            )
         )
     return BoardList(boards_count=len(boards), boards=boards)
 
@@ -110,6 +167,7 @@ def get_member_boards(user_id: int, db: DatabaseHandler = Depends(get_database_h
 def add_board_member(board_id: int, member: BoardMember, db: DatabaseHandler = Depends(get_database_handler)):
     if not board_exists(board_id, db):
         raise HTTPException(status_code=404, detail="Board not found")
+    ensure_board_writable(board_id, db)
     if not user_exists(member.user_id, db):
         raise HTTPException(status_code=404, detail="User not found")
 
@@ -127,10 +185,28 @@ def add_board_member(board_id: int, member: BoardMember, db: DatabaseHandler = D
     return statusOk
 
 
+@router.put("/board/{board_id}/member/{user_id}/role")
+def update_board_member_role(board_id: int, user_id: int, data: BoardMemberRoleUpdate,
+                             db: DatabaseHandler = Depends(get_database_handler)):
+    if not board_exists(board_id, db):
+        raise HTTPException(status_code=404, detail="Board not found")
+    ensure_board_writable(board_id, db)
+    if not user_exists(user_id, db):
+        raise HTTPException(status_code=404, detail="User not found")
+    if is_board_owner(board_id, user_id, db):
+        raise HTTPException(status_code=400, detail="Cannot change the board owner role")
+    if not is_board_member(board_id, user_id, db):
+        raise HTTPException(status_code=404, detail="User is not a member of this board")
+
+    db.execute("UPDATE board_members SET role = %s WHERE board_id = %s AND user_id = %s", (data.role, board_id, user_id))
+    return statusOk
+
+
 @router.delete("/board/{board_id}/member")
 def remove_board_member(board_id: int, user_id: int, db: DatabaseHandler = Depends(get_database_handler)):
     if not board_exists(board_id, db):
         raise HTTPException(status_code=404, detail="Board not found")
+    ensure_board_writable(board_id, db)
     if not user_exists(user_id, db):
         raise HTTPException(status_code=404, detail="User not found")
 
@@ -159,6 +235,7 @@ def get_board_labels(board_id: int, db: DatabaseHandler = Depends(get_database_h
 def add_board_label(board_id: int, label: Label, db: DatabaseHandler = Depends(get_database_handler)):
     if not board_exists(board_id, db):
         raise HTTPException(status_code=404, detail="Board not found")
+    ensure_board_writable(board_id, db)
 
     result = db.execute("INSERT INTO labels (board_id, name, color) VALUES (%s, %s, %s) RETURNING id",
                         (board_id, label.name, label.color))
@@ -180,6 +257,7 @@ def get_board_label(board_id: int, label_id: int, db: DatabaseHandler = Depends(
 def edit_board_label(board_id: int, label_id: int, label: Label, db: DatabaseHandler = Depends(get_database_handler)):
     if not board_exists(board_id, db):
         raise HTTPException(status_code=404, detail="Board not found")
+    ensure_board_writable(board_id, db)
     if not label_exists(board_id, label_id, db):
         raise HTTPException(status_code=404, detail="Label not found")
 
@@ -191,6 +269,7 @@ def edit_board_label(board_id: int, label_id: int, label: Label, db: DatabaseHan
 def remove_board_label(board_id: int, label_id: int, db: DatabaseHandler = Depends(get_database_handler)):
     if not board_exists(board_id, db):
         raise HTTPException(status_code=404, detail="Board not found")
+    ensure_board_writable(board_id, db)
     if not label_exists(board_id, label_id, db):
         raise HTTPException(status_code=404, detail="Label not found")
 
@@ -217,6 +296,7 @@ def get_board_lists(board_id: int, db: DatabaseHandler = Depends(get_database_ha
 def add_board_list(board_id: int, board_list: List, db: DatabaseHandler = Depends(get_database_handler)):
     if not board_exists(board_id, db):
         raise HTTPException(status_code=404, detail="Board not found")
+    ensure_board_writable(board_id, db)
 
     result = db.execute("INSERT INTO lists (board_id, title, position) VALUES (%s, %s, %s) RETURNING id",
                         (board_id, board_list.title, board_list.position))
@@ -240,6 +320,7 @@ def get_board_list(board_id: int, list_id: int, db: DatabaseHandler = Depends(ge
 def update_board_list(board_id: int, list_id: int, data: List, db: DatabaseHandler = Depends(get_database_handler)):
     if not board_exists(board_id, db):
         raise HTTPException(status_code=404, detail="Board not found")
+    ensure_board_writable(board_id, db)
     if not list_exists(board_id, list_id, db):
         raise HTTPException(status_code=404, detail="List not found")
 
@@ -254,6 +335,7 @@ def update_board_list(board_id: int, list_id: int, data: List, db: DatabaseHandl
 def remove_board_list(board_id: int, list_id: int, db: DatabaseHandler = Depends(get_database_handler)):
     if not board_exists(board_id, db):
         raise HTTPException(status_code=404, detail="Board not found")
+    ensure_board_writable(board_id, db)
     if not list_exists(board_id, list_id, db):
         raise HTTPException(status_code=404, detail="List not found")
 
@@ -265,6 +347,7 @@ def remove_board_list(board_id: int, list_id: int, db: DatabaseHandler = Depends
 def move_list(board_id: int, list_id: int, data: MoveRequest, db: DatabaseHandler = Depends(get_database_handler)):
     if not board_exists(board_id, db):
         raise HTTPException(status_code=404, detail="Board not found")
+    ensure_board_writable(board_id, db)
     if not list_exists(board_id, list_id, db):
         raise HTTPException(status_code=404, detail="List not found")
 
@@ -334,6 +417,7 @@ def add_board_card(board_id: int, card: Card, db: DatabaseHandler = Depends(get_
 
     if not board_exists(board_id, db):
         raise HTTPException(status_code=404, detail="Board not found")
+    ensure_board_writable(board_id, db)
     if not list_exists(board_id, card.list_id, db):
         raise HTTPException(status_code=404, detail="List not found")
 
@@ -346,6 +430,7 @@ def add_board_card(board_id: int, card: Card, db: DatabaseHandler = Depends(get_
 def edit_board_card(board_id: int, card_id: int, card: Card, db: DatabaseHandler = Depends(get_database_handler)):
     if not board_exists(board_id, db):
         raise HTTPException(status_code=404, detail="Board not found")
+    ensure_board_writable(board_id, db)
     if not card_exists(board_id, card_id, db):
         raise HTTPException(status_code=404, detail="Card not found")
 
@@ -358,6 +443,7 @@ def edit_board_card(board_id: int, card_id: int, card: Card, db: DatabaseHandler
 def remove_board_card(board_id: int, card_id: int, db: DatabaseHandler = Depends(get_database_handler)):
     if not board_exists(board_id, db):
         raise HTTPException(status_code=404, detail="Board not found")
+    ensure_board_writable(board_id, db)
     if not card_exists(board_id, card_id, db):
         raise HTTPException(status_code=404, detail="Card not found")
 
@@ -406,6 +492,7 @@ def get_board_card_assignees(board_id: int, card_id: int, db: DatabaseHandler = 
 def add_board_card_assignee(board_id: int, card_id: int, user_id: int, db: DatabaseHandler = Depends(get_database_handler)):
     if not board_exists(board_id, db):
         raise HTTPException(status_code=404, detail="Board not found")
+    ensure_board_writable(board_id, db)
     if not card_exists(board_id, card_id, db):
         raise HTTPException(status_code=404, detail="Card not found")
     if not user_id or not user_exists(user_id, db):
@@ -420,6 +507,7 @@ def add_board_card_assignee(board_id: int, card_id: int, user_id: int, db: Datab
 def remove_board_card_assignee(board_id: int, card_id: int, user_id: int, db: DatabaseHandler = Depends(get_database_handler)):
     if not board_exists(board_id, db):
         raise HTTPException(status_code=404, detail="Board not found")
+    ensure_board_writable(board_id, db)
     if not card_exists(board_id, card_id, db):
         raise HTTPException(status_code=404, detail="Card not found")
     if not user_exists(user_id, db):
@@ -447,6 +535,7 @@ def get_board_card_labels(board_id: int, card_id: int, db: DatabaseHandler = Dep
 def add_board_card_label(board_id: int, card_id: int, label_id: int, db: DatabaseHandler = Depends(get_database_handler)):
     if not board_exists(board_id, db):
         raise HTTPException(status_code=404, detail="Board not found")
+    ensure_board_writable(board_id, db)
     if not card_exists(board_id, card_id, db):
         raise HTTPException(status_code=404, detail="Card not found")
     if not label_id or not label_exists(board_id, label_id, db):
@@ -460,6 +549,7 @@ def add_board_card_label(board_id: int, card_id: int, label_id: int, db: Databas
 def remove_board_card_label(board_id: int, card_id: int, label_id: int, db: DatabaseHandler = Depends(get_database_handler)):
     if not board_exists(board_id, db):
         raise HTTPException(status_code=404, detail="Board not found")
+    ensure_board_writable(board_id, db)
     if not card_exists(board_id, card_id, db):
         raise HTTPException(status_code=404, detail="Card not found")
     if not label_exists(board_id, label_id, db):
@@ -473,6 +563,7 @@ def remove_board_card_label(board_id: int, card_id: int, label_id: int, db: Data
 def move_card(board_id: int, card_id: int, data: MoveRequest, db: DatabaseHandler = Depends(get_database_handler)):
     if not board_exists(board_id, db):
         raise HTTPException(status_code=404, detail="Board not found")
+    ensure_board_writable(board_id, db)
     if not card_exists(board_id, card_id, db):
         raise HTTPException(status_code=404, detail="Card not found")
     if data.list_id is not None and not list_exists(board_id, data.list_id, db):
@@ -536,8 +627,8 @@ def move_card(board_id: int, card_id: int, data: MoveRequest, db: DatabaseHandle
 # Board
 @router.post("/board")
 def create_board(board: Board, db: DatabaseHandler = Depends(get_database_handler)):
-    result = db.execute("INSERT INTO boards (owner_id, title, description) VALUES (%s, %s, %s) RETURNING id",
-                        (board.owner_id, board.title, board.description))
+    result = db.execute("INSERT INTO boards (owner_id, title, description, board_status) VALUES (%s, %s, %s, %s) RETURNING id",
+                        (board.owner_id, board.title, board.description, board.board_status))
     return {"id": result[0]['id']}
 
 
@@ -578,6 +669,7 @@ def get_board_invites(board_id: int, db: DatabaseHandler = Depends(get_database_
 def delete_board_invite(board_id: int, invite_id: int, db: DatabaseHandler = Depends(get_database_handler)):
     if not board_exists(board_id, db):
         raise HTTPException(status_code=404, detail="Board not found")
+    ensure_board_writable(board_id, db)
     if not invite_exists(board_id, invite_id, db):
         raise HTTPException(status_code=404, detail="Invite not found")
 
@@ -589,6 +681,7 @@ def delete_board_invite(board_id: int, invite_id: int, db: DatabaseHandler = Dep
 def create_board_invite(board_id: int, data: BoardInvite, db: DatabaseHandler = Depends(get_database_handler)):
     if not board_exists(board_id, db):
         raise HTTPException(status_code=404, detail="Board not found")
+    ensure_board_writable(board_id, db)
 
     code = generate_code()
     attempts: int = 0
@@ -695,3 +788,15 @@ def list_exists(board_id: int, list_id: int, db: DatabaseHandler) -> bool:
     if result is None or len(result) == 0:
         return False
     return True
+
+
+def get_board_status(board_id: int, db: DatabaseHandler) -> str:
+    board = db.execute("SELECT * FROM boards WHERE id = %s", board_id)
+    if board is None or len(board) == 0:
+        raise HTTPException(status_code=404, detail="Board not found")
+    return board[0]['board_status']
+
+
+def ensure_board_writable(board_id: int, db: DatabaseHandler):
+    if get_board_status(board_id, db) == "archived":
+        raise HTTPException(status_code=400, detail="Board is archived and read-only")

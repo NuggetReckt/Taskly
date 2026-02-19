@@ -2,7 +2,19 @@ import List, {ListData} from "@/app/components/list";
 import {User, useUser} from "@/app/components/user";
 import Label, {LabelData} from "@/app/components/label";
 import React, {useState} from "react";
-import {createInvite, createLabel, deleteInvite, fetchBoardInvites} from "@/app/http/boards";
+import {
+    createInvite,
+    createLabel,
+    deleteBoard,
+    deleteInvite,
+    deleteLabel,
+    fetchBoardInvites,
+    removeBoardMember,
+    transferBoardOwnership,
+    updateBoard,
+    updateBoardMemberRole,
+    updateBoardStatus
+} from "@/app/http/boards";
 import {addCardAssignee, addCardLabel, createCard, moveCard, removeCardAssignee, removeCardLabel, updateCard} from "@/app/http/cards";
 import {createList, moveList} from "@/app/http/lists";
 import {CardData} from "@/app/components/card";
@@ -19,6 +31,7 @@ export interface BoardViewData {
     id: number;
     title: string;
     description: string;
+    boardStatus: "active" | "archived";
     owner: User;
     members: BoardMemberData[];
     lists: ListData[];
@@ -38,6 +51,7 @@ export default function BoardView(data: BoardViewData) {
     const [isLabelModalOpen, setIsLabelModalOpen] = useState(false);
     const [isCardModalOpen, setIsCardModalOpen] = useState(false);
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+    const [isBoardEditModalOpen, setIsBoardEditModalOpen] = useState(false);
     const [newListTitle, setNewListTitle] = useState("");
     const [newLabelName, setNewLabelName] = useState("");
     const [newLabelColor, setNewLabelColor] = useState("#000000");
@@ -55,6 +69,19 @@ export default function BoardView(data: BoardViewData) {
     const [searchQuery, setSearchQuery] = useState("");
     const [creating, setCreating] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [editBoardTitle, setEditBoardTitle] = useState(data.title);
+    const [editBoardDescription, setEditBoardDescription] = useState(data.description);
+    const [editMembers, setEditMembers] = useState<BoardMemberData[]>(data.members.map(member => ({...member})));
+    const [editLabels, setEditLabels] = useState<LabelData[]>(data.labels.map(label => ({...label})));
+    const [newEditLabelName, setNewEditLabelName] = useState("");
+    const [newEditLabelColor, setNewEditLabelColor] = useState("#000000");
+    const [ownershipTransferUserId, setOwnershipTransferUserId] = useState<number | null>(null);
+    const [boardStatus, setBoardStatus] = useState<"active" | "archived">(data.boardStatus);
+    const [deletingBoard, setDeletingBoard] = useState(false);
+    const [archivingBoard, setArchivingBoard] = useState(false);
+    const [applyingBoardEdits, setApplyingBoardEdits] = useState(false);
+    const [transferringOwnership, setTransferringOwnership] = useState(false);
+    const isReadOnly = boardStatus === "archived";
     const pointerSensor = useSensor(PointerSensor, {
         activationConstraint: {
             distance: 0.01
@@ -84,6 +111,18 @@ export default function BoardView(data: BoardViewData) {
         setIsShareModalOpen(true)
     }
 
+    const handleOpenBoardEditModal = () => {
+        setEditBoardTitle(data.title);
+        setEditBoardDescription(data.description);
+        setEditMembers(data.members.map(member => ({...member})));
+        setEditLabels(data.labels.map(label => ({...label})));
+        setNewEditLabelName("");
+        setNewEditLabelColor("#000000");
+        setOwnershipTransferUserId(null);
+        setError(null);
+        setIsBoardEditModalOpen(true);
+    }
+
     const handlePlusClick = () => {
         if (isPlusModalOpen) {
             setIsPlusModalOpen(false);
@@ -101,6 +140,7 @@ export default function BoardView(data: BoardViewData) {
         setIsLabelSelectorOpen(false);
         setIsAssigneeSelectorOpen(false);
         setIsShareModalOpen(false);
+        setIsBoardEditModalOpen(false);
         setError(null);
     };
 
@@ -131,6 +171,10 @@ export default function BoardView(data: BoardViewData) {
 
     const onSaveCard = async () => {
         if (!selectedCard) return;
+        if (isReadOnly) {
+            setError("This board is archived and read-only.");
+            return;
+        }
         setCreating(true);
         try {
             await updateCard(data.id, selectedCard.id, editingCardTitle, editingCardDesc, selectedCard.pos);
@@ -145,6 +189,10 @@ export default function BoardView(data: BoardViewData) {
 
     const onAddLabelToCard = async (label: LabelData) => {
         if (!selectedCard || !label.id) return;
+        if (isReadOnly) {
+            setError("This board is archived and read-only.");
+            return;
+        }
         try {
             await addCardLabel(data.id, selectedCard.id, label.id);
             const updatedCard = {...selectedCard, labels: [...selectedCard.labels, label]};
@@ -157,6 +205,10 @@ export default function BoardView(data: BoardViewData) {
 
     const onRemoveLabelFromCard = async (labelId: number) => {
         if (!selectedCard) return;
+        if (isReadOnly) {
+            setError("This board is archived and read-only.");
+            return;
+        }
         try {
             await removeCardLabel(data.id, selectedCard.id, labelId);
             const updatedCard = {...selectedCard, labels: selectedCard.labels.filter(l => l.id !== labelId)};
@@ -168,6 +220,10 @@ export default function BoardView(data: BoardViewData) {
 
     const onAddAssigneeToCard = async (member: BoardMemberData) => {
         if (!selectedCard) return;
+        if (isReadOnly) {
+            setError("This board is archived and read-only.");
+            return;
+        }
         try {
             await addCardAssignee(data.id, selectedCard.id, member.user.id);
             const updatedCard = {...selectedCard, assignees: [...selectedCard.assignees, member]};
@@ -180,6 +236,10 @@ export default function BoardView(data: BoardViewData) {
 
     const onRemoveAssigneeFromCard = async (userId: number) => {
         if (!selectedCard) return;
+        if (isReadOnly) {
+            setError("This board is archived and read-only.");
+            return;
+        }
         try {
             await removeCardAssignee(data.id, selectedCard.id, userId);
             const updatedCard = {...selectedCard, assignees: selectedCard.assignees.filter(a => a.user.id !== userId)};
@@ -192,6 +252,10 @@ export default function BoardView(data: BoardViewData) {
     const onCreateLabel = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!user || !newLabelName.trim()) return;
+        if (isReadOnly) {
+            setError("This board is archived and read-only.");
+            return;
+        }
 
         setCreating(true);
         setError(null);
@@ -210,6 +274,10 @@ export default function BoardView(data: BoardViewData) {
     const onCreateCard = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!user || !newCardTitle.trim() || newCardListId === null) return;
+        if (isReadOnly) {
+            setError("This board is archived and read-only.");
+            return;
+        }
 
         setCreating(true);
         setError(null);
@@ -230,6 +298,10 @@ export default function BoardView(data: BoardViewData) {
     const onCreateList = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!user || !newListTitle.trim()) return;
+        if (isReadOnly) {
+            setError("This board is archived and read-only.");
+            return;
+        }
 
         setCreating(true);
         setError(null);
@@ -251,6 +323,10 @@ export default function BoardView(data: BoardViewData) {
 
     const onCreateInvite = async () => {
         if (!user || inviteCreateRole === "" || areAllInviteRolesUsed) return;
+        if (isReadOnly) {
+            setError("This board is archived and read-only.");
+            return;
+        }
 
         try {
             const result = await createInvite(data.id, inviteCreateRole);
@@ -270,6 +346,10 @@ export default function BoardView(data: BoardViewData) {
 
     const onDeleteInvite = async (inviteId: number) => {
         if (!user) return;
+        if (isReadOnly) {
+            setError("This board is archived and read-only.");
+            return;
+        }
 
         try {
             const result = await deleteInvite(data.id, inviteId);
@@ -290,6 +370,7 @@ export default function BoardView(data: BoardViewData) {
 
 
     async function handleDragEnd(event: DragEndEvent) {
+        if (isReadOnly) return;
         const {active, over} = event;
         if (!over) return;
         const activeData: any = active.data.current;
@@ -337,10 +418,146 @@ export default function BoardView(data: BoardViewData) {
         return items;
     }
 
+    const editableMembers = editMembers.filter(member => member.role !== "owner");
+    const ownershipCandidates = editMembers.filter(member => member.user.id !== data.owner.id);
+
+    const handleBoardMemberRoleChange = (userId: number, role: string) => {
+        setEditMembers(prev => prev.map(member => member.user.id === userId ? {...member, role} : member));
+    };
+
+    const handleRemoveBoardMemberFromDraft = (userId: number) => {
+        setEditMembers(prev => prev.filter(member => member.user.id !== userId));
+    };
+
+    const handleAddBoardLabelToDraft = () => {
+        if (!newEditLabelName.trim()) return;
+        setEditLabels(prev => [...prev, {name: newEditLabelName.trim(), color: newEditLabelColor}]);
+        setNewEditLabelName("");
+        setNewEditLabelColor("#000000");
+    };
+
+    const handleRemoveBoardLabelFromDraft = (index: number) => {
+        setEditLabels(prev => prev.filter((_, labelIndex) => labelIndex !== index));
+    };
+
+    const onApplyBoardChanges = async () => {
+        if (!editBoardTitle.trim()) {
+            setError("Board title cannot be empty.");
+            return;
+        }
+        if (isReadOnly) {
+            setError("This board is archived and read-only.");
+            return;
+        }
+
+        setApplyingBoardEdits(true);
+        setError(null);
+        try {
+            await updateBoard(data.id, editBoardTitle.trim(), editBoardDescription.trim());
+
+            const originalMembers = data.members.filter(member => member.role !== "owner");
+            for (const member of editableMembers) {
+                const initialMember = originalMembers.find(initial => initial.user.id === member.user.id);
+                if (!initialMember) continue;
+                if (initialMember.role !== member.role) {
+                    await updateBoardMemberRole(data.id, member.user.id, member.role);
+                }
+            }
+            for (const initialMember of originalMembers) {
+                const stillPresent = editableMembers.some(member => member.user.id === initialMember.user.id);
+                if (!stillPresent) {
+                    await removeBoardMember(data.id, initialMember.user.id);
+                }
+            }
+
+            const originalPersistedLabels = data.labels.filter(label => label.id);
+            const editedPersistedLabels = editLabels.filter(label => label.id);
+            const newLabels = editLabels.filter(label => !label.id);
+
+            for (const label of originalPersistedLabels) {
+                const stillPresent = editedPersistedLabels.some(edited => edited.id === label.id);
+                if (!stillPresent && label.id) {
+                    await deleteLabel(data.id, label.id);
+                }
+            }
+            for (const label of newLabels) {
+                await createLabel(data.id, label.name, label.color);
+            }
+
+            window.location.reload();
+        } catch (err: any) {
+            setError(err?.response?.data?.detail ?? err?.message ?? "Failed to apply board changes");
+        } finally {
+            setApplyingBoardEdits(false);
+        }
+    };
+
+    const onTransferOwnership = async () => {
+        if (ownershipTransferUserId === null) {
+            setError("Select a member to transfer ownership.");
+            return;
+        }
+        if (isReadOnly) {
+            setError("This board is archived and read-only.");
+            return;
+        }
+
+        const confirmed = window.confirm("Transfer ownership to the selected member?");
+        if (!confirmed) return;
+
+        setTransferringOwnership(true);
+        setError(null);
+        try {
+            await transferBoardOwnership(data.id, ownershipTransferUserId);
+            window.location.reload();
+        } catch (err: any) {
+            setError(err?.response?.data?.detail ?? err?.message ?? "Failed to transfer ownership");
+        } finally {
+            setTransferringOwnership(false);
+        }
+    };
+
+    const onArchiveBoard = async () => {
+        if (isReadOnly) {
+            setError("This board is already archived.");
+            return;
+        }
+        const confirmed = window.confirm("Archive this board? It will become read-only.");
+        if (!confirmed) return;
+
+        setArchivingBoard(true);
+        setError(null);
+        try {
+            await updateBoardStatus(data.id, "archived");
+            setBoardStatus("archived");
+            window.location.reload();
+        } catch (err: any) {
+            setError(err?.response?.data?.detail ?? err?.message ?? "Failed to archive board");
+        } finally {
+            setArchivingBoard(false);
+        }
+    };
+
+    const onDeleteBoard = async () => {
+        const confirmed = window.confirm("Delete this board permanently?");
+        if (!confirmed) return;
+
+        setDeletingBoard(true);
+        setError(null);
+        try {
+            await deleteBoard(data.id);
+            window.location.href = "/app";
+        } catch (err: any) {
+            setError(err?.response?.data?.detail ?? err?.message ?? "Failed to delete board");
+        } finally {
+            setDeletingBoard(false);
+        }
+    };
+
     const listItems = filteredLists.sort((a, b) => a.pos - b.pos).map(list =>
         <li key={"list_" + list.id}>
             <List id={list.id} boardId={list.boardId} pos={list.pos} title={list.title} cards={list.cards}
-                  onCardClick={handleCardClick}/>
+                  onCardClick={handleCardClick} readOnly={isReadOnly}/>
         </li>
     );
 
@@ -349,7 +566,7 @@ export default function BoardView(data: BoardViewData) {
         createListLabel = "Create your first list";
     listItems.push(
         <li key={"list_create"} className="list-wrapper create-first-list">
-            <button className="card-add-btn" onClick={handleCreateListClick}>
+            <button className="card-add-btn" onClick={handleCreateListClick} disabled={isReadOnly}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                      strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-plus size-4">
                     <path d="M5 12h14"></path>
@@ -556,8 +773,175 @@ export default function BoardView(data: BoardViewData) {
                     </div>
                 </div>
             )}
+            {isBoardEditModalOpen && (
+                <div className="modal-overlay" onClick={handleCloseModal}>
+                    <div className="modal-content board-edit-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="auth-card board-edit-card">
+                            <div className="modal-header">
+                                <h1 className="auth-title">Edit Board</h1>
+                                <button className="modal-close" onClick={handleCloseModal}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                                         strokeLinejoin="round" className="lucide lucide-x size-5">
+                                        <path d="M18 6 6 18"></path>
+                                        <path d="m6 6 12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div className="board-edit-sections">
+                                <section className="board-edit-section">
+                                    <h2>Board Details</h2>
+                                    <label className="auth-field">
+                                        <span className="auth-label">Board Name</span>
+                                        <input
+                                            className="auth-input"
+                                            type="text"
+                                            value={editBoardTitle}
+                                            onChange={(e) => setEditBoardTitle(e.target.value)}
+                                            disabled={isReadOnly}
+                                        />
+                                    </label>
+                                    <label className="auth-field">
+                                        <span className="auth-label">Description</span>
+                                        <textarea
+                                            className="auth-input"
+                                            value={editBoardDescription}
+                                            onChange={(e) => setEditBoardDescription(e.target.value)}
+                                            disabled={isReadOnly}
+                                        />
+                                    </label>
+                                </section>
+
+                                <div className={"flex justify-between gap-4"}>
+                                    <section className="board-edit-section board-edit-section-members">
+                                        <h2>Members</h2>
+                                        <div className="board-edit-list">
+                                            {editableMembers.length === 0 && <p className="auth-hint">No members.</p>}
+                                            {editableMembers.map(member => (
+                                                <div key={member.user.id} className="board-edit-row">
+                                                    <MemberMedal member={member.user} size={"m"}/>
+                                                    <div className="board-edit-row-actions">
+                                                        <select
+                                                            className="auth-input"
+                                                            value={member.role}
+                                                            onChange={(e) => handleBoardMemberRoleChange(member.user.id, e.target.value)}
+                                                            disabled={isReadOnly}
+                                                        >
+                                                            <option value="admin">Administrator</option>
+                                                            <option value="editor">Editor</option>
+                                                            <option value="viewer">Viewer</option>
+                                                        </select>
+                                                        <button className="remove-btn board-edit-remove-btn"
+                                                                onClick={() => handleRemoveBoardMemberFromDraft(member.user.id)}
+                                                                disabled={isReadOnly}>
+                                                            -
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </section>
+
+                                    <section className="board-edit-section board-edit-section-labels">
+                                        <h2>Labels</h2>
+                                        <div className="board-edit-list">
+                                            {editLabels.length === 0 && <p className="auth-hint">No labels.</p>}
+                                            {editLabels.map((label, index) => (
+                                                <div key={`edit_label_${label.id ?? "new"}_${index}`} className="board-edit-row">
+                                                    <Label name={label.name} color={label.color}/>
+                                                    <button className="remove-btn board-edit-remove-btn"
+                                                            onClick={() => handleRemoveBoardLabelFromDraft(index)}
+                                                            disabled={isReadOnly}>
+                                                        -
+                                                    </button>
+                                                </div>
+                                            ))}
+                                            <div className="board-edit-add-label">
+                                                <input
+                                                    className="auth-input"
+                                                    type="text"
+                                                    placeholder="New label name"
+                                                    value={newEditLabelName}
+                                                    onChange={(e) => setNewEditLabelName(e.target.value)}
+                                                    disabled={isReadOnly}
+                                                />
+                                                <input
+                                                    className="auth-input"
+                                                    type="color"
+                                                    value={newEditLabelColor}
+                                                    onChange={(e) => setNewEditLabelColor(e.target.value)}
+                                                    disabled={isReadOnly}
+                                                />
+                                                <button className="auth-button" onClick={handleAddBoardLabelToDraft}
+                                                        disabled={isReadOnly || !newEditLabelName.trim()}>
+                                                    Add Label
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+
+                                <section className="board-edit-section danger-zone">
+                                    <h2>Danger Zone</h2>
+                                    <div className="danger-row">
+                                        <div>
+                                            <h3>Transfer Ownership</h3>
+                                            <p>Transfer this board to another member.</p>
+                                        </div>
+                                        <div className="danger-actions">
+                                            <select
+                                                className="auth-input"
+                                                value={ownershipTransferUserId ?? ""}
+                                                onChange={(e) => setOwnershipTransferUserId(Number(e.target.value))}
+                                                disabled={isReadOnly || ownershipCandidates.length === 0 || transferringOwnership}
+                                            >
+                                                <option value="" disabled>Select member</option>
+                                                {ownershipCandidates.map(member => (
+                                                    <option key={`owner_candidate_${member.user.id}`} value={member.user.id}>
+                                                        {member.user.firstName} {member.user.lastName}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            <button className="auth-button btn-danger" onClick={onTransferOwnership}
+                                                    disabled={isReadOnly || ownershipTransferUserId === null || transferringOwnership}>
+                                                {transferringOwnership ? "Transferring..." : "Transfer Ownership"}
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="danger-row">
+                                        <div>
+                                            <h3>Archive Board</h3>
+                                            <p>Archived boards are read-only.</p>
+                                        </div>
+                                        <button className="auth-button btn-danger" onClick={onArchiveBoard}
+                                                disabled={isReadOnly || archivingBoard}>
+                                            {archivingBoard ? "Archiving..." : "Archive Board"}
+                                        </button>
+                                    </div>
+                                    <div className="danger-row">
+                                        <div>
+                                            <h3>Delete Board</h3>
+                                            <p>Permanently delete this board and all its data.</p>
+                                        </div>
+                                        <button className="auth-button btn-danger" onClick={onDeleteBoard} disabled={deletingBoard}>
+                                            {deletingBoard ? "Deleting..." : "Delete Board"}
+                                        </button>
+                                    </div>
+                                </section>
+                            </div>
+                            <div className="board-edit-footer">
+                                {error && <p className="auth-error">{error}</p>}
+                                <button className="auth-button" onClick={onApplyBoardChanges}
+                                        disabled={isReadOnly || applyingBoardEdits || !editBoardTitle.trim()}>
+                                    {applyingBoardEdits ? "Applying..." : "Apply Changes"}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
             <div className="board-header">
-                <h1>{data.title}</h1>
+                <h1>{data.title}{isReadOnly ? " (Archived)" : ""}</h1>
                 <div className="header-tools">
                     <div className="tool-searchbar">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -569,7 +953,7 @@ export default function BoardView(data: BoardViewData) {
                         <input type="text" data-slot="input" placeholder="Search cards..." value={searchQuery}
                                onChange={handleSearchChange}/>
                     </div>
-                    <button data-slot="button" className="tool-button" onClick={handlePlusClick}>
+                    <button data-slot="button" className="tool-button" onClick={handlePlusClick} disabled={isReadOnly}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                              strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-plus size-5">
                             <path d="M5 12h14"></path>
@@ -605,7 +989,7 @@ export default function BoardView(data: BoardViewData) {
                                 d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                         </svg>
                     </a>
-                    <button data-slot="button" className="tool-button" onClick={handleShareClick}>
+                    <button data-slot="button" className="tool-button" onClick={handleShareClick} disabled={isReadOnly}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 16 16"
                              className="lucide lucide-house size-5">
                             <path fill="currentcolor" fillRule="evenodd"
@@ -613,7 +997,7 @@ export default function BoardView(data: BoardViewData) {
                                   clipRule="evenodd"></path>
                         </svg>
                     </button>
-                    <button data-slot="button" className="tool-button">
+                    <button data-slot="button" className="tool-button" onClick={handleOpenBoardEditModal}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                              className="lucide lucide-settings size-5">
@@ -664,12 +1048,17 @@ export default function BoardView(data: BoardViewData) {
                                     {selectedCard.labels.map(label => (
                                         <div key={label.id} className="label-item-wrapper">
                                             <Label name={label.name} color={label.color}/>
-                                            <button className="remove-btn" onClick={() => label.id && onRemoveLabelFromCard(label.id)}>-
+                                            <button className="remove-btn" onClick={() => label.id && onRemoveLabelFromCard(label.id)}
+                                                    disabled={isReadOnly}>
+                                                -
                                             </button>
                                         </div>
                                     ))}
                                     <div className="relative">
-                                        <button className="add-btn" onClick={() => setIsLabelSelectorOpen(!isLabelSelectorOpen)}>+</button>
+                                        <button className="add-btn" onClick={() => setIsLabelSelectorOpen(!isLabelSelectorOpen)}
+                                                disabled={isReadOnly}>
+                                            +
+                                        </button>
                                         {isLabelSelectorOpen && (
                                             <div className="selector-dropdown">
                                                 {data.labels.filter(l => !selectedCard.labels.find(sl => sl.id === l.id)).map(label => (
@@ -689,12 +1078,16 @@ export default function BoardView(data: BoardViewData) {
                                     {selectedCard.assignees.map(assignee => (
                                         <div key={assignee.user.id} className="assignee-item-wrapper">
                                             <MemberMedal member={assignee.user}/>
-                                            <button className="remove-btn" onClick={() => onRemoveAssigneeFromCard(assignee.user.id)}>-
+                                            <button className="remove-btn" onClick={() => onRemoveAssigneeFromCard(assignee.user.id)}
+                                                    disabled={isReadOnly}>
+                                                -
                                             </button>
                                         </div>
                                     ))}
                                     <div className="relative">
-                                        <button className="add-btn" onClick={() => setIsAssigneeSelectorOpen(!isAssigneeSelectorOpen)}>+
+                                        <button className="add-btn" onClick={() => setIsAssigneeSelectorOpen(!isAssigneeSelectorOpen)}
+                                                disabled={isReadOnly}>
+                                            +
                                         </button>
                                         {isAssigneeSelectorOpen && (
                                             <div className="selector-dropdown">
@@ -728,7 +1121,7 @@ export default function BoardView(data: BoardViewData) {
                         </div>
                         <div className="modal-footer">
                             {error && <p className="auth-error">{error}</p>}
-                            <button className="auth-button" onClick={onSaveCard} disabled={creating}>
+                            <button className="auth-button" onClick={onSaveCard} disabled={creating || isReadOnly}>
                                 {creating ? "Saving..." : "Save Changes"}
                             </button>
                         </div>
