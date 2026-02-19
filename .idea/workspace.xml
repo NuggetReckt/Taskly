@@ -4,22 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc50de9-dfc5-44f4-abd8-4356aa24684d" name="Changes" comment="feat(App): Added loading icon&#10;feat(Board): Added limit to prevent user to create an infinite amount of invites.">
+    <list default="true" id="4cc50de9-dfc5-44f4-abd8-4356aa24684d" name="Changes" comment="feat(Board): Added board settings modal for editing board settings (name, description, manage members, labels, ...)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/resources/database_scheme.sql" beforeDir="false" afterPath="$PROJECT_DIR$/backend/resources/database_scheme.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/routes/BoardsRoutes.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/routes/BoardsRoutes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/routes/UsersRoutes.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/routes/UsersRoutes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/routes/baseModels/BoardsBaseModels.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/routes/baseModels/BoardsBaseModels.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/tests/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/tests/conftest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/tests/test_boards_routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/tests/test_boards_routes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/app/board/board.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/app/board/board.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/app/board/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/app/board/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/app/components/boardView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/components/boardView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/components/inviteCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/components/inviteCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/components/list.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/components/list.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/globals.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/http/boards.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/http/boards.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -179,7 +166,7 @@
       <recent name="C:\Users\corto\delivery\PRO\Taskly\frontend\app\app" />
     </key>
   </component>
-  <component name="RunManager" selected="Docker.Run (BACK+DB)">
+  <component name="RunManager" selected="npm.[FRONT] Dev">
     <configuration name="Backend" type="ShConfigurationType">
       <option name="SCRIPT_TEXT" value="" />
       <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
@@ -244,7 +231,9 @@
       <workItem from="1771235089833" duration="29941000" />
       <workItem from="1771321978553" duration="6076000" />
       <workItem from="1771335381870" duration="2701000" />
-      <workItem from="1771516126904" duration="6986000" />
+      <workItem from="1771516126904" duration="7292000" />
+      <workItem from="1771536300107" duration="1000000" />
+      <workItem from="1771537322622" duration="7603000" />
     </task>
     <task id="LOCAL-00001" summary="feat(Server): Added FastAPI server &amp; basic routes&#10;feat(Server): Added Database connector&#10;feat(Deployment): Added docker compose yaml file for easier deployment">
       <option name="closed" value="true" />
@@ -398,7 +387,15 @@
       <option name="project" value="LOCAL" />
       <updated>1771338019512</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="feat(Board): Added board settings modal for editing board settings (name, description, manage members, labels, ...)">
+      <option name="closed" value="true" />
+      <created>1771523670106</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1771523670106</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -425,7 +422,8 @@
     <MESSAGE value="feat(Board): Added Drag &amp; drop for Cards AND lists" />
     <MESSAGE value="feat(Board): Added board sharing: Users can now create invite links for other users to join the board&#10;feat(API): Added basic board retrieve endpoint without details (labels, members, lists, cards, ...)&#10;fix(App): Fixed different height between member and owning boards in app page.&#10;fix(DB): Fixed bad unique for board invites" />
     <MESSAGE value="feat(App): Added loading icon&#10;feat(Board): Added limit to prevent user to create an infinite amount of invites." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(App): Added loading icon&#10;feat(Board): Added limit to prevent user to create an infinite amount of invites." />
+    <MESSAGE value="feat(Board): Added board settings modal for editing board settings (name, description, manage members, labels, ...)" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(Board): Added board settings modal for editing board settings (name, description, manage members, labels, ...)" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Taskly$Unnamed.coverage" NAME="Unnamed Coverage Results" MODIFIED="1764860605274" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />

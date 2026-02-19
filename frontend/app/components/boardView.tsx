@@ -1,7 +1,7 @@
 import List, {ListData} from "@/app/components/list";
 import {User, useUser} from "@/app/components/user";
 import Label, {LabelData} from "@/app/components/label";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     createInvite,
     createLabel,
@@ -45,6 +45,7 @@ export default function BoardView(data: BoardViewData) {
         {value: "admin", label: "Administrator"}
     ];
     const user = useUser();
+    const [currentMember, setCurrentMember] = useState<BoardMemberData | null>(null);
     const [currentListPos, setCurrentListPos] = useState(data.lists.length);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isPlusModalOpen, setIsPlusModalOpen] = useState(false);
@@ -98,11 +99,29 @@ export default function BoardView(data: BoardViewData) {
         pointerSensor
     )
 
+    useEffect(() => {
+        if (data.owner.id === user?.id) {
+            setCurrentMember({user: user, role: "owner"});
+        } else {
+            setCurrentMember(data.members.filter(m => m.user.id === user?.id)[0]);
+        }
+    }, [user]);
+
     const handleCreateListClick = () => {
+        if (currentMember != null && currentMember.role === "viewer") {
+            setError("You do not have the permission!");
+            return;
+        }
+
         setIsModalOpen(true);
     };
 
     const handleShareClick = async () => {
+        if (currentMember != null && currentMember.role === "viewer") {
+            setError("You do not have the permission!");
+            return;
+        }
+
         const result = await fetchBoardInvites(data.id);
         setInvites(result);
         const usedRoles = new Set(result.map(invite => invite.role.toLowerCase()));
@@ -112,6 +131,11 @@ export default function BoardView(data: BoardViewData) {
     }
 
     const handleOpenBoardEditModal = () => {
+        if (currentMember != null && currentMember.role === "viewer") {
+            setError("You do not have the permission!");
+            return;
+        }
+
         setEditBoardTitle(data.title);
         setEditBoardDescription(data.description);
         setEditMembers(data.members.map(member => ({...member})));
@@ -124,6 +148,10 @@ export default function BoardView(data: BoardViewData) {
     }
 
     const handlePlusClick = () => {
+        if (currentMember != null && currentMember.role === "viewer") {
+            setError("You do not have the permission!");
+            return;
+        }
         if (isPlusModalOpen) {
             setIsPlusModalOpen(false);
         } else {
@@ -175,6 +203,11 @@ export default function BoardView(data: BoardViewData) {
             setError("This board is archived and read-only.");
             return;
         }
+        if (currentMember != null && currentMember.role === "viewer") {
+            setError("You do not have the permission!");
+            return;
+        }
+
         setCreating(true);
         try {
             await updateCard(data.id, selectedCard.id, editingCardTitle, editingCardDesc, selectedCard.pos);
@@ -193,6 +226,11 @@ export default function BoardView(data: BoardViewData) {
             setError("This board is archived and read-only.");
             return;
         }
+        if (currentMember != null && currentMember.role === "viewer") {
+            setError("You do not have the permission!");
+            return;
+        }
+
         try {
             await addCardLabel(data.id, selectedCard.id, label.id);
             const updatedCard = {...selectedCard, labels: [...selectedCard.labels, label]};
@@ -209,6 +247,11 @@ export default function BoardView(data: BoardViewData) {
             setError("This board is archived and read-only.");
             return;
         }
+        if (currentMember != null && currentMember.role === "viewer") {
+            setError("You do not have the permission!");
+            return;
+        }
+
         try {
             await removeCardLabel(data.id, selectedCard.id, labelId);
             const updatedCard = {...selectedCard, labels: selectedCard.labels.filter(l => l.id !== labelId)};
@@ -224,6 +267,11 @@ export default function BoardView(data: BoardViewData) {
             setError("This board is archived and read-only.");
             return;
         }
+        if (currentMember != null && currentMember.role === "viewer") {
+            setError("You do not have the permission!");
+            return;
+        }
+
         try {
             await addCardAssignee(data.id, selectedCard.id, member.user.id);
             const updatedCard = {...selectedCard, assignees: [...selectedCard.assignees, member]};
@@ -240,6 +288,11 @@ export default function BoardView(data: BoardViewData) {
             setError("This board is archived and read-only.");
             return;
         }
+        if (currentMember != null && currentMember.role === "viewer") {
+            setError("You do not have the permission!");
+            return;
+        }
+
         try {
             await removeCardAssignee(data.id, selectedCard.id, userId);
             const updatedCard = {...selectedCard, assignees: selectedCard.assignees.filter(a => a.user.id !== userId)};
@@ -254,6 +307,10 @@ export default function BoardView(data: BoardViewData) {
         if (!user || !newLabelName.trim()) return;
         if (isReadOnly) {
             setError("This board is archived and read-only.");
+            return;
+        }
+        if (currentMember != null && currentMember.role === "viewer") {
+            setError("You do not have the permission!");
             return;
         }
 
@@ -278,6 +335,10 @@ export default function BoardView(data: BoardViewData) {
             setError("This board is archived and read-only.");
             return;
         }
+        if (currentMember != null && currentMember.role === "viewer") {
+            setError("You do not have the permission!");
+            return;
+        }
 
         setCreating(true);
         setError(null);
@@ -300,6 +361,10 @@ export default function BoardView(data: BoardViewData) {
         if (!user || !newListTitle.trim()) return;
         if (isReadOnly) {
             setError("This board is archived and read-only.");
+            return;
+        }
+        if (currentMember != null && currentMember.role === "viewer") {
+            setError("You do not have the permission!");
             return;
         }
 
@@ -327,6 +392,10 @@ export default function BoardView(data: BoardViewData) {
             setError("This board is archived and read-only.");
             return;
         }
+        if (currentMember != null && (currentMember.role === "viewer" || currentMember.role === "editor")) {
+            setError("You do not have the permission!");
+            return;
+        }
 
         try {
             const result = await createInvite(data.id, inviteCreateRole);
@@ -350,6 +419,10 @@ export default function BoardView(data: BoardViewData) {
             setError("This board is archived and read-only.");
             return;
         }
+        if (currentMember != null && currentMember.role === "viewer") {
+            setError("You do not have the permission!");
+            return;
+        }
 
         try {
             const result = await deleteInvite(data.id, inviteId);
@@ -371,6 +444,8 @@ export default function BoardView(data: BoardViewData) {
 
     async function handleDragEnd(event: DragEndEvent) {
         if (isReadOnly) return;
+        if (currentMember != null && currentMember.role === "viewer") return;
+
         const {active, over} = event;
         if (!over) return;
         const activeData: any = active.data.current;
@@ -422,14 +497,34 @@ export default function BoardView(data: BoardViewData) {
     const ownershipCandidates = editMembers.filter(member => member.user.id !== data.owner.id);
 
     const handleBoardMemberRoleChange = (userId: number, role: string) => {
+        if (currentMember != null && (currentMember.role === "viewer" || currentMember.role === "editor")) {
+            setError("You do not have the permission!");
+            return;
+        }
+
+        if (currentMember?.role != "owner" && role === "admin") {
+            setError("You do not have the permission!");
+            return;
+        }
+
         setEditMembers(prev => prev.map(member => member.user.id === userId ? {...member, role} : member));
     };
 
     const handleRemoveBoardMemberFromDraft = (userId: number) => {
+        if (currentMember != null && (currentMember.role === "viewer" || currentMember.role === "editor")) {
+            setError("You do not have the permission!");
+            return;
+        }
+
         setEditMembers(prev => prev.filter(member => member.user.id !== userId));
     };
 
     const handleAddBoardLabelToDraft = () => {
+        if (currentMember != null && (currentMember.role === "viewer" || currentMember.role === "editor")) {
+            setError("You do not have the permission!");
+            return;
+        }
+
         if (!newEditLabelName.trim()) return;
         setEditLabels(prev => [...prev, {name: newEditLabelName.trim(), color: newEditLabelColor}]);
         setNewEditLabelName("");
@@ -437,6 +532,11 @@ export default function BoardView(data: BoardViewData) {
     };
 
     const handleRemoveBoardLabelFromDraft = (index: number) => {
+        if (currentMember != null && (currentMember.role === "viewer" || currentMember.role === "editor")) {
+            setError("You do not have the permission!");
+            return;
+        }
+
         setEditLabels(prev => prev.filter((_, labelIndex) => labelIndex !== index));
     };
 
@@ -449,6 +549,10 @@ export default function BoardView(data: BoardViewData) {
             setError("This board is archived and read-only.");
             return;
         }
+        if (currentMember != null && (currentMember.role === "viewer" || currentMember.role === "editor")) {
+            setError("You do not have the permission!");
+            return;
+        }
 
         setApplyingBoardEdits(true);
         setError(null);
@@ -456,11 +560,11 @@ export default function BoardView(data: BoardViewData) {
             await updateBoard(data.id, editBoardTitle.trim(), editBoardDescription.trim());
 
             const originalMembers = data.members.filter(member => member.role !== "owner");
-            for (const member of editableMembers) {
-                const initialMember = originalMembers.find(initial => initial.user.id === member.user.id);
+            for (const m of editableMembers) {
+                const initialMember = originalMembers.find(initial => initial.user.id === m.user.id);
                 if (!initialMember) continue;
-                if (initialMember.role !== member.role) {
-                    await updateBoardMemberRole(data.id, member.user.id, member.role);
+                if (initialMember.role !== m.role) {
+                    await updateBoardMemberRole(data.id, m.user.id, m.role);
                 }
             }
             for (const initialMember of originalMembers) {
@@ -494,15 +598,19 @@ export default function BoardView(data: BoardViewData) {
 
     const onTransferOwnership = async () => {
         if (ownershipTransferUserId === null) {
-            setError("Select a member to transfer ownership.");
+            setError("Select a currentMember to transfer ownership.");
             return;
         }
         if (isReadOnly) {
             setError("This board is archived and read-only.");
             return;
         }
+        if (currentMember != null && currentMember.role != "owner") {
+            setError("You do not have the permission!");
+            return;
+        }
 
-        const confirmed = window.confirm("Transfer ownership to the selected member?");
+        const confirmed = window.confirm("Transfer ownership to the selected currentMember?");
         if (!confirmed) return;
 
         setTransferringOwnership(true);
@@ -522,6 +630,10 @@ export default function BoardView(data: BoardViewData) {
             setError("This board is already archived.");
             return;
         }
+        if (currentMember != null && currentMember.role != "owner") {
+            setError("You do not have the permission!");
+            return;
+        }
         const confirmed = window.confirm("Archive this board? It will become read-only.");
         if (!confirmed) return;
 
@@ -539,6 +651,11 @@ export default function BoardView(data: BoardViewData) {
     };
 
     const onDeleteBoard = async () => {
+        if (currentMember != null && currentMember.role != "owner") {
+            setError("You do not have the permission!");
+            return;
+        }
+
         const confirmed = window.confirm("Delete this board permanently?");
         if (!confirmed) return;
 
@@ -798,7 +915,7 @@ export default function BoardView(data: BoardViewData) {
                                             type="text"
                                             value={editBoardTitle}
                                             onChange={(e) => setEditBoardTitle(e.target.value)}
-                                            disabled={isReadOnly}
+                                            disabled={isReadOnly || currentMember?.role === "viewer" || currentMember?.role === "editor"}
                                         />
                                     </label>
                                     <label className="auth-field">
@@ -807,7 +924,7 @@ export default function BoardView(data: BoardViewData) {
                                             className="auth-input"
                                             value={editBoardDescription}
                                             onChange={(e) => setEditBoardDescription(e.target.value)}
-                                            disabled={isReadOnly}
+                                            disabled={isReadOnly || currentMember?.role === "viewer" || currentMember?.role === "editor"}
                                         />
                                     </label>
                                 </section>
@@ -825,7 +942,7 @@ export default function BoardView(data: BoardViewData) {
                                                             className="auth-input"
                                                             value={member.role}
                                                             onChange={(e) => handleBoardMemberRoleChange(member.user.id, e.target.value)}
-                                                            disabled={isReadOnly}
+                                                            disabled={isReadOnly || currentMember?.role === "viewer" || currentMember?.role === "editor"}
                                                         >
                                                             <option value="admin">Administrator</option>
                                                             <option value="editor">Editor</option>
@@ -833,7 +950,7 @@ export default function BoardView(data: BoardViewData) {
                                                         </select>
                                                         <button className="remove-btn board-edit-remove-btn"
                                                                 onClick={() => handleRemoveBoardMemberFromDraft(member.user.id)}
-                                                                disabled={isReadOnly}>
+                                                                disabled={isReadOnly || currentMember?.role === "viewer" || currentMember?.role === "editor"}>
                                                             -
                                                         </button>
                                                     </div>
@@ -851,7 +968,7 @@ export default function BoardView(data: BoardViewData) {
                                                     <Label name={label.name} color={label.color}/>
                                                     <button className="remove-btn board-edit-remove-btn"
                                                             onClick={() => handleRemoveBoardLabelFromDraft(index)}
-                                                            disabled={isReadOnly}>
+                                                            disabled={isReadOnly || currentMember?.role === "viewer" || currentMember?.role === "editor"}>
                                                         -
                                                     </button>
                                                 </div>
@@ -863,17 +980,17 @@ export default function BoardView(data: BoardViewData) {
                                                     placeholder="New label name"
                                                     value={newEditLabelName}
                                                     onChange={(e) => setNewEditLabelName(e.target.value)}
-                                                    disabled={isReadOnly}
+                                                    disabled={isReadOnly || currentMember?.role === "viewer" || currentMember?.role === "editor"}
                                                 />
                                                 <input
                                                     className="auth-input"
                                                     type="color"
                                                     value={newEditLabelColor}
                                                     onChange={(e) => setNewEditLabelColor(e.target.value)}
-                                                    disabled={isReadOnly}
+                                                    disabled={isReadOnly || currentMember?.role === "viewer" || currentMember?.role === "editor"}
                                                 />
                                                 <button className="auth-button" onClick={handleAddBoardLabelToDraft}
-                                                        disabled={isReadOnly || !newEditLabelName.trim()}>
+                                                        disabled={isReadOnly || !newEditLabelName.trim() || currentMember?.role === "viewer" || currentMember?.role === "editor"}>
                                                     Add Label
                                                 </button>
                                             </div>
@@ -893,7 +1010,7 @@ export default function BoardView(data: BoardViewData) {
                                                 className="auth-input"
                                                 value={ownershipTransferUserId ?? ""}
                                                 onChange={(e) => setOwnershipTransferUserId(Number(e.target.value))}
-                                                disabled={isReadOnly || ownershipCandidates.length === 0 || transferringOwnership}
+                                                disabled={isReadOnly || ownershipCandidates.length === 0 || transferringOwnership || currentMember?.role != "owner"}
                                             >
                                                 <option value="" disabled>Select member</option>
                                                 {ownershipCandidates.map(member => (
@@ -903,7 +1020,7 @@ export default function BoardView(data: BoardViewData) {
                                                 ))}
                                             </select>
                                             <button className="auth-button btn-danger" onClick={onTransferOwnership}
-                                                    disabled={isReadOnly || ownershipTransferUserId === null || transferringOwnership}>
+                                                    disabled={isReadOnly || ownershipTransferUserId === null || transferringOwnership || currentMember?.role != "owner"}>
                                                 {transferringOwnership ? "Transferring..." : "Transfer Ownership"}
                                             </button>
                                         </div>
@@ -914,7 +1031,7 @@ export default function BoardView(data: BoardViewData) {
                                             <p>Archived boards are read-only.</p>
                                         </div>
                                         <button className="auth-button btn-danger" onClick={onArchiveBoard}
-                                                disabled={isReadOnly || archivingBoard}>
+                                                disabled={isReadOnly || archivingBoard || currentMember?.role != "owner"}>
                                             {archivingBoard ? "Archiving..." : "Archive Board"}
                                         </button>
                                     </div>
@@ -923,7 +1040,8 @@ export default function BoardView(data: BoardViewData) {
                                             <h3>Delete Board</h3>
                                             <p>Permanently delete this board and all its data.</p>
                                         </div>
-                                        <button className="auth-button btn-danger" onClick={onDeleteBoard} disabled={deletingBoard}>
+                                        <button className="auth-button btn-danger" onClick={onDeleteBoard}
+                                                disabled={deletingBoard || currentMember?.role != "owner"}>
                                             {deletingBoard ? "Deleting..." : "Delete Board"}
                                         </button>
                                     </div>
