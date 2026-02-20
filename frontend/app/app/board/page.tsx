@@ -27,13 +27,26 @@ export default function Page() {
             router.replace(`/app`);
             return;
         }
+        // TODO: Check if board exists before trying to retrieve data
+        const id = parseInt(boardId);
 
-        fetchBoardDetails(parseInt(boardId))
+        fetchBoardDetails(id)
             .then((data) => {
+                let canAccess = false;
+
+                if (data.owner.id === user.id)
+                    canAccess = true
+                if (data.members.find(m => m.user.id === user.id))
+                    canAccess = true
+
+                if (!canAccess) {
+                    setError("Access denied");
+                    return;
+                }
                 setBoardView(data);
             })
             .catch((error) => {
-                setError(error);
+                setError(error.message);
             })
             .finally(() => {
                 setLoading(false);
