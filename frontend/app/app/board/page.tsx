@@ -27,7 +27,6 @@ export default function Page() {
             router.replace(`/app`);
             return;
         }
-        // TODO: Check if board exists before trying to retrieve data
         const id = parseInt(boardId);
 
         fetchBoardDetails(id)
