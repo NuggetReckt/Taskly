@@ -4,14 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc50de9-dfc5-44f4-abd8-4356aa24684d" name="Changes" comment="feat(Board): Added permissions for user actions (create card, modifying board title, ...)">
+    <list default="true" id="4cc50de9-dfc5-44f4-abd8-4356aa24684d" name="Changes" comment="feat(LandingPage): Added HTML Skeleton and page structure">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/app/components/header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/components/header.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/globals.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/metadata.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/metadata.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,6 +27,7 @@
         <option value="GitHub Workflow" />
         <option value="TypeScript File" />
         <option value="TypeScript JSX File" />
+        <option value="CSS File" />
       </list>
     </option>
   </component>
@@ -135,6 +133,7 @@
     "ignore.virus.scanning.warn.message": "true",
     "junie.onboarding.icon.badge.shown": "true",
     "last_opened_file_path": "C:/Users/corto/delivery/PRO/Taskly/frontend",
+    "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -157,10 +156,10 @@
 }]]></component>
   <component name="RecapSpentCounter">
     <option name="endsOfQuotaMs" value="1773738009901" />
-    <option name="spentUsd" value="0.053113498" />
+    <option name="spentUsd" value="0.092075" />
   </component>
   <component name="RecapUselessUpdatesCounter">
-    <option name="suspendCountdown" value="7" />
+    <option name="suspendCountdown" value="6" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -412,7 +411,15 @@
       <option name="project" value="LOCAL" />
       <updated>1771545013213</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="feat(LandingPage): Added HTML Skeleton and page structure">
+      <option name="closed" value="true" />
+      <created>1771698928170</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1771698928170</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -441,7 +448,8 @@
     <MESSAGE value="feat(App): Added loading icon&#10;feat(Board): Added limit to prevent user to create an infinite amount of invites." />
     <MESSAGE value="feat(Board): Added board settings modal for editing board settings (name, description, manage members, labels, ...)" />
     <MESSAGE value="feat(Board): Added permissions for user actions (create card, modifying board title, ...)" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(Board): Added permissions for user actions (create card, modifying board title, ...)" />
+    <MESSAGE value="feat(LandingPage): Added HTML Skeleton and page structure" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(LandingPage): Added HTML Skeleton and page structure" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Taskly$Unnamed.coverage" NAME="Unnamed Coverage Results" MODIFIED="1764860605274" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />

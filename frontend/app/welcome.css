@@ -1,0 +1,135 @@
+@import "./globals.css";
+
+:root {
+    --header-background: linear-gradient(10deg, rgba(255, 255, 255, 1) 20%, rgba(179, 206, 230, 1) 100%);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --header-background: linear-gradient(10deg, rgba(12, 12, 12, 1) 20%, rgba(15, 24, 30, 1) 100%);
+    }
+}
+
+.welcomepage-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.welcomepage-section {
+    padding: 0 var(--margin);
+}
+
+/* Header */
+.welcomepage-header-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - var(--header-height));
+    width: 100%;
+    background: #0C0C0C;
+    background: var(--header-background);
+}
+
+.welcomepage-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 60vw;
+    gap: 26px;
+}
+
+.welcomepage-header-title {
+    font-size: 72px;
+    line-height: 1;
+    text-align: center;
+}
+
+.welcomepage-header-subtitle {
+    color: var(--text-third);
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center;
+    margin: 0 100px 4px 100px;
+}
+
+.welcomepage-header-btns {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 42px;
+}
+
+.welcomepage-header-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    border-radius: 10px;
+    transition: all .25s ease;
+    font-weight: bold;
+}
+
+.get-started-btn {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.get-started-btn:hover {
+    opacity: 0.8;
+}
+
+.view-gh-btn {
+    background-color: white;
+    color: black;
+}
+
+.view-gh-btn:hover {
+    opacity: 0.8;
+}
+
+.welcomepage-numbers {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+}
+
+.welcomepage-numbers {
+    margin-top: 46px;
+}
+
+.welcomepage-numbers > li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.welcomepage-numbers > li > h2 {
+    color: var(--accent-color);
+    font-size: 32px;
+    line-height: 1.2;
+}
+
+.welcomepage-numbers > li > span {
+    font-size: 15px;
+    color: var(--text-third);
+}
+
+.learn-more-btn {
+    position: absolute;
+    bottom: 50px;
+    padding: 16px;
+    background-color: var(--accent-color);
+    border-radius: 99px;
+    transition: all ease .25s;
+    animation: bounce 1.5s infinite;
+    color: white;
+}
+
+.learn-more-btn:hover {
+    opacity: 0.8;
+    animation-play-state: paused;
+}

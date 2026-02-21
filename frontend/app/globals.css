@@ -17,6 +17,7 @@
     --muted: rgba(0, 0, 0, 0.65);
     --danger: #b42318;
     --margin: 50px;
+    --header-height: 60px;
 }
 
 @theme inline {
@@ -50,10 +51,6 @@ h1, h2, h3 {
     font-weight: bold;
 }
 
-span, p {
-    font-weight: normal;
-}
-
 input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, textarea:focus {
     border-color: var(--accent-color);
     box-shadow: 0 0 0 2px var(--accent-color);
@@ -77,15 +74,20 @@ body {
 
 /* Header */
 .header-wrapper {
+    padding: 0 var(--margin);
+    width: 100%;
+    height: var(--header-height);
+    background: var(--card-bg);
+    border-bottom: var(--card-border) 1px solid;
+    box-shadow: var(--card-shadow);
+}
+
+.header-content {
     display: flex;
     align-items: center;
     flex-direction: row;
     justify-content: space-between;
-    padding: 10px var(--margin);
-    width: 100%;
-    background: var(--card-bg);
-    border-bottom: var(--card-border) 1px solid;
-    box-shadow: var(--card-shadow);
+    height: var(--header-height);
 }
 
 .header-logo, .footer-logo {
