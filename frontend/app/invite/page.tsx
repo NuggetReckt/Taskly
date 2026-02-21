@@ -8,6 +8,14 @@ import {BoardInviteData} from "@/app/components/inviteCard";
 import {BoardData} from "@/app/components/board";
 
 export default function Page() {
+    return (
+        <Suspense fallback={<p>Loading invite details...</p>}>
+            <InvitePageContent />
+        </Suspense>
+    );
+}
+
+function InvitePageContent() {
     const user = useUser();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -68,13 +76,10 @@ export default function Page() {
     }
 
     return (
-        <Suspense fallback={<div>Loading invite...</div>}>
-            <div>
-                <p>{code + " -> " + inviteData?.role}</p>
-                <p>Joining {boardData?.owner.firstName} Board?</p>
-                <button onClick={onInviteAccept}>Join</button>
-            </div>
-        </Suspense>
+        <div>
+            <p>{code + " -> " + inviteData?.role}</p>
+            <p>Joining {boardData?.owner.firstName} Board?</p>
+            <button onClick={onInviteAccept}>Join</button>
+        </div>
     )
-
 }
