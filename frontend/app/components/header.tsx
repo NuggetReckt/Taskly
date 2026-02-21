@@ -40,9 +40,9 @@ export default function Header() {
             </div>
             <div className={"header-section"}>
                 <ul className={"header-links"}>
-                    <li className={"header-link"}><a href="/#">Features</a></li>
-                    <li className={"header-link"}><a href="/#">Pricing</a></li>
-                    <li className={"header-link"}><a href="/#">Open Source</a></li>
+                    <li className={"header-link"}><a href="/#features">Features</a></li>
+                    <li className={"header-link"}><a href="/#pricing">Pricing</a></li>
+                    <li className={"header-link"}><a href="/#open-source">Open Source</a></li>
                     {logged && user && !inApp && (
                         <li className={"header-link"}><a href="/app" className={"login-btn"}>Open App</a></li>
                     )}
