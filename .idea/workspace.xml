@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc50de9-dfc5-44f4-abd8-4356aa24684d" name="Changes" comment="feat(Docker): Added reverse proxy for API access">
+    <list default="true" id="4cc50de9-dfc5-44f4-abd8-4356aa24684d" name="Changes" comment="fix(Docker): Added reverse proxy for API access">
       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -241,7 +241,7 @@
       <workItem from="1771516126904" duration="7292000" />
       <workItem from="1771536300107" duration="1000000" />
       <workItem from="1771537322622" duration="8864000" />
-      <workItem from="1771685533585" duration="2693000" />
+      <workItem from="1771685533585" duration="2745000" />
     </task>
     <task id="LOCAL-00001" summary="feat(Server): Added FastAPI server &amp; basic routes&#10;feat(Server): Added Database connector&#10;feat(Deployment): Added docker compose yaml file for easier deployment">
       <option name="closed" value="true" />
@@ -435,7 +435,15 @@
       <option name="project" value="LOCAL" />
       <updated>1771688093256</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="fix(Docker): Added reverse proxy for API access">
+      <option name="closed" value="true" />
+      <created>1771688278706</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1771688278706</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -466,7 +474,8 @@
     <MESSAGE value="feat(Board): Added permissions for user actions (create card, modifying board title, ...)" />
     <MESSAGE value="fix(Invite page): Fixed useSearchParams now wrapped in a suspense boundary" />
     <MESSAGE value="feat(Docker): Added reverse proxy for API access" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(Docker): Added reverse proxy for API access" />
+    <MESSAGE value="fix(Docker): Added reverse proxy for API access" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix(Docker): Added reverse proxy for API access" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Taskly$Unnamed.coverage" NAME="Unnamed Coverage Results" MODIFIED="1764860605274" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
