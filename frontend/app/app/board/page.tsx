@@ -6,6 +6,7 @@ import {useSearchParams, useRouter} from "next/navigation";
 import {useUser} from "@/app/components/user";
 import {fetchBoardDetails} from "@/app/http/boards";
 import "./board.css"
+import LoadingIcon from "@/app/components/LoadingIcon";
 
 export default function Page() {
     const params = useSearchParams()
@@ -26,13 +27,25 @@ export default function Page() {
             router.replace(`/app`);
             return;
         }
+        const id = parseInt(boardId);
 
-        fetchBoardDetails(parseInt(boardId))
+        fetchBoardDetails(id)
             .then((data) => {
+                let canAccess = false;
+
+                if (data.owner.id === user.id)
+                    canAccess = true
+                if (data.members.find(m => m.user.id === user.id))
+                    canAccess = true
+
+                if (!canAccess) {
+                    setError("Access denied");
+                    return;
+                }
                 setBoardView(data);
             })
             .catch((error) => {
-                setError(error);
+                setError(error.message);
             })
             .finally(() => {
                 setLoading(false);
@@ -49,7 +62,7 @@ export default function Page() {
     }
     if (loading || !boardView) {
         return (
-            <p>Chargement du board...</p>
+            <LoadingIcon/>
         );
     }
     // metadata.title = "Taskly - " + board.title;
@@ -57,7 +70,7 @@ export default function Page() {
     return (
         <div className="board-wrapper">
             <BoardView id={boardView.id} title={boardView.title} owner={boardView.owner} lists={boardView.lists} members={boardView.members}
-                       description={boardView.description} labels={boardView.labels}/>
+                       description={boardView.description} labels={boardView.labels} boardStatus={boardView.boardStatus}/>
         </div>
     );
 }

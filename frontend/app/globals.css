@@ -17,6 +17,7 @@
     --muted: rgba(0, 0, 0, 0.65);
     --danger: #b42318;
     --margin: 50px;
+    --header-height: 60px;
 }
 
 @theme inline {
@@ -41,12 +42,13 @@
     }
 }
 
-h1, h2, h3 {
-    font-weight: bold;
+html {
+    scroll-behavior: smooth;
+    --moz-scroll-behavior: smooth;
 }
 
-span, p {
-    font-weight: normal;
+h1, h2, h3 {
+    font-weight: bold;
 }
 
 input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, textarea:focus {
@@ -72,15 +74,20 @@ body {
 
 /* Header */
 .header-wrapper {
+    padding: 0 var(--margin);
+    width: 100%;
+    height: var(--header-height);
+    background: var(--card-bg);
+    border-bottom: var(--card-border) 1px solid;
+    box-shadow: var(--card-shadow);
+}
+
+.header-content {
     display: flex;
     align-items: center;
     flex-direction: row;
     justify-content: space-between;
-    padding: 10px var(--margin);
-    width: 100%;
-    background: var(--card-bg);
-    border-bottom: var(--card-border) 1px solid;
-    box-shadow: var(--card-shadow);
+    height: var(--header-height);
 }
 
 .header-logo, .footer-logo {
@@ -305,14 +312,31 @@ body {
     color: #fff;
     cursor: pointer;
     font-weight: 600;
+    transition: all .25s ease;
+}
+
+.btn-danger {
+    background: var(--danger);
+}
+
+.auth-button:hover {
+    color: var(--accent-color);
+    background: white;
+}
+
+.btn-danger:hover {
+    color: var(--danger);
+    background: white;
 }
 
 .auth-button:disabled {
     opacity: 0.55;
     cursor: not-allowed;
+    color: white;
+    background: var(--accent-color);
 }
 
-.btn-danger {
+.btn-danger:disabled {
     background: var(--danger);
 }
 
@@ -485,4 +509,11 @@ body {
 
 .toggle-input:checked + .toggle-label .toggle-slider::after {
     left: 21px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    :root {
+        --margin: 20px;
+    }
 }

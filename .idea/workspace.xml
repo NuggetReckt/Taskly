@@ -4,30 +4,35 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc50de9-dfc5-44f4-abd8-4356aa24684d" name="Changes" comment="fix(Line Separators): Set Line Separators to LF and not CRLF for project files&#10;fix(DB): Fixed synthax issues in db scheme" />
+    <list default="true" id="4cc50de9-dfc5-44f4-abd8-4356aa24684d" name="Changes" comment="fix(Docker): Added reverse proxy for API access">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nginx.conf" beforeDir="false" afterPath="$PROJECT_DIR$/nginx.conf" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="2759" />
+    <option name="cachedIndexableFilesCount" value="98" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Dockerfile" />
-        <option value="TypeScript JSX File" />
         <option value="Python Script" />
         <option value="GitHub Workflow" />
+        <option value="TypeScript File" />
+        <option value="TypeScript JSX File" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="dev" />
+        <entry key="$PROJECT_DIR$" value="feat/landing_page" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -58,12 +63,16 @@
               <option name="branches">
                 <list>
                   <RecentBranch>
-                    <option name="branchName" value="main" />
-                    <option name="lastUsedInstant" value="1765733580" />
+                    <option name="branchName" value="dev" />
+                    <option name="lastUsedInstant" value="1771683431" />
                   </RecentBranch>
                   <RecentBranch>
-                    <option name="branchName" value="dev" />
-                    <option name="lastUsedInstant" value="1765733251" />
+                    <option name="branchName" value="feat/landing_page" />
+                    <option name="lastUsedInstant" value="1771586849" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="main" />
+                    <option name="lastUsedInstant" value="1765733580" />
                   </RecentBranch>
                 </list>
               </option>
@@ -101,55 +110,65 @@
     <option name="showLibraryContents" value="true" />
     <option name="showMembers" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Docker.Dockerfile.executor": "Run",
-    "Docker.Run (ALL).executor": "Run",
-    "Docker.Run (BACK+DB).executor": "Run",
-    "Docker.Run (DB).executor": "Run",
-    "FastAPI.FastAPI.executor": "Run",
-    "FastAPI.Unnamed.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python.DatabaseHandler.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "SHELLCHECK.PATH": "C:\\Users\\corto\\AppData\\Roaming\\JetBrains\\PyCharm2025.2\\plugins\\Shell Script\\shellcheck.exe",
-    "git-widget-placeholder": "#5 on dev",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/corto/delivery/PRO/Taskly/frontend",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_interpreter_path": "C:/Users/corto/AppData/Roaming/JetBrains/PyCharm2025.2/node/versions/24.11.1/node",
-    "nodejs_package_manager_path": "npm",
-    "npm.Dev.executor": "Run",
-    "npm.[FRONT] Dev.executor": "Run",
-    "npm.install.executor": "Run",
-    "settings.editor.selected.configurable": "preferences.sourceCode",
-    "ts.external.directory.path": "C:\\Users\\corto\\delivery\\PRO\\Taskly\\frontend\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Docker.Dockerfile.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.Run (ALL).executor&quot;: &quot;Run&quot;,
+    &quot;Docker.Run (BACK+DB).executor&quot;: &quot;Run&quot;,
+    &quot;Docker.Run (DB).executor&quot;: &quot;Run&quot;,
+    &quot;FastAPI.FastAPI.executor&quot;: &quot;Run&quot;,
+    &quot;FastAPI.Unnamed.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.DatabaseHandler.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;SHELLCHECK.PATH&quot;: &quot;C:\\Users\\corto\\AppData\\Roaming\\JetBrains\\PyCharm2025.2\\plugins\\Shell Script\\shellcheck.exe&quot;,
+    &quot;Shell Script.Backend.executor&quot;: &quot;Run&quot;,
+    &quot;ai.playground.ignore.import.keys.banner.in.settings&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feat/landing__page&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/corto/delivery/PRO/Taskly/backend/resources&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_interpreter_path&quot;: &quot;node&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.Dev.executor&quot;: &quot;Run&quot;,
+    &quot;npm.[FRONT] Dev.executor&quot;: &quot;Run&quot;,
+    &quot;npm.install.executor&quot;: &quot;Run&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;ml.llm.agents.accounts&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\corto\\delivery\\PRO\\Taskly\\frontend\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "GitIgnore"
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;GitIgnore&quot;
     ]
   }
-}]]></component>
+}</component>
+  <component name="RecapSpentCounter">
+    <option name="endsOfQuotaMs" value="1773738009901" />
+    <option name="spentUsd" value="0.03601435" />
+  </component>
   <component name="RecapUselessUpdatesCounter">
-    <option name="suspendCountdown" value="9" />
+    <option name="suspendCountdown" value="0" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\corto\delivery\PRO\Taskly\backend\resources" />
       <recent name="C:\Users\corto\delivery\PRO\Taskly\frontend" />
       <recent name="C:\Users\corto\delivery\PRO\Taskly\frontend\app\app" />
       <recent name="C:\Users\corto\delivery\PRO\Taskly\frontend\app\register" />
       <recent name="C:\Users\corto\delivery\PRO\Taskly\frontend\app\login" />
-      <recent name="C:\Users\corto\delivery\PRO\Taskly\frontend\app\board" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\corto\delivery\PRO\Taskly\frontend\app\http" />
@@ -157,6 +176,21 @@
     </key>
   </component>
   <component name="RunManager" selected="Docker.Run (ALL)">
+    <configuration name="Backend" type="ShConfigurationType">
+      <option name="SCRIPT_TEXT" value="" />
+      <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
+      <option name="SCRIPT_PATH" value="$PROJECT_DIR$/backend/start" />
+      <option name="SCRIPT_OPTIONS" value="--dev" />
+      <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
+      <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$/backend" />
+      <option name="INDEPENDENT_INTERPRETER_PATH" value="true" />
+      <option name="INTERPRETER_PATH" value="/bin/zsh" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="EXECUTE_IN_TERMINAL" value="true" />
+      <option name="EXECUTE_SCRIPT_FILE" value="true" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <configuration default="true" type="docker-deploy" factoryName="dockerfile" temporary="true">
       <deployment type="dockerfile">
         <settings />
@@ -169,13 +203,14 @@
       <item itemvalue="Docker.Run (DB)" />
       <item itemvalue="Docker.Run (DB+FRONT)" />
       <item itemvalue="npm.[FRONT] Dev" />
+      <item itemvalue="Shell Script.Backend" />
     </list>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-c7e53b3be11b-JavaScript-PY-253.28294.336" />
-        <option value="bundled-python-sdk-0978a7220b69-9867c7d4c0a4-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-253.28294.336" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-PY-253.31033.139" />
+        <option value="bundled-python-sdk-2653e85de345-6d6dccd035ac-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-253.31033.139" />
       </set>
     </attachedChunks>
   </component>
@@ -202,6 +237,13 @@
       <workItem from="1765723009634" duration="1287000" />
       <workItem from="1765724327383" duration="6128000" />
       <workItem from="1765733199700" duration="800000" />
+      <workItem from="1771235089833" duration="29941000" />
+      <workItem from="1771321978553" duration="6076000" />
+      <workItem from="1771335381870" duration="2701000" />
+      <workItem from="1771516126904" duration="7292000" />
+      <workItem from="1771536300107" duration="1000000" />
+      <workItem from="1771537322622" duration="8864000" />
+      <workItem from="1771685533585" duration="2762000" />
     </task>
     <task id="LOCAL-00001" summary="feat(Server): Added FastAPI server &amp; basic routes&#10;feat(Server): Added Database connector&#10;feat(Deployment): Added docker compose yaml file for easier deployment">
       <option name="closed" value="true" />
@@ -331,7 +373,55 @@
       <option name="project" value="LOCAL" />
       <updated>1770563712558</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="feat(Board): Added Drag &amp; drop for Cards AND lists">
+      <option name="closed" value="true" />
+      <created>1770824889791</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1770824889791</updated>
+    </task>
+    <task id="LOCAL-00018" summary="feat(Board): Added board sharing: Users can now create invite links for other users to join the board&#10;feat(API): Added basic board retrieve endpoint without details (labels, members, lists, cards, ...)&#10;fix(App): Fixed different height between member and owning boards in app page.&#10;fix(DB): Fixed bad unique for board invites">
+      <option name="closed" value="true" />
+      <created>1771287838826</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1771287838826</updated>
+    </task>
+    <task id="LOCAL-00019" summary="feat(App): Added loading icon&#10;feat(Board): Added limit to prevent user to create an infinite amount of invites.">
+      <option name="closed" value="true" />
+      <created>1771338019512</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1771338019512</updated>
+    </task>
+    <task id="LOCAL-00020" summary="feat(Board): Added board settings modal for editing board settings (name, description, manage members, labels, ...)">
+      <option name="closed" value="true" />
+      <created>1771523670106</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1771523670106</updated>
+    </task>
+    <task id="LOCAL-00021" summary="feat(Board): Added permissions for user actions (create card, modifying board title, ...)">
+      <option name="closed" value="true" />
+      <created>1771545013213</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1771545013213</updated>
+    </task>
+    <task id="LOCAL-00022" summary="feat(LandingPage): Added HTML Skeleton and page structure">
+      <option name="closed" value="true" />
+      <created>1771698928170</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1771698928170</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -355,7 +445,13 @@
     <MESSAGE value="feat(CI): Added mirror gh action" />
     <MESSAGE value="mirror: added repo" />
     <MESSAGE value="fix(Line Separators): Set Line Separators to LF and not CRLF for project files&#10;fix(DB): Fixed synthax issues in db scheme" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix(Line Separators): Set Line Separators to LF and not CRLF for project files&#10;fix(DB): Fixed synthax issues in db scheme" />
+    <MESSAGE value="feat(Board): Added Drag &amp; drop for Cards AND lists" />
+    <MESSAGE value="feat(Board): Added board sharing: Users can now create invite links for other users to join the board&#10;feat(API): Added basic board retrieve endpoint without details (labels, members, lists, cards, ...)&#10;fix(App): Fixed different height between member and owning boards in app page.&#10;fix(DB): Fixed bad unique for board invites" />
+    <MESSAGE value="feat(App): Added loading icon&#10;feat(Board): Added limit to prevent user to create an infinite amount of invites." />
+    <MESSAGE value="feat(Board): Added board settings modal for editing board settings (name, description, manage members, labels, ...)" />
+    <MESSAGE value="feat(Board): Added permissions for user actions (create card, modifying board title, ...)" />
+    <MESSAGE value="feat(LandingPage): Added HTML Skeleton and page structure" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(LandingPage): Added HTML Skeleton and page structure" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Taskly$Unnamed.coverage" NAME="Unnamed Coverage Results" MODIFIED="1764860605274" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />

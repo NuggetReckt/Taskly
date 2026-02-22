@@ -30,6 +30,20 @@ export async function updateCard(boardId: number, cardId: number, title: string,
     }
 }
 
+export async function moveCard(boardId: number, cardId: number, position: number, listId?: number): Promise<any> {
+    try {
+        const payload: { new_position: number; list_id?: number } = {new_position: position};
+        if (listId !== undefined) {
+            payload.list_id = listId;
+        }
+        const response = await client.put(`board/${boardId}/card/${cardId}/move`, payload);
+        return response.data;
+    } catch (error) {
+        console.error("Error moving card:", error);
+        throw error;
+    }
+}
+
 export async function addCardLabel(boardId: number, cardId: number, labelId: number): Promise<any> {
     try {
         const response = await client.post(`board/${boardId}/card/${cardId}/label/${labelId}`);

@@ -1,5 +1,4 @@
-from typing import Optional
-
+from typing import Optional, Literal
 from pydantic import BaseModel
 
 
@@ -65,6 +64,7 @@ class Board(BaseModel):
     owner_id: int
     title: str
     description: str
+    board_status: Literal["active", "archived"] = "active"
 
 
 class BoardList(BaseModel):
@@ -77,6 +77,7 @@ class BoardDetails(BaseModel):
     owner_id: int
     title: str
     description: str
+    board_status: Literal["active", "archived"] = "active"
     labels: Optional[list[Label]] = None
     lists: Optional[list[List]] = None
     members: Optional[list[BoardMember]] = None
@@ -85,3 +86,27 @@ class BoardDetails(BaseModel):
 class MoveRequest(BaseModel):
     new_position: int
     list_id: Optional[int] = None
+
+
+class BoardInvite(BaseModel):
+    id: Optional[int] = None
+    board_id: int
+    role: str
+    code: Optional[str] = None
+
+
+class BoardUpdate(BaseModel):
+    title: str
+    description: str
+
+
+class BoardMemberRoleUpdate(BaseModel):
+    role: Literal["admin", "editor", "viewer"]
+
+
+class BoardTransferOwnershipRequest(BaseModel):
+    new_owner_id: int
+
+
+class BoardStatusUpdate(BaseModel):
+    board_status: Literal["active", "archived"]

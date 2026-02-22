@@ -1,3 +1,13 @@
+:root {
+    --card-item-bg: #fffdfd;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --card-item-bg: #131313;
+    }
+}
+
 /* Board */
 .board-wrapper {
     width: 100%;
@@ -68,6 +78,101 @@
     color: white;
     background-color: #212020;
     cursor: pointer;
+}
+
+/* Invites */
+.invites-list {
+    display: flex;
+    flex-direction: column;
+    padding: 0 16px;
+    gap: 10px;
+}
+
+.no-invites {
+    margin: 10px 0;
+    font-size: 15px;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.invite-card {
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 22px 18px;
+    border-radius: 12px;
+    border: var(--card-border) 1px solid;
+    background-color: var(--card-item-bg);
+}
+
+.invite-card-code {
+    background-color: #1c1c1c;
+    color: white;
+    padding: 6px 8px;
+    border-radius: 10px;
+}
+
+.invite-card-role {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.invite-link-copy-btn {
+    cursor: pointer;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background-color: var(--accent-color);
+    transition: all .25s ease;
+    font-weight: bold;
+}
+
+.invite-link-copy-btn:hover {
+    background-color: white;
+    color: var(--accent-color);
+}
+
+.invites-create-field {
+    border-top: var(--card-border) 1px solid;
+    padding-top: 10px;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.invite-permission-select {
+    border: var(--card-border) 1px solid;
+    border-radius: 6px;
+    padding: 4px 6px;
+}
+
+.create-invite-btn {
+    padding: 10px 8px;
+    background-color: var(--accent-color);
+    color: var(--text-primary);
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.25s ease;
+    font-weight: bold;
+    font-size: 15px;
+    max-width: 60%;
+}
+
+.create-invite-btn:hover {
+    background-color: white;
+    color: var(--accent-color);
+}
+
+.create-invite-btn:disabled {
+    background-color: #6e6e6e;
+    color: var(--text-primary);
+    cursor: not-allowed;
 }
 
 /* Lists */
@@ -165,7 +270,8 @@
     padding: 12px;
     border: var(--card-border) 1px solid;
     border-radius: 14px;
-    transition: all .15s;
+    transition: border .15s;
+    background-color: var(--card-item-bg);
 }
 
 .card {
@@ -329,7 +435,7 @@
     align-items: center;
 }
 
-.label-item-wrapper, .assignee-item-wrapper {
+.label-item-wrapper, .assignee-item-wrapper, .invite-card-wrapper {
     position: relative;
     display: flex;
     align-items: center;
@@ -354,7 +460,7 @@
     transition: opacity 0.2s;
 }
 
-.label-item-wrapper:hover .remove-btn, .assignee-item-wrapper:hover .remove-btn {
+.label-item-wrapper:hover .remove-btn, .assignee-item-wrapper:hover .remove-btn, .invite-card-wrapper:hover .remove-btn {
     opacity: 1;
 }
 
@@ -424,4 +530,123 @@
     gap: 12px;
     padding-top: 16px;
     border-top: 1px solid var(--card-border);
+}
+
+/* Board Edit Modal */
+.board-edit-modal {
+    max-width: 980px;
+    width: 95%;
+}
+
+.board-edit-card {
+    max-width: none;
+    max-height: 98vh;
+    overflow-y: auto;
+}
+
+.board-edit-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.board-edit-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.board-edit-section-members, .board-edit-section-labels {
+    width: 100%;
+}
+
+.board-edit-section > h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.board-edit-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.board-edit-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.board-edit-row-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.board-edit-remove-btn {
+    position: static;
+    opacity: 1;
+}
+
+.board-edit-add-label {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.danger-zone {
+    border-color: rgba(180, 35, 24, 0.35);
+}
+
+.danger-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 8px 0;
+    border-top: 1px solid var(--card-border);
+}
+
+.danger-row > div > h3 {
+    margin: 0;
+}
+
+.danger-row > div > p {
+    margin: 2px 0 0;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.danger-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.board-edit-footer {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--card-border);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+@media (max-width: 768px) {
+    .board-edit-row,
+    .danger-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .danger-actions,
+    .board-edit-add-label {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
 }

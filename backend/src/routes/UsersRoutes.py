@@ -43,7 +43,13 @@ def get_user_boards(user_id: int, db: DatabaseHandler = Depends(get_database_han
 
     for board in result:
         boards.append(
-            Board(id=board['id'], owner_id=board['owner_id'], title=board['title'], description=board['description']))
+            Board(
+                id=board['id'],
+                owner_id=board['owner_id'],
+                title=board['title'],
+                description=board['description'],
+                board_status=board['board_status']
+            ))
     return BoardList(boards_count=len(boards), boards=boards)
 
 

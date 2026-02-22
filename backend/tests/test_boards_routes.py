@@ -47,7 +47,7 @@ def test_board_members_flow(client):
     # add member (success)
     r = client.put(
         f"/board/{board_id}/member",
-        json={"user_id": u1_id, "role": "member"},
+        json={"user_id": u1_id, "role": "editor"},
     )
     assert r.status_code == 200
     assert r.json()["status"] == "OK"
@@ -55,7 +55,7 @@ def test_board_members_flow(client):
     # add member (duplicate) - should fail
     r = client.put(
         f"/board/{board_id}/member",
-        json={"user_id": u1_id, "role": "member"},
+        json={"user_id": u1_id, "role": "editor"},
     )
     assert r.status_code == 400
     assert r.json()["detail"] == "User is already a member of this board"
@@ -63,7 +63,7 @@ def test_board_members_flow(client):
     # add board owner as member - should fail
     r = client.put(
         f"/board/{board_id}/member",
-        json={"user_id": owner_id, "role": "member"},
+        json={"user_id": owner_id, "role": "editor"},
     )
     assert r.status_code == 400
     assert r.json()["detail"] == "User is the board owner"
@@ -280,3 +280,48 @@ def test_board_cards_flow(client):
     # back to empty
     r = client.get(f"/board/{board_id}/cards")
     assert len(r.json()) == 0
+
+
+def test_transfer_board_ownership(client):
+    client.post("/user", json={"email": "owner@t.com", "first_name": "Owner", "last_name": "User", "password": "p", "avatar_url": ""})
+    client.post("/user", json={"email": "member@t.com", "first_name": "Member", "last_name": "User", "password": "p", "avatar_url": ""})
+    owner_id = 1
+    member_id = 2
+
+    r = client.post("/board", json={"owner_id": owner_id, "title": "B", "description": "D"})
+    board_id = r.json()["id"]
+
+    client.put(f"/board/{board_id}/member", json={"user_id": member_id, "role": "editor"})
+
+    r = client.put(f"/board/{board_id}/ownership", json={"new_owner_id": member_id})
+    assert r.status_code == 200
+    assert r.json()["status"] == "OK"
+
+    r = client.get(f"/board/{board_id}")
+    assert r.status_code == 200
+    assert r.json()["owner_id"] == member_id
+
+    r = client.get(f"/board/{board_id}/members")
+    assert r.status_code == 200
+    owner_member = next(m for m in r.json()["members"] if m["user_id"] == owner_id)
+    assert owner_member["role"] == "admin"
+
+
+def test_archive_board_makes_it_read_only(client):
+    client.post("/user", json={"email": "owner@t.com", "first_name": "Owner", "last_name": "User", "password": "p", "avatar_url": ""})
+    owner_id = 1
+
+    r = client.post("/board", json={"owner_id": owner_id, "title": "B", "description": "D"})
+    board_id = r.json()["id"]
+
+    r = client.put(f"/board/{board_id}/status", json={"board_status": "archived"})
+    assert r.status_code == 200
+    assert r.json()["status"] == "OK"
+
+    r = client.put(f"/board/{board_id}", json={"title": "Updated", "description": "Updated"})
+    assert r.status_code == 400
+    assert r.json()["detail"] == "Board is archived and read-only"
+
+    r = client.post(f"/board/{board_id}/label", json={"name": "Blocked", "color": "#ff0000"})
+    assert r.status_code == 400
+    assert r.json()["detail"] == "Board is archived and read-only"

@@ -5,6 +5,7 @@ import {useRouter} from "next/navigation";
 import Board, {BoardData} from "@/app/components/board";
 import {createBoard, fetchMemberBoards, fetchUserBoards} from "@/app/http/boards";
 import {useUser} from "@/app/components/user";
+import LoadingIcon from "@/app/components/LoadingIcon";
 
 export default function Page() {
     const user = useUser();
@@ -104,7 +105,7 @@ export default function Page() {
 
     if (loading) {
         return (
-            <p>Chargement des boards...</p>
+            <LoadingIcon/>
         );
     }
 
