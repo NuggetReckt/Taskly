@@ -1,6 +1,6 @@
 "use client"
 
-import React, {useEffect, useState} from "react";
+import React, {Suspense, useEffect, useState} from "react";
 import {useUser} from "@/app/components/user";
 import {addMemberToBoard, fetchBoard, fetchBoardInvite} from "@/app/http/boards";
 import {useRouter, useSearchParams} from "next/navigation";
@@ -8,6 +8,14 @@ import {BoardInviteData} from "@/app/components/inviteCard";
 import {BoardData} from "@/app/components/board";
 
 export default function Page() {
+    return (
+        <Suspense fallback={<p>Loading invite details...</p>}>
+            <InvitePageContent />
+        </Suspense>
+    );
+}
+
+function InvitePageContent() {
     const user = useUser();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -16,7 +24,7 @@ export default function Page() {
     const [inviteData, setInviteData] = useState<BoardInviteData>();
     const [boardData, setBoardData] = useState<BoardData>();
 
-    let code = searchParams.get('code');
+    const code = searchParams.get('code');
 
     const onInviteAccept = async () => {
         if (!user || !boardData || !inviteData) return;
@@ -74,5 +82,4 @@ export default function Page() {
             <button onClick={onInviteAccept}>Join</button>
         </div>
     )
-    
 }
