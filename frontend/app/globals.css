@@ -510,3 +510,10 @@ body {
 .toggle-input:checked + .toggle-label .toggle-slider::after {
     left: 21px;
 }
+
+/* Responsive */
+@media (max-width: 600px) {
+    :root {
+        --margin: 20px;
+    }
+}

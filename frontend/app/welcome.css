@@ -1,6 +1,7 @@
 @import "./globals.css";
 
 :root {
+    --section-spacing: 60px;
     --header-background: linear-gradient(10deg, rgba(255, 255, 255, 1) 20%, rgba(179, 206, 230, 1) 100%);
 }
 
@@ -14,11 +15,31 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: var(--section-spacing);
     width: 100%;
 }
 
 .welcomepage-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     padding: 0 var(--margin);
+    width: 100%;
+}
+
+.welcomepage-section-header {
+    text-align: center;
+    margin-bottom: 36px;
+}
+
+.welcomepage-section-title {
+    margin-bottom: 5px;
+    font-size: 36px;
+}
+
+.welcomepage-section-subtitle {
+    color: var(--text-third);
+    font-size: 18px;
 }
 
 /* Header */
@@ -51,7 +72,7 @@
     font-size: 18px;
     font-weight: 500;
     text-align: center;
-    margin: 0 100px 4px 100px;
+    margin: 0 120px 4px 120px;
 }
 
 .welcomepage-header-btns {
@@ -61,9 +82,10 @@
     gap: 42px;
 }
 
-.welcomepage-header-btn {
+.welcomepage-header-btn, .pricing-get-started-btn {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 12px;
     padding: 12px 20px;
     border-radius: 10px;
@@ -74,10 +96,19 @@
 .get-started-btn {
     background-color: var(--accent-color);
     color: white;
+    width: fit-content;
+}
+
+.get-started-btn svg {
+    transition: transform .5s ease;
 }
 
 .get-started-btn:hover {
     opacity: 0.8;
+}
+
+.get-started-btn:hover svg {
+    transform: translateX(6px);
 }
 
 .view-gh-btn {
@@ -132,4 +163,231 @@
 .learn-more-btn:hover {
     opacity: 0.8;
     animation-play-state: paused;
+}
+
+/* Features */
+.features-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 30px;
+    padding-inline: 48px;
+}
+
+.feature-card-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 20px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    box-shadow: var(--card-shadow);
+    border-radius: 14px;
+    padding: 24px;
+    transition: all .25s ease;
+}
+
+.feature-card-wrapper:hover, .opensource-card:hover {
+    border-color: var(--accent-color);
+}
+
+.feature-card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    background-color: color-mix(in oklab, #0E6BA8 10%, transparent);
+}
+
+.feature-card-title {
+    font-size: 20px;
+}
+
+.feature-card-desc {
+    font-size: 16px;
+    color: var(--text-third);
+}
+
+/* Pricing */
+.pricing-card {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    border: 2px solid var(--accent-color);
+    box-shadow: var(--card-shadow);
+    border-radius: 14px;
+    padding: 32px;
+    background-color: var(--card-bg);
+    max-width: 500px;
+}
+
+.pricing-card-header {
+    text-align: center;
+}
+
+.pricing-card-header-title {
+    font-size: 30px;
+}
+
+.pricing-card-features {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.pricing-card-feature {
+    display: flex;
+    gap: 10px;
+}
+
+.pricing-card-feature > span {
+    color: var(--text-secondary);
+}
+
+.pricing-get-started-btn {
+    width: 100%;
+}
+
+/* Open Source */
+.welcomepage-opensource-os {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+    background-color: color-mix(in oklab, var(--accent-color) 10%, transparent);
+    border-radius: 99px;
+    padding: 8px 16px;
+    margin-bottom: 24px;
+}
+
+.welcomepage-opensource-cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px;
+}
+
+.opensource-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    background-color: var(--card-bg);
+    box-shadow: var(--card-shadow);
+    padding: 24px;
+    transition: all .25s ease;
+}
+
+.opensource-card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: color-mix(in oklab, var(--accent-color) 10%, transparent);
+    border-radius: calc(infinity * 1px);
+    width: 52px;
+    height: 52px;
+}
+
+.opensource-card-title {
+    font-size: 20px;
+}
+
+.opensource-card-desc {
+    color: var(--text-third);
+}
+
+/* Get Started */
+.get-started-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+    padding: 40px 48px;
+    border-radius: 14px;
+    width: 100%;
+    border: 1px solid var(--accent-color);
+    background-color: color-mix(in oklab, var(--accent-color) 10%, transparent);
+}
+
+.get-started-title {
+    font-size: 36px;
+}
+
+.get-started-subtitle {
+    color: var(--text-third);
+    margin-bottom: 24px;
+}
+
+.welcomepage-getstarted {
+    margin-bottom: var(--section-spacing);
+}
+
+/* Responsive */
+@media (max-width: 1250px) {
+    .welcomepage-header {
+        max-width: 80vw;
+    }
+
+    .welcomepage-header-subtitle {
+        margin: 0 48px 4px 48px;
+    }
+
+    .features-list {
+        padding-inline: 24px;
+    }
+}
+
+@media (max-width: 970px) {
+    .features-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 910px) {
+    .welcomepage-header {
+        max-width: 90vw;
+    }
+
+    .welcomepage-header-title {
+        font-size: 62px;
+    }
+
+    .welcomepage-opensource-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .features-list {
+        padding-inline: 0;
+    }
+
+    .pricing-card {
+        max-width: 400px;
+    }
+}
+
+@media (max-width: 520px) {
+    .welcomepage-header-title {
+        font-size: 48px;
+    }
+
+    .welcomepage-header-subtitle {
+        margin: 0 12px 4px 12px;
+    }
+}
+
+@media (max-width: 450px) {
+    .welcomepage-opensource-cards {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+
+    .pricing-card {
+        max-width: 350px;
+    }
 }
