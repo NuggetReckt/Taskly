@@ -91,6 +91,7 @@
     border-radius: 10px;
     transition: all .25s ease;
     font-weight: bold;
+    box-shadow: var(--card-shadow);
 }
 
 .get-started-btn {
@@ -116,7 +117,12 @@
     color: black;
 }
 
-.view-gh-btn:hover {
+.view-gb-btn {
+    background-color: #EB6233;
+    color: #0c0c0c;
+}
+
+.view-gh-btn:hover, .view-gb-btn:hover {
     opacity: 0.8;
 }
 
@@ -299,6 +305,12 @@
 
 .opensource-card-desc {
     color: var(--text-third);
+}
+
+.opensource-buttons {
+    display: flex;
+    gap: 42px;
+    margin-top: 36px;
 }
 
 /* Get Started */

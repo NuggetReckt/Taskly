@@ -5,14 +5,14 @@ export default function Footer() {
     const subSections = (
         <>
             <FooterSubSection title={"Product"} links={[
-                {href: "/#", text: "Features"},
-                {href: "/#", text: "Pricing"},
-                {href: "/#", text: "Open Source"},
+                {href: "/#features", text: "Features"},
+                {href: "/#pricing", text: "Pricing"},
+                {href: "/#open-source", text: "Open Source"},
                 {href: "/app", text: "Get Started"}
             ]}/>
             <FooterSubSection title={"Resources"} links={[
-                {href: "#", text: "Documentation"},
-                {href: "#", text: "API Reference"},
+                {href: "https://taskly-1.gitbook.io/docs/", text: "Documentation"},
+                {href: "https://api.noskillworld.fr/docs", text: "API Reference"},
                 {href: "#", text: "Community"},
                 {href: "#", text: "Blog"}
             ]}/>
@@ -37,8 +37,8 @@ export default function Footer() {
                     </div>
                     <div className={"footer-subsection-content"}>
                         <p>Free and open-source project management tool for modern teams.</p>
-                        <a href="#" className={"footer-gh-link"}>
-                            <svg viewBox="-25.6 -25.6 307.20 307.20" xmlns="http://www.w3.org/2000/svg"  width="24" height="24"
+                        <a href="https://github.com/NuggetReckt/Taskly" className={"footer-gh-link"}>
+                            <svg viewBox="-25.6 -25.6 307.20 307.20" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                  preserveAspectRatio="xMinYMin meet" fill="currentColor">
                                 <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                                 <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round" stroke="currentColor"

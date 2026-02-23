@@ -88,8 +88,57 @@
     gap: 16px
 }
 
+.board-card-wrapper {
+    position: relative;
+}
+
+.board-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
 .board-card-title {
     font-size: 18px;
+}
+
+.board-card-actions {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.board-card-btn {
+    padding: 4px 8px;
+    border-radius: 8px;
+    transition: all .15s;
+    color: #9f9fa9;
+    cursor: pointer;
+}
+
+.board-card-btn:hover {
+    color: white;
+    background-color: #212020;
+}
+
+.board-card-btn > svg {
+    height: 20px;
+}
+
+.board-leave-modal {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: max-content;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    z-index: 100;
 }
 
 .board-card-members {

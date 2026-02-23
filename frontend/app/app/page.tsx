@@ -16,7 +16,6 @@ export default function Page() {
     const [filteredMemberBoards, setFilteredMemberBoards] = useState<BoardData[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [loading, setLoading] = useState(true);
-
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [newBoardTitle, setNewBoardTitle] = useState(user?.firstName + "'s board");
     const [creating, setCreating] = useState(false);
@@ -116,6 +115,7 @@ export default function Page() {
                 title={board.title}
                 owner={board.owner}
                 members={board.members}
+                owning={true}
             />
         </li>
     );

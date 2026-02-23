@@ -367,6 +367,145 @@ body {
     text-decoration: underline;
 }
 
+/* Invite page */
+.invite-page {
+    min-height: calc(100vh - var(--header-height));
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--margin);
+    background: radial-gradient(circle at 15% 20%, rgba(14, 107, 168, 0.15), transparent 50%),
+    radial-gradient(circle at 85% 10%, rgba(9, 66, 102, 0.15), transparent 45%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 250, 255, 0.9));
+}
+
+.invite-card {
+    width: min(720px, 100%);
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.invite-badge {
+    align-self: flex-start;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(14, 107, 168, 0.12);
+    color: var(--accent-color);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+}
+
+.invite-title {
+    margin: 0;
+    font-size: 32px;
+}
+
+.invite-subtitle {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 15px;
+}
+
+.invite-details {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.invite-detail {
+    background: rgba(14, 107, 168, 0.06);
+    border-radius: 14px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border: 1px solid rgba(14, 107, 168, 0.12);
+}
+
+.invite-detail-label {
+    font-size: 12px;
+    color: var(--text-third);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+
+.invite-detail-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.invite-code {
+    letter-spacing: .06em;
+}
+
+.invite-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.invite-accept {
+    align-self: flex-start;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 22px;
+    font-weight: 700;
+    background: var(--accent-color);
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    box-shadow: 0 12px 25px rgba(14, 107, 168, 0.25);
+}
+
+.invite-accept:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 30px rgba(14, 107, 168, 0.35);
+}
+
+.invite-accept:active {
+    transform: translateY(0);
+    box-shadow: 0 10px 20px rgba(14, 107, 168, 0.25);
+}
+
+.invite-note {
+    margin: 0;
+    color: var(--text-third);
+    font-size: 13px;
+}
+
+@media (max-width: 900px) {
+    .invite-page {
+        padding: 48px 24px;
+    }
+
+    .invite-details {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .invite-page {
+        background: radial-gradient(circle at 15% 20%, rgba(14, 107, 168, 0.2), transparent 55%),
+        radial-gradient(circle at 85% 10%, rgba(9, 66, 102, 0.2), transparent 50%),
+        linear-gradient(135deg, rgba(12, 12, 12, 0.95), rgba(16, 16, 16, 0.95));
+    }
+
+    .invite-detail {
+        background: rgba(14, 107, 168, 0.12);
+    }
+}
+
 /* Member medals */
 .member-medal {
     display: flex;

@@ -10,7 +10,7 @@ import {BoardData} from "@/app/components/board";
 export default function Page() {
     return (
         <Suspense fallback={<p>Loading invite details...</p>}>
-            <InvitePageContent />
+            <InvitePageContent/>
         </Suspense>
     );
 }
@@ -71,15 +71,43 @@ function InvitePageContent() {
     }
     if (loading) {
         return (
-            <p>Chargement des détails de l'invitation...</p>
+            <div className="invite-page">
+                <div className="invite-card">
+                    <p className="invite-status">Chargement des détails de l'invitation...</p>
+                </div>
+            </div>
         );
     }
 
     return (
-        <div>
-            <p>{code + " -> " + inviteData?.role}</p>
-            <p>Joining {boardData?.owner.firstName} Board?</p>
-            <button onClick={onInviteAccept}>Join</button>
+        <div className="invite-page">
+            <div className="invite-card">
+                <div className="invite-badge">You're invited</div>
+                <h1 className="invite-title">Join the board</h1>
+                <p className="invite-subtitle">
+                    You have been invited to collaborate. Review the details and accept to jump in.
+                </p>
+                <div className="invite-details">
+                    <div className="invite-detail">
+                        <span className="invite-detail-label">Invite Code</span>
+                        <span className="invite-detail-value invite-code">{code}</span>
+                    </div>
+                    <div className="invite-detail">
+                        <span className="invite-detail-label">Role</span>
+                        <span className="invite-detail-value">{inviteData?.role}</span>
+                    </div>
+                    <div className="invite-detail">
+                        <span className="invite-detail-label">Board</span>
+                        <span className="invite-detail-value">{boardData?.owner.firstName} Board</span>
+                    </div>
+                </div>
+                <div className="invite-actions">
+                    <button className="invite-accept" onClick={onInviteAccept}>
+                        Accept Invite
+                    </button>
+                    {/*<p className="invite-note">You can leave the board anytime in settings.</p>*/}
+                </div>
+            </div>
         </div>
     )
 }
