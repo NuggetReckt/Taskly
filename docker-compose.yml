@@ -28,8 +28,8 @@ services:
       db:
         condition: service_healthy
         restart: true
-    expose:
-      - "8000"
+    ports:
+      - "8000:8000" # TEMPORAIRE
     networks:
       - backend
       - frontend
