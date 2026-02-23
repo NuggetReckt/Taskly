@@ -484,16 +484,6 @@ body {
     font-size: 13px;
 }
 
-@media (max-width: 900px) {
-    .invite-page {
-        padding: 48px 24px;
-    }
-
-    .invite-details {
-        grid-template-columns: 1fr;
-    }
-}
-
 @media (prefers-color-scheme: dark) {
     .invite-page {
         background: radial-gradient(circle at 15% 20%, rgba(14, 107, 168, 0.2), transparent 55%),
@@ -654,5 +644,15 @@ body {
 @media (max-width: 600px) {
     :root {
         --margin: 20px;
+    }
+}
+
+@media (max-width: 900px) {
+    .invite-page {
+        padding: 48px 24px;
+    }
+
+    .invite-details {
+        grid-template-columns: 1fr;
     }
 }

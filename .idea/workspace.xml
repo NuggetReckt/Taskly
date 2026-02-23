@@ -6,11 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="4cc50de9-dfc5-44f4-abd8-4356aa24684d" name="Changes" comment="feat(Landing page): Added Github &amp; gitbook buttons&#10;feat(App): Added leave button modal for board cards in app&#10;feat(Invite): Added invite styling&#10;fix(Footer): Fixed missing links in footer">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/app/board/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/app/board/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/metadata.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/globals.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/welcome.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/welcome.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,7 +17,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="98" />
+    <option name="cachedIndexableFilesCount" value="2818" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
@@ -145,7 +144,7 @@
     "npm.install.executor": "Run",
     "settings.editor.selected.configurable": "ml.llm.agents.accounts",
     "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "/Users/corto/delivery/PRO/Taskly/frontend/node_modules/typescript/lib",
+    "ts.external.directory.path": "C:\\Users\\corto\\delivery\\PRO\\Taskly\\frontend\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -174,7 +173,7 @@
       <recent name="C:\Users\corto\delivery\PRO\Taskly\frontend\app\app" />
     </key>
   </component>
-  <component name="RunManager" selected="Docker.Run (DB+FRONT)">
+  <component name="RunManager" selected="npm.[FRONT] Dev">
     <configuration name="Backend" type="ShConfigurationType">
       <option name="SCRIPT_TEXT" value="" />
       <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
