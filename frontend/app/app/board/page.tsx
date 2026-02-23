@@ -65,7 +65,6 @@ export default function Page() {
             <LoadingIcon/>
         );
     }
-    // metadata.title = "Taskly - " + board.title;
 
     return (
         <div className="board-wrapper">

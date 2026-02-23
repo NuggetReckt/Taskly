@@ -4,19 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc50de9-dfc5-44f4-abd8-4356aa24684d" name="Changes" comment="fix(Docker): Added reverse proxy for API access">
+    <list default="true" id="4cc50de9-dfc5-44f4-abd8-4356aa24684d" name="Changes" comment="feat(Landing page): Added Github &amp; gitbook buttons&#10;feat(App): Added leave button modal for board cards in app&#10;feat(Invite): Added invite styling&#10;fix(Footer): Fixed missing links in footer">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/app/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/app/app.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/components/board.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/components/board.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/components/footer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/components/footer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/globals.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/invite/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/invite/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/app/board/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/app/board/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/metadata.tsx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/welcome.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/welcome.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -426,7 +420,15 @@
       <option name="project" value="LOCAL" />
       <updated>1771698928170</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="feat(Landing page): Added Github &amp; gitbook buttons&#10;feat(App): Added leave button modal for board cards in app&#10;feat(Invite): Added invite styling&#10;fix(Footer): Fixed missing links in footer">
+      <option name="closed" value="true" />
+      <created>1771857126231</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1771857126231</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -456,7 +458,8 @@
     <MESSAGE value="feat(Board): Added board settings modal for editing board settings (name, description, manage members, labels, ...)" />
     <MESSAGE value="feat(Board): Added permissions for user actions (create card, modifying board title, ...)" />
     <MESSAGE value="feat(LandingPage): Added HTML Skeleton and page structure" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(LandingPage): Added HTML Skeleton and page structure" />
+    <MESSAGE value="feat(Landing page): Added Github &amp; gitbook buttons&#10;feat(App): Added leave button modal for board cards in app&#10;feat(Invite): Added invite styling&#10;fix(Footer): Fixed missing links in footer" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(Landing page): Added Github &amp; gitbook buttons&#10;feat(App): Added leave button modal for board cards in app&#10;feat(Invite): Added invite styling&#10;fix(Footer): Fixed missing links in footer" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Taskly$Unnamed.coverage" NAME="Unnamed Coverage Results" MODIFIED="1764860605274" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
