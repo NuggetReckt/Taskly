@@ -15,7 +15,16 @@ import {
     updateBoardMemberRole,
     updateBoardStatus
 } from "@/app/http/boards";
-import {addCardAssignee, addCardLabel, createCard, moveCard, removeCardAssignee, removeCardLabel, updateCard} from "@/app/http/cards";
+import {
+    addCardAssignee,
+    addCardLabel,
+    createCard,
+    moveCard,
+    removeCard,
+    removeCardAssignee,
+    removeCardLabel,
+    updateCard
+} from "@/app/http/cards";
 import {createList, moveList} from "@/app/http/lists";
 import {CardData} from "@/app/components/card";
 import MemberMedal from "@/app/components/memberMedal";
@@ -105,6 +114,16 @@ export default function BoardView(data: BoardViewData) {
         } else {
             setCurrentMember(data.members.filter(m => m.user.id === user?.id)[0]);
         }
+
+        const keyDownHandler = (e: any) => {
+            if (e.code != "Escape") return;
+            handleCloseModal();
+        };
+        document.addEventListener("keydown", keyDownHandler);
+
+        return () => {
+            document.removeEventListener("keydown", keyDownHandler);
+        };
     }, [user]);
 
     const handleCreateListClick = () => {
@@ -219,6 +238,29 @@ export default function BoardView(data: BoardViewData) {
             setCreating(false);
         }
     };
+
+    const onCardRemove = async () => {
+        if (!selectedCard) return;
+        if (isReadOnly) {
+            setError("This board is archived and read-only.");
+            return;
+        }
+        if (currentMember != null && currentMember.role === "viewer") {
+            setError("You do not have the permission!");
+            return;
+        }
+
+        setCreating(true);
+        try {
+            await removeCard(data.id, selectedCard.id);
+            handleCloseModal();
+            window.location.reload();
+        } catch (err: any) {
+            setError(err?.message ?? "Failed to update card");
+        } finally {
+            setCreating(false);
+        }
+    }
 
     const onAddLabelToCard = async (label: LabelData) => {
         if (!selectedCard || !label.id) return;
@@ -483,14 +525,13 @@ export default function BoardView(data: BoardViewData) {
     }
 
     function getInvites(invites: BoardInviteData[]) {
-        let items = invites.map(invite => (
+        return invites.map(invite => (
             <li key={"invite_" + invite.id} className={"invite-card-wrapper"}>
                 <InviteCard id={invite.id} boardId={invite.boardId} code={invite.code} role={invite.role}/>
                 <button className="remove-btn" onClick={() => onDeleteInvite(invite.id)}>-
                 </button>
             </li>
         ));
-        return items;
     }
 
     const editableMembers = editMembers.filter(member => member.role !== "owner");
@@ -718,7 +759,14 @@ export default function BoardView(data: BoardViewData) {
                                         className="auth-input"
                                         type="text"
                                         value={newListTitle}
-                                        onChange={(e) => setNewListTitle(e.target.value)}
+                                        onChange={(e) => {
+                                            if (e.target.value.length > 24) {
+                                                setError("The title must not be longer than 24 characters");
+                                                return;
+                                            }
+                                            setError(null);
+                                            setNewListTitle(e.target.value);
+                                        }}
                                         placeholder="My new list"
                                         required
                                         autoFocus
@@ -756,7 +804,14 @@ export default function BoardView(data: BoardViewData) {
                                         className="auth-input"
                                         type="text"
                                         value={newLabelName}
-                                        onChange={(e) => setNewLabelName(e.target.value)}
+                                        onChange={(e) => {
+                                            if (e.target.value.length > 12) {
+                                                setError("The label name must not be longer than 12 characters");
+                                                return;
+                                            }
+                                            setError(null);
+                                            setNewLabelName(e.target.value);
+                                        }}
                                         placeholder="Label name"
                                         required
                                         autoFocus
@@ -804,7 +859,14 @@ export default function BoardView(data: BoardViewData) {
                                         className="auth-input"
                                         type="text"
                                         value={newCardTitle}
-                                        onChange={(e) => setNewCardTitle(e.target.value)}
+                                        onChange={(e) => {
+                                            if (e.target.value.length > 24) {
+                                                setError("The title must not be longer than 24 characters");
+                                                return;
+                                            }
+                                            setError(null);
+                                            setNewCardTitle(e.target.value);
+                                        }}
                                         placeholder="Card title"
                                         required
                                         autoFocus
@@ -815,7 +877,14 @@ export default function BoardView(data: BoardViewData) {
                                     <textarea
                                         className="auth-input"
                                         value={newCardDesc}
-                                        onChange={(e) => setNewCardDesc(e.target.value)}
+                                        onChange={(e) => {
+                                            if (e.target.value.length > 3000) {
+                                                setError("The description must not be longer than 3000 characters");
+                                                return;
+                                            }
+                                            setError(null);
+                                            setNewCardDesc(e.target.value);
+                                        }}
                                         placeholder="Card description"
                                     />
                                 </label>
@@ -914,7 +983,14 @@ export default function BoardView(data: BoardViewData) {
                                             className="auth-input"
                                             type="text"
                                             value={editBoardTitle}
-                                            onChange={(e) => setEditBoardTitle(e.target.value)}
+                                            onChange={(e) => {
+                                                if (e.target.value.length > 16) {
+                                                    setError("The title must not be longer than 16 characters");
+                                                    return;
+                                                }
+                                                setError(null);
+                                                setEditBoardTitle(e.target.value);
+                                            }}
                                             disabled={isReadOnly || currentMember?.role === "viewer" || currentMember?.role === "editor"}
                                         />
                                     </label>
@@ -923,7 +999,14 @@ export default function BoardView(data: BoardViewData) {
                                         <textarea
                                             className="auth-input"
                                             value={editBoardDescription}
-                                            onChange={(e) => setEditBoardDescription(e.target.value)}
+                                            onChange={(e) => {
+                                                if (e.target.value.length > 3000) {
+                                                    setError("The description must not be longer than 3000 characters");
+                                                    return;
+                                                }
+                                                setError(null);
+                                                setEditBoardDescription(e.target.value);
+                                            }}
                                             disabled={isReadOnly || currentMember?.role === "viewer" || currentMember?.role === "editor"}
                                         />
                                     </label>
@@ -1138,7 +1221,14 @@ export default function BoardView(data: BoardViewData) {
                             <input
                                 className="modal-title-input"
                                 value={editingCardTitle}
-                                onChange={(e) => setEditingCardTitle(e.target.value)}
+                                onChange={(e) => {
+                                    if (e.target.value.length > 24) {
+                                        setError("The title must not be longer than 24 characters");
+                                        return;
+                                    }
+                                    setError(null);
+                                    setEditingCardTitle(e.target.value);
+                                }}
                             />
                             <button className="modal-close" onClick={handleCloseModal}>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -1155,7 +1245,14 @@ export default function BoardView(data: BoardViewData) {
                                 <textarea
                                     className="description-textarea"
                                     value={editingCardDesc}
-                                    onChange={(e) => setEditingCardDesc(e.target.value)}
+                                    onChange={(e) => {
+                                        if (e.target.value.length > 3000) {
+                                            setError("The description must not be longer than 3000 characters");
+                                            return;
+                                        }
+                                        setError(null);
+                                        setEditingCardDesc(e.target.value);
+                                    }}
                                     placeholder="Add a description..."
                                 />
                             </div>
@@ -1241,6 +1338,12 @@ export default function BoardView(data: BoardViewData) {
                             {error && <p className="auth-error">{error}</p>}
                             <button className="auth-button" onClick={onSaveCard} disabled={creating || isReadOnly}>
                                 {creating ? "Saving..." : "Save Changes"}
+                            </button>
+                            <button
+                                className="auth-button btn-danger"
+                                onClick={onCardRemove}
+                                disabled={creating || isReadOnly}>
+                                Remove card
                             </button>
                         </div>
                     </div>

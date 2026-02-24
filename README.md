@@ -1,8 +1,6 @@
 # Taskly - A Trello alternative
 
-
 ## 📋 Overview
-
 Before introducing the project itself, let’s put a little bit of context on this. For
 our third year of studies in computer science at Epitech, we must have practical
 work experience at the start of the year part-time (Thursdays and Fridays). This
@@ -18,7 +16,6 @@ method. It is based on the organization of projects into boards listing cards, e
 representing tasks. Cards are assignable to users and are movable from one board
 to another, representing their progress. Code name: “Taskly”.
 
-
 ## ✨ Key Features
 - Visually intuitive and responsive Kanban board interface.
 - Users can manage tasks through cards, lists, and boards.
@@ -26,24 +23,27 @@ to another, representing their progress. Code name: “Taskly”.
 - Real-time updates when multiple users interact with the same board.
 
 ## ⚙️ Quick Start
-1. Clone the repository: `git clone git@github.com:EpitechPGE3-2025/G-PRO-500-PAR-5-1-professionalwork-44.git`
-2. Build and run the project: `docker-compose up --build`
+1. Clone the repository: `git clone https://github.com/NuggetReckt/Taskly.git`
+2. Build and run the project: `docker compose up --build`
 3. That's it! Now you can access the application at http://localhost
 
-
 ## 📚 Documentation
-- [API Reference](https://taskly.noskillworld.fr:8000/docs)
-- 
-
+- [Documentation](https://taskly-1.gitbook.io/docs/)
+- [API Reference](https://api.noskillworld.fr/docs)
 
 ## 🛠️ Technologies Used
+
 ### Frontend
-- [TailwindCSS](https://tailwindcss.com/) - A utility-first CSS framework for rapidly building custom user interfaces.
+- [React](https://react.dev/) - React is a declarative, component-based JavaScript library for building user interfaces.
+- [Next.js](https://nextjs.org/) - Next.js is a React-based web framework for building full-stack applications with server-side rendering 
+  and static site generation.
+- [TailwindCSS](https://tailwindcss.com/) - TailwindCSS is a utility-first CSS framework for rapidly building custom user interfaces.
 
 ### Backend
 - [Python](https://www.python.org/) - Python is an interpreted, high-level, general-purpose programming language.
-- [FastAPI](https://fastapi.tiangolo.com/) - FastAPI is a modern, fast (high-performance), web framework for building APIs with Python 3.
-
+- [FastAPI](https://fastapi.tiangolo.com/) - FastAPI is a modern, fast web framework for building APIs with Python 3.
+- [PostgreSQL](https://www.postgresql.org/) - PostgreSQL is an advanced, open-source relational database management system focused on
+  reliability, extensibility, and SQL standards compliance.
 
 ## 📄 Resources
 - Original project website: https://trello.com
@@ -53,7 +53,7 @@ to another, representing their progress. Code name: “Taskly”.
 
 <br>
 
-*Last update: November 2025*
+*Last update: February 2026*
 <br>
 
-<div align="center"> <sub>{Epitech.} - 2025</sub> </div>
+<div align="center"><sub>{Epitech.} - 2026</sub></div>

@@ -85,6 +85,16 @@ export default function Page() {
 
     useEffect(() => {
         handleSearch(searchTerm);
+
+        const keyDownHandler = (e: any) => {
+            if (e.code != "Escape") return;
+            handleCloseModal();
+        };
+        document.addEventListener("keydown", keyDownHandler);
+
+        return () => {
+            document.removeEventListener("keydown", keyDownHandler);
+        };
     }, [searchTerm, owningBoards, memberBoards]);
 
     const handleSearch = (term: string) => {
@@ -168,7 +178,14 @@ export default function Page() {
                                         className="auth-input"
                                         type="text"
                                         value={newBoardTitle}
-                                        onChange={(e) => setNewBoardTitle(e.target.value)}
+                                        onChange={(e) => {
+                                            if (e.target.value.length > 16) {
+                                                setError("The title must not be longer than 16 characters");
+                                                return;
+                                            }
+                                            setError(null);
+                                            setNewBoardTitle(e.target.value);
+                                        }}
                                         placeholder="My awesome board"
                                         required
                                         autoFocus

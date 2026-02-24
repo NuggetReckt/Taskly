@@ -1,6 +1,6 @@
 import Card from "@/app/components/card";
 import {CardData} from "@/app/components/card";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {deleteList, updateList} from "@/app/http/lists";
 import {useUser} from "@/app/components/user";
 import {createCard} from "@/app/http/cards";
@@ -45,6 +45,20 @@ export default function List(data: ListData) {
             cardsCount: data.cards.length
         }
     });
+
+    useEffect(() => {
+        const keyDownHandler = (e: any) => {
+            if (e.code != "Escape") return;
+            handleCloseCreateModal();
+        };
+        document.addEventListener("keydown", keyDownHandler);
+
+        return () => {
+            document.removeEventListener("keydown", keyDownHandler);
+        };
+    }, []);
+
+
     const setNodeRef = (node: HTMLDivElement | null) => {
         setDroppableNodeRef(node);
         setDraggableNodeRef(node);
@@ -177,7 +191,14 @@ export default function List(data: ListData) {
                                         className="auth-input"
                                         type="text"
                                         value={newCardTitle}
-                                        onChange={(e) => setNewCardTitle(e.target.value)}
+                                        onChange={(e) => {
+                                            if (e.target.value.length > 24) {
+                                                setError("The title must not be longer than 24 characters");
+                                                return;
+                                            }
+                                            setError(null);
+                                            setNewCardTitle(e.target.value);
+                                        }}
                                         placeholder="My new card"
                                         required
                                         autoFocus
@@ -188,7 +209,14 @@ export default function List(data: ListData) {
                                     <textarea
                                         className="auth-input"
                                         value={newCardDesc}
-                                        onChange={(e) => setNewCardDesc(e.target.value)}
+                                        onChange={(e) => {
+                                            if (e.target.value.length > 3000) {
+                                                setError("The description must not be longer than 3000 characters");
+                                                return;
+                                            }
+                                            setError(null);
+                                            setNewCardDesc(e.target.value);
+                                        }}
                                         placeholder="Card description"
                                     />
                                 </label>
@@ -224,7 +252,14 @@ export default function List(data: ListData) {
                                         className="auth-input"
                                         type="text"
                                         value={listTitle}
-                                        onChange={(e) => setListTitle(e.target.value)}
+                                        onChange={(e) => {
+                                            if (e.target.value.length > 24) {
+                                                setError("The title must not be longer than 24 characters");
+                                                return;
+                                            }
+                                            setError(null);
+                                            setListTitle(e.target.value);
+                                        }}
                                         placeholder="List title"
                                         required
                                         autoFocus
@@ -246,7 +281,8 @@ export default function List(data: ListData) {
                     </div>
                 </div>
             )}
-            <div className={"list-draggable"} ref={setNodeRef} style={style} {...(data.readOnly ? {} : listeners)} {...(data.readOnly ? {} : attributes)}>
+            <div className={"list-draggable"} ref={setNodeRef}
+                 style={style} {...(data.readOnly ? {} : listeners)} {...(data.readOnly ? {} : attributes)}>
                 <div className={"list-wrapper"}>
                     <div className={"list"}>
                         <div className="list-header">
