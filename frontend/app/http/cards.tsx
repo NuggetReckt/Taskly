@@ -16,6 +16,16 @@ export async function createCard(boardId: number, listId: number, title: string,
     }
 }
 
+export async function removeCard(boardId: number, cardId: number): Promise<any> {
+    try {
+        const response = await client.delete(`board/${boardId}/card/${cardId}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error updating card:", error);
+        throw error;
+    }
+}
+
 export async function updateCard(boardId: number, cardId: number, title: string, desc: string, position: number): Promise<any> {
     try {
         const response = await client.put(`board/${boardId}/card/${cardId}`, {

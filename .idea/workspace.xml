@@ -4,11 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc50de9-dfc5-44f4-abd8-4356aa24684d" name="Changes" comment="feat(Landing page): Added Github &amp; gitbook buttons&#10;feat(App): Added leave button modal for board cards in app&#10;feat(Invite): Added invite styling&#10;fix(Footer): Fixed missing links in footer">
+    <list default="true" id="4cc50de9-dfc5-44f4-abd8-4356aa24684d" name="Changes" comment="fix(Readme): Added missing frontend technologies">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/globals.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/welcome.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/welcome.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/components/boardView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/components/boardView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/components/list.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/components/list.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/http/cards.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/http/cards.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -142,9 +143,9 @@
     "npm.Dev.executor": "Run",
     "npm.[FRONT] Dev.executor": "Run",
     "npm.install.executor": "Run",
-    "settings.editor.selected.configurable": "ml.llm.agents.accounts",
+    "settings.editor.selected.configurable": "configurable.tailwindcss",
     "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "C:\\Users\\corto\\delivery\\PRO\\Taskly\\frontend\\node_modules\\typescript\\lib",
+    "ts.external.directory.path": "/Users/corto/delivery/PRO/Taskly/frontend/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -427,7 +428,15 @@
       <option name="project" value="LOCAL" />
       <updated>1771857126231</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="fix(Readme): Added missing frontend technologies">
+      <option name="closed" value="true" />
+      <created>1771941295535</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1771941295535</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -458,7 +467,8 @@
     <MESSAGE value="feat(Board): Added permissions for user actions (create card, modifying board title, ...)" />
     <MESSAGE value="feat(LandingPage): Added HTML Skeleton and page structure" />
     <MESSAGE value="feat(Landing page): Added Github &amp; gitbook buttons&#10;feat(App): Added leave button modal for board cards in app&#10;feat(Invite): Added invite styling&#10;fix(Footer): Fixed missing links in footer" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(Landing page): Added Github &amp; gitbook buttons&#10;feat(App): Added leave button modal for board cards in app&#10;feat(Invite): Added invite styling&#10;fix(Footer): Fixed missing links in footer" />
+    <MESSAGE value="fix(Readme): Added missing frontend technologies" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix(Readme): Added missing frontend technologies" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Taskly$Unnamed.coverage" NAME="Unnamed Coverage Results" MODIFIED="1764860605274" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
