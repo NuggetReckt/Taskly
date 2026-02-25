@@ -1,4 +1,5 @@
 from typing import Optional, Literal
+from datetime import datetime
 from pydantic import BaseModel
 
 
@@ -40,6 +41,9 @@ class Card(BaseModel):
     description: str
     labels: Optional[list[int]] = None
     assignees: Optional[list[int]] = None
+    due_date: Optional[datetime] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
 
 
 class List(BaseModel):

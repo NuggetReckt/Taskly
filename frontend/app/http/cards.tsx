@@ -1,13 +1,14 @@
 import {client} from "@/app/http/client";
 
-export async function createCard(boardId: number, listId: number, title: string, desc: string, position: number): Promise<any> {
+export async function createCard(boardId: number, listId: number, title: string, desc: string, position: number, dueDate?: string | null): Promise<any> {
     try {
         const response = await client.post("board/" + boardId + "/card", {
             board_id: boardId,
             list_id: listId,
             title: title,
             position: position,
-            description: desc
+            description: desc,
+            due_date: dueDate ?? null
         });
         return response.data;
     } catch (error) {
@@ -26,12 +27,13 @@ export async function removeCard(boardId: number, cardId: number): Promise<any> 
     }
 }
 
-export async function updateCard(boardId: number, cardId: number, title: string, desc: string, position: number): Promise<any> {
+export async function updateCard(boardId: number, cardId: number, title: string, desc: string, position: number, dueDate?: string | null): Promise<any> {
     try {
         const response = await client.put(`board/${boardId}/card/${cardId}`, {
             title: title,
             description: desc,
-            position: position
+            position: position,
+            due_date: dueDate ?? null
         });
         return response.data;
     } catch (error) {

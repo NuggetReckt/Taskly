@@ -10,6 +10,9 @@ export interface CardData {
     pos: number;
     title: string;
     desc: string;
+    dueDate?: string | null;
+    createdAt?: string | null;
+    updatedAt?: string | null;
     assignees: BoardMemberData[];
     labels: LabelData[];
 }
@@ -24,6 +27,9 @@ export interface BoardCardDetailsData {
     id: number;
     card: CardData;
     comments: BoardCardCommentData[];
+    dueDate?: string | null;
+    createdAt?: string | null;
+    updatedAt?: string | null;
 }
 
 export default function Card(data: CardData & { onClick?: () => void }) {
@@ -60,7 +66,7 @@ export default function Card(data: CardData & { onClick?: () => void }) {
 
     return (
         <div className="card-wrapper" ref={setNodeRef} {...listeners} {...attributes} onClick={data.onClick}
-             style={{cursor: data.onClick ? 'pointer' : 'default', outline: isOver ? "2px solid #5b94ff" : undefined, ...style}}>
+             style={{cursor: data.onClick ? 'pointer' : 'default', outline: isOver ? "2px solid #0E6BA8" : undefined, ...style}}>
             <div className="card">
                 {labels.length >= 1 && (<div className="card-labels">
                     {labels}

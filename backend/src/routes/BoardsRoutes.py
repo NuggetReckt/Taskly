@@ -406,7 +406,8 @@ def get_board_cards(board_id: int, db: DatabaseHandler = Depends(get_database_ha
             cardAssignees.append(assignee['user_id'])
 
         cards.append(Card(id=card_id, list_id=card['list_id'], board_id=card['board_id'], title=card['title'],
-                          description=card['description'], position=card['position'], assignees=cardAssignees, labels=cardLabels))
+                          description=card['description'], position=card['position'], assignees=cardAssignees,
+                          labels=cardLabels, due_date=card['due_date'], created_at=card['created_at'], updated_at=card['updated_at']))
     return cards
 
 
@@ -421,8 +422,8 @@ def add_board_card(board_id: int, card: Card, db: DatabaseHandler = Depends(get_
     if not list_exists(board_id, card.list_id, db):
         raise HTTPException(status_code=404, detail="List not found")
 
-    result = db.execute("INSERT INTO cards (board_id, list_id, title, description, position) VALUES (%s, %s, %s, %s, %s) RETURNING id",
-                        (board_id, card.list_id, card.title, card.description, card.position))
+    result = db.execute("INSERT INTO cards (board_id, list_id, title, description, due_date, position) VALUES (%s, %s, %s, %s, %s, %s) RETURNING id",
+                        (board_id, card.list_id, card.title, card.description, card.due_date, card.position))
     return {"id": result[0]['id']}
 
 
@@ -434,8 +435,8 @@ def edit_board_card(board_id: int, card_id: int, card: Card, db: DatabaseHandler
     if not card_exists(board_id, card_id, db):
         raise HTTPException(status_code=404, detail="Card not found")
 
-    db.execute("UPDATE cards SET title = %s, description = %s, position = %s WHERE board_id = %s AND id = %s",
-               (card.title, card.description, card.position, board_id, card_id))
+    db.execute("UPDATE cards SET title = %s, description = %s, position = %s, due_date = %s, updated_at = NOW() WHERE board_id = %s AND id = %s",
+               (card.title, card.description, card.position, card.due_date, board_id, card_id))
     return statusOk
 
 
@@ -471,7 +472,8 @@ def get_board_card(board_id: int, card_id: int, db: DatabaseHandler = Depends(ge
         cardAssignees.append(assignee['user_id'])
     return Card(list_id=result[0]['list_id'], board_id=result[0]['board_id'], title=result[0]['title'],
                 description=result[0]['description'],
-                position=result[0]['position'], assignees=cardAssignees, labels=cardLabels)
+                position=result[0]['position'], assignees=cardAssignees, labels=cardLabels,
+                due_date=result[0]['due_date'], created_at=result[0]['created_at'], updated_at=result[0]['updated_at'])
 
 
 @router.get("/board/{board_id}/card/{card_id}/assignees")
@@ -721,7 +723,8 @@ def get_board_cards_for_list(board_id: int, list_id: int, db: DatabaseHandler) -
             cardAssignees.append(assignee['user_id'])
 
         cardsList.append(Card(id=card_id, list_id=card['list_id'], board_id=board_id, title=card['title'], position=card['position'],
-                              description=card['description'], labels=cardLabels, assignees=cardAssignees))
+                              description=card['description'], labels=cardLabels, assignees=cardAssignees,
+                              due_date=card['due_date'], created_at=card['created_at'], updated_at=card['updated_at']))
     return cardsList
 
 

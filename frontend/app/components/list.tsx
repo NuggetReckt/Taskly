@@ -22,6 +22,7 @@ export default function List(data: ListData) {
     const [isCreateModalOpen, setCreateModalOpen] = useState(false);
     const [newCardTitle, setNewCardTitle] = useState(user?.firstName + "'s card");
     const [newCardDesc, setNewCardDesc] = useState("");
+    const [newCardDueDate, setNewCardDueDate] = useState<string>("");
     const [creating, setCreating] = useState(false);
     const [listTitle, setListTitle] = useState(data.title);
     const [listPos, setListPos] = useState(data.pos);
@@ -73,6 +74,7 @@ export default function List(data: ListData) {
     };
     const handleCloseCreateModal = () => {
         setCreateModalOpen(false);
+        setNewCardDueDate("");
     };
 
     const onCreateCard = async (e: React.FormEvent) => {
@@ -83,7 +85,7 @@ export default function List(data: ListData) {
         setError(null);
 
         try {
-            const result = await createCard(data.boardId, data.id, newCardTitle.trim(), newCardDesc.trim(), currentCardPos);
+            const result = await createCard(data.boardId, data.id, newCardTitle.trim(), newCardDesc.trim(), currentCardPos, newCardDueDate || null);
             handleCloseCreateModal();
             if (result && result.id) {
                 setCurrentCardPos(currentCardPos + 1);
@@ -220,6 +222,15 @@ export default function List(data: ListData) {
                                         placeholder="Card description"
                                     />
                                 </label>
+                                <label className="auth-field">
+                                    <span className="auth-label">Due Date</span>
+                                    <input
+                                        className="auth-input"
+                                        type="date"
+                                        value={newCardDueDate}
+                                        onChange={(e) => setNewCardDueDate(e.target.value)}
+                                    />
+                                </label>
                                 {error && <p className="auth-error">{error}</p>}
                                 <button className="auth-button" type="submit"
                                         disabled={creating || !newCardTitle.trim()}>
@@ -282,7 +293,7 @@ export default function List(data: ListData) {
                 </div>
             )}
             <div className={"list-draggable"} ref={setNodeRef}
-                 style={style} {...(data.readOnly ? {} : listeners)} {...(data.readOnly ? {} : attributes)}>
+                 style={{outline: isOver ? "2px solid #0E6BA8" : undefined, ...style}} {...(data.readOnly ? {} : listeners)} {...(data.readOnly ? {} : attributes)}>
                 <div className={"list-wrapper"}>
                     <div className={"list"}>
                         <div className="list-header">
@@ -296,7 +307,7 @@ export default function List(data: ListData) {
                                 </svg>
                             </button>
                         </div>
-                        <div className="cards-wrapper" style={{outline: isOver ? "2px dashed #5b94ff" : undefined}}>
+                        <div className="cards-wrapper">
                             <ul className="cards">{cardItems}</ul>
                         </div>
                     </div>
