@@ -323,8 +323,8 @@ class FakeDatabaseHandler:
                 board_id = params
             return [c for c in self._cards if c["board_id"] == board_id]
 
-        if q.startswith("insert into cards (board_id, list_id, title, description, position) values (%s, %s, %s, %s, %s)"):
-            board_id, list_id, title, description, position = params
+        if q.startswith("insert into cards (board_id, list_id, title, description, due_date, position) values (%s, %s, %s, %s, %s, %s)"):
+            board_id, list_id, title, description, due_date, position = params
             new_id = self._card_id_seq
             new_card = {
                 "id": new_id,
@@ -332,7 +332,10 @@ class FakeDatabaseHandler:
                 "list_id": list_id,
                 "title": title,
                 "description": description,
+                "due_date": due_date,
                 "position": position,
+                "created_at": "2025-01-01T00:00:00",
+                "updated_at": "2025-01-01T00:00:00",
             }
             self._card_id_seq += 1
             self._cards.append(new_card)
@@ -340,13 +343,15 @@ class FakeDatabaseHandler:
                 return [{"id": new_id}]
             return 1
 
-        if q.startswith("update cards set title = %s, description = %s, position = %s where board_id = %s and id = %s"):
-            title, description, position, board_id, card_id = params
+        if q.startswith("update cards set title = %s, description = %s, position = %s, due_date = %s, updated_at = now() where board_id = %s and id = %s"):
+            title, description, position, due_date, board_id, card_id = params
             for c in self._cards:
                 if c["id"] == card_id and c["board_id"] == board_id:
                     c["title"] = title
                     c["description"] = description
                     c["position"] = position
+                    c["due_date"] = due_date
+                    c["updated_at"] = "2025-01-02T00:00:00"
                     return 1
             return 0
 

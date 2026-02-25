@@ -2,6 +2,7 @@ import List, {ListData} from "@/app/components/list";
 import {User, useUser} from "@/app/components/user";
 import Label, {LabelData} from "@/app/components/label";
 import React, {useEffect, useState} from "react";
+import Calendar from "react-calendar";
 import {
     createInvite,
     createLabel,
@@ -62,11 +63,13 @@ export default function BoardView(data: BoardViewData) {
     const [isCardModalOpen, setIsCardModalOpen] = useState(false);
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [isBoardEditModalOpen, setIsBoardEditModalOpen] = useState(false);
+    const [isCalendarOpen, setIsCalendarOpen] = useState(false);
     const [newListTitle, setNewListTitle] = useState("");
     const [newLabelName, setNewLabelName] = useState("");
     const [newLabelColor, setNewLabelColor] = useState("#000000");
     const [newCardTitle, setNewCardTitle] = useState("");
     const [newCardDesc, setNewCardDesc] = useState("");
+    const [newCardDueDate, setNewCardDueDate] = useState<string>("");
     const [newCardListId, setNewCardListId] = useState<number | null>(null);
     const [selectedCard, setSelectedCard] = useState<CardData | null>(null);
     const [editingCardTitle, setEditingCardTitle] = useState("");
@@ -108,6 +111,40 @@ export default function BoardView(data: BoardViewData) {
         pointerSensor
     )
 
+    const formatDateTimeDisplay = (value?: string | null) => {
+        if (!value) return "Unknown";
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return value;
+        return date.toLocaleString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+    };
+
+    const getDateKeyFromValue = (value?: string | null) => {
+        if (!value) return "";
+        const datePart = value.split("T")[0];
+        return datePart;
+    };
+
+    const getDateKeyFromDate = (date: Date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+    };
+
+    const cardsByDate = data.lists.flatMap(list => list.cards).reduce((acc, card) => {
+        const key = getDateKeyFromValue(card.dueDate);
+        if (!key) return acc;
+        if (!acc[key]) acc[key] = [];
+        acc[key].push(card);
+        return acc;
+    }, {} as Record<string, CardData[]>);
+
     useEffect(() => {
         if (data.owner.id === user?.id) {
             setCurrentMember({user: user, role: "owner"});
@@ -134,6 +171,10 @@ export default function BoardView(data: BoardViewData) {
 
         setIsModalOpen(true);
     };
+
+    const handleCalendarClick = () => {
+        setIsCalendarOpen(true);
+    }
 
     const handleShareClick = async () => {
         if (currentMember != null && currentMember.role === "viewer") {
@@ -183,11 +224,13 @@ export default function BoardView(data: BoardViewData) {
         setIsPlusModalOpen(false);
         setIsLabelModalOpen(false);
         setIsCardModalOpen(false);
+        setNewCardDueDate("");
         setSelectedCard(null);
         setIsLabelSelectorOpen(false);
         setIsAssigneeSelectorOpen(false);
         setIsShareModalOpen(false);
         setIsBoardEditModalOpen(false);
+        setIsCalendarOpen(false);
         setError(null);
     };
 
@@ -229,7 +272,7 @@ export default function BoardView(data: BoardViewData) {
 
         setCreating(true);
         try {
-            await updateCard(data.id, selectedCard.id, editingCardTitle, editingCardDesc, selectedCard.pos);
+            await updateCard(data.id, selectedCard.id, editingCardTitle, editingCardDesc, selectedCard.pos, selectedCard.dueDate);
             handleCloseModal();
             window.location.reload();
         } catch (err: any) {
@@ -388,7 +431,7 @@ export default function BoardView(data: BoardViewData) {
         try {
             const list = data.lists.find(l => l.id === newCardListId);
             const pos = list ? list.cards.length : 0;
-            await createCard(data.id, newCardListId, newCardTitle.trim(), newCardDesc.trim(), pos);
+            await createCard(data.id, newCardListId, newCardTitle.trim(), newCardDesc.trim(), pos, newCardDueDate || null);
             handleCloseModal();
             window.location.reload(); /* TODO: TROUVER MEILLEUR MOYEN DE REFRESH LE BOARD */
         } catch (err: any) {
@@ -902,6 +945,15 @@ export default function BoardView(data: BoardViewData) {
                                         ))}
                                     </select>
                                 </label>
+                                <label className="auth-field">
+                                    <span className="auth-label">Due Date</span>
+                                    <input
+                                        className="auth-input"
+                                        type="date"
+                                        value={newCardDueDate}
+                                        onChange={(e) => setNewCardDueDate(e.target.value)}
+                                    />
+                                </label>
                                 {error && <p className="auth-error">{error}</p>}
                                 <button className="auth-button" type="submit"
                                         disabled={creating || !newCardTitle.trim() || newCardListId === null}>
@@ -1141,6 +1193,42 @@ export default function BoardView(data: BoardViewData) {
                     </div>
                 </div>
             )}
+            {isCalendarOpen && (
+                <div className="modal-overlay" onClick={handleCloseModal}>
+                    <div className="modal-content calendar-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h1 className="auth-title">Calendar</h1>
+                            <button className="modal-close" onClick={handleCloseModal}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                                     strokeLinejoin="round" className="lucide lucide-x size-5">
+                                    <path d="M18 6 6 18"></path>
+                                    <path d="m6 6 12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <Calendar
+                            className="board-calendar"
+                            view="month"
+                            tileContent={({date, view}) => {
+                                if (view !== "month") return null;
+                                const key = getDateKeyFromDate(date);
+                                const cards = cardsByDate[key];
+                                if (!cards || cards.length === 0) return null;
+                                return (
+                                    <div className="calendar-cards">
+                                        {cards.map(card => (
+                                            <div key={`calendar-card-${card.id}`} className="calendar-card">
+                                                {card.title}
+                                            </div>
+                                        ))}
+                                    </div>
+                                );
+                            }}
+                        />
+                    </div>
+                </div>
+            )}
             <div className="board-header">
                 <h1>{data.title}{isReadOnly ? " (Archived)" : ""}</h1>
                 <div className="header-tools">
@@ -1190,6 +1278,16 @@ export default function BoardView(data: BoardViewData) {
                                 d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                         </svg>
                     </a>
+                    <button data-slot="button" className="tool-button" onClick={handleCalendarClick}>
+                        <svg fill="currentColor" viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+                            <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+                            <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
+                            <g id="SVGRepo_iconCarrier">
+                                <path fillRule="evenodd"
+                                      d="M20,8 L20,5 L18,5 L18,6 L16,6 L16,5 L8,5 L8,6 L6,6 L6,5 L4,5 L4,8 L20,8 Z M20,10 L4,10 L4,20 L20,20 L20,10 Z M18,3 L20,3 C21.1045695,3 22,3.8954305 22,5 L22,20 C22,21.1045695 21.1045695,22 20,22 L4,22 C2.8954305,22 2,21.1045695 2,20 L2,5 C2,3.8954305 2.8954305,3 4,3 L6,3 L6,2 L8,2 L8,3 L16,3 L16,2 L18,2 L18,3 Z M9,14 L7,14 L7,12 L9,12 L9,14 Z M13,14 L11,14 L11,12 L13,12 L13,14 Z M17,14 L15,14 L15,12 L17,12 L17,14 Z M9,18 L7,18 L7,16 L9,16 L9,18 Z M13,18 L11,18 L11,16 L13,16 L13,18 Z"></path>
+                            </g>
+                        </svg>
+                    </button>
                     <button data-slot="button" className="tool-button" onClick={handleShareClick} disabled={isReadOnly}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 16 16"
                              className="lucide lucide-house size-5">
@@ -1318,6 +1416,19 @@ export default function BoardView(data: BoardViewData) {
                                     </div>
                                 </div>
                             </div>
+                            <div className="modal-section">
+                                <h3 className="section-title">Due Date</h3>
+                                <input
+                                    className="auth-input w-fit dark:scheme-dark"
+                                    type="date"
+                                    value={selectedCard.dueDate ? selectedCard.dueDate.split("T")[0] : ""}
+                                    onChange={(e) => {
+                                        const raw = e.target.value;
+                                        setSelectedCard(prev => prev ? {...prev, dueDate: raw ? raw : null} : prev);
+                                    }}
+                                    disabled={isReadOnly}
+                                />
+                            </div>
 
                             <div className="modal-section">
                                 <h3 className="section-title">Comments</h3>
@@ -1332,6 +1443,10 @@ export default function BoardView(data: BoardViewData) {
                                     }}>Add Comment
                                     </button>
                                 </div>
+                            </div>
+                            <div className="card-meta">
+                                <span>Created {formatDateTimeDisplay(selectedCard.createdAt)}</span>
+                                <span>Last modified {formatDateTimeDisplay(selectedCard.updatedAt)}</span>
                             </div>
                         </div>
                         <div className="modal-footer">

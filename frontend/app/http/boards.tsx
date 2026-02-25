@@ -107,7 +107,15 @@ export async function fetchBoardDetails(boardId: number): Promise<BoardViewData>
                     return member || {role: "member", user: {id: assigneeId, firstName: "Unknown", lastName: "User", email: ""}};
                 });
                 return {
-                    id: card.id, pos: card.position, assignees: cardAssignees, desc: card.description, labels: cardLabels, title: card.title
+                    id: card.id,
+                    pos: card.position,
+                    assignees: cardAssignees,
+                    desc: card.description,
+                    labels: cardLabels,
+                    title: card.title,
+                    dueDate: card.due_date ?? null,
+                    createdAt: card.created_at ?? null,
+                    updatedAt: card.updated_at ?? null
                 }
             });
             return {
