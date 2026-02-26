@@ -225,7 +225,7 @@ export default function List(data: ListData) {
                                 <label className="auth-field">
                                     <span className="auth-label">Due Date</span>
                                     <input
-                                        className="auth-input"
+                                        className="auth-input w-fit dark:scheme-dark"
                                         type="date"
                                         value={newCardDueDate}
                                         onChange={(e) => setNewCardDueDate(e.target.value)}
