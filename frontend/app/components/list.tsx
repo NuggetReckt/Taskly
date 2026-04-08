@@ -1,6 +1,7 @@
 import Card from "@/app/components/card";
 import {CardData} from "@/app/components/card";
 import React, {useEffect, useState} from "react";
+import useBodyScrollLock from "@/app/hooks/useBodyScrollLock";
 import {deleteList, updateList} from "@/app/http/lists";
 import {useUser} from "@/app/components/user";
 import {createCard} from "@/app/http/cards";
@@ -29,6 +30,9 @@ export default function List(data: ListData) {
     const [updating, setUpdating] = useState(false);
     const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const isAnyModalOpen = isCreateModalOpen || isUpdateModalOpen;
+
+    useBodyScrollLock(isAnyModalOpen);
     const {attributes, listeners, setNodeRef: setDraggableNodeRef, transform} = useDraggable({
         id: `list-${data.id}`,
         data: {
@@ -316,3 +320,5 @@ export default function List(data: ListData) {
         </>
     );
 }
+
+

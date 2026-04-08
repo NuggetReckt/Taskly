@@ -186,6 +186,20 @@
     flex-grow: 1;
 }
 
+.lists-wrapper::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+}
+
+.lists-wrapper::-webkit-scrollbar-track {
+    background: var(--background);
+}
+
+.lists-wrapper::-webkit-scrollbar-thumb {
+    background: var(--card-border);
+    border-radius: 10px;
+}
+
 .lists {
     display: flex;
     flex-wrap: nowrap;

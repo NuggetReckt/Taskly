@@ -24,8 +24,20 @@ to another, representing their progress. Code name: “Taskly”.
 
 ## ⚙️ Quick Start
 1. Clone the repository: `git clone https://github.com/NuggetReckt/Taskly.git`
-2. Build and run the project: `docker compose up --build`
-3. That's it! Now you can access the application at http://localhost
+2. Navigate to the backend directory: `cd Taskly/backend`
+3. In the `resources` directory, copy/paste the `.env-exemple` file and name the copy to `.env`: `cd resources && cp .env-exemple .env`
+4. Open the `.env` with your prefered text editor and fill in the required fields.
+5. Go back to the root directory and go to the frontend app directory: `cd ../../frontend/app`
+6. create a `secrets.tsx` file with the following content:
+  ```typescript
+  export const API_BASEURL = "http://localhost:8000"
+  export const API_SECRET = "" // The API key you set in the backend .env file
+  export const JWT_SECRET = "" // The secret key for the JWT you set in the backend .env file
+  ```
+7. Build and run the project: `docker compose up --build`
+8. That's it! Now you can access the application at http://localhost
+
+⚠️ Do not forget to create secrets.tsx file for frontend and .env file for backend!
 
 ## 📚 Documentation
 - [Documentation](https://taskly-1.gitbook.io/docs/)
@@ -53,7 +65,7 @@ to another, representing their progress. Code name: “Taskly”.
 
 <br>
 
-*Last update: February 2026*
+*Last update: April 2026*
 <br>
 
 <div align="center"><sub>{Epitech.} - 2026</sub></div>

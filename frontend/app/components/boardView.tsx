@@ -2,6 +2,7 @@ import List, {ListData} from "@/app/components/list";
 import {User, useUser} from "@/app/components/user";
 import Label, {LabelData} from "@/app/components/label";
 import React, {useEffect, useState} from "react";
+import useBodyScrollLock from "@/app/hooks/useBodyScrollLock";
 import Calendar from "react-calendar";
 import {
     createInvite,
@@ -95,6 +96,15 @@ export default function BoardView(data: BoardViewData) {
     const [applyingBoardEdits, setApplyingBoardEdits] = useState(false);
     const [transferringOwnership, setTransferringOwnership] = useState(false);
     const isReadOnly = boardStatus === "archived";
+    const isAnyModalOpen = isModalOpen
+        || isLabelModalOpen
+        || isCardModalOpen
+        || isShareModalOpen
+        || isBoardEditModalOpen
+        || isCalendarOpen
+        || selectedCard !== null;
+
+    useBodyScrollLock(isAnyModalOpen);
     const pointerSensor = useSensor(PointerSensor, {
         activationConstraint: {
             distance: 0.01
