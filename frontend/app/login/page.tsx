@@ -2,7 +2,6 @@
 
 import React, {Suspense, useMemo, useState} from "react";
 import {useRouter, useSearchParams} from "next/navigation";
-//import {metadata} from "@/app/layout";
 import {isTokenValid, login} from "@/app/http/auth";
 import {useSetUser} from "@/app/components/user";
 
