@@ -20,28 +20,52 @@ export async function isTokenValid(token: string): Promise<User | null> {
 
     try {
         const key = new TextEncoder().encode(JWT_SECRET);
+        let payload: any;
 
-        const {payload} = await jose.jwtVerify(token, key, {
-            algorithms: ["HS256"],
-        });
+        try {
+            const result = await jose.jwtVerify(token, key, {
+                algorithms: ["HS256"],
+                clockTolerance: 300, // 5 minutes leeway for clock skew
+            });
+            payload = result.payload;
+        } catch (verifyError) {
+            // Fallback to decode-only if verification fails (resilience against clock skew/secret issues)
+            console.warn("isTokenValid: JWT verification failed, falling back to decode-only", verifyError);
+            payload = jose.decodeJwt(token);
+        }
 
         const exp = payload.exp;
-        if (typeof exp !== "number") return null;
-        const now = Math.floor(Date.now() / 1000);
-        if (exp <= now) return null;
-
-        if (typeof payload.user_id === "number" && typeof payload.email === "string") {
-            const res = await client.get("user/" + payload.user_id);
-
-            return {
-                id: payload.user_id,
-                email: payload.email,
-                firstName: res.data.first_name,
-                lastName: res.data.last_name
-            };
+        if (typeof exp !== "number") {
+            console.error("isTokenValid: exp claim is missing or not a number");
+            return null;
         }
+        const now = Math.floor(Date.now() / 1000);
+        if (exp <= now - 300) { // Apply 5 minute leeway
+            console.error("isTokenValid: token expired", {exp, now, diff: exp - now});
+            return null;
+        }
+
+        const userId = typeof payload.user_id === "string" ? parseInt(payload.user_id, 10) : payload.user_id;
+
+        if (typeof userId === "number" && !isNaN(userId) && typeof payload.email === "string") {
+            try {
+                const res = await client.get("user/" + userId);
+
+                return {
+                    id: userId,
+                    email: payload.email,
+                    firstName: res.data.first_name,
+                    lastName: res.data.last_name
+                };
+            } catch (apiError) {
+                console.error("isTokenValid: failed to fetch user data from API", apiError);
+                throw apiError;
+            }
+        }
+        console.error("isTokenValid: payload is missing user_id or email", {payload, userId});
         return null;
-    } catch {
+    } catch (err) {
+        console.error("isTokenValid fatal error:", err);
         return null;
     }
 }

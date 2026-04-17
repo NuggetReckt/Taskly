@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc50de9-dfc5-44f4-abd8-4356aa24684d" name="Changes" comment="fix(Readme): Added more explicit quick start guide&#10;feat(Board): Improved lists wrapper scrollbar for chromium browsers&#10;deps(npm): Updated dependencies">
+    <list default="true" id="4cc50de9-dfc5-44f4-abd8-4356aa24684d" name="Changes" comment="ref(Hooks): Renamed `useBodyScrollLock` to `.tsx` and removed unused imports  &#10;deps(npm): Bumped package versions  &#10;fix(Env): Updated JWT algorithm in `.env_example`">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/resources/.env_exemple" beforeDir="false" afterPath="$PROJECT_DIR$/backend/resources/.env_exemple" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/hooks/useBodyScrollLock.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/hooks/useBodyScrollLock.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/login/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/login/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/http/auth.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/http/auth.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -181,7 +179,7 @@
       <recent name="C:\Users\corto\delivery\PRO\Taskly\frontend\app\app" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.[FRONT] Dev">
+  <component name="RunManager" selected="Docker.Run (ALL)">
     <configuration name="Backend" type="ShConfigurationType">
       <option name="SCRIPT_TEXT" value="" />
       <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
@@ -459,7 +457,15 @@
       <option name="project" value="LOCAL" />
       <updated>1775656861933</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="ref(Hooks): Renamed `useBodyScrollLock` to `.tsx` and removed unused imports  &#10;deps(npm): Bumped package versions  &#10;fix(Env): Updated JWT algorithm in `.env_example`">
+      <option name="closed" value="true" />
+      <created>1776432311052</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1776432311052</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -477,7 +483,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat(Frontend): Added Nginx docker image for frontend with default page&#10;feat(DB): Added full DB scheme&#10;fix(DatabaseManager): Removed useless scheme init as its initialized by docker" />
     <MESSAGE value="feat(Frontend): Added cards, lists &amp; boards components&#10;feat(Frontend): Board page containing requested board&#10;feat(Frontend): Added board cards display on /app" />
     <MESSAGE value="feat(Auth): Added login/register frontend routes&#10;feat(Frontend): Added changing title depending on what page the user is on" />
     <MESSAGE value="feat(Auth): Added login/register backend routes&#10;feat(API): Added header API secret middleware checker" />
@@ -502,7 +507,8 @@
     <MESSAGE value="fix(Readme): Added missing frontend technologies" />
     <MESSAGE value="feat(App): Added Escape key listener for closing modals&#10;fix(App): Added characters count limit for inputs" />
     <MESSAGE value="fix(Readme): Added more explicit quick start guide&#10;feat(Board): Improved lists wrapper scrollbar for chromium browsers&#10;deps(npm): Updated dependencies" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix(Readme): Added more explicit quick start guide&#10;feat(Board): Improved lists wrapper scrollbar for chromium browsers&#10;deps(npm): Updated dependencies" />
+    <MESSAGE value="ref(Hooks): Renamed `useBodyScrollLock` to `.tsx` and removed unused imports  &#10;deps(npm): Bumped package versions  &#10;fix(Env): Updated JWT algorithm in `.env_example`" />
+    <option name="LAST_COMMIT_MESSAGE" value="ref(Hooks): Renamed `useBodyScrollLock` to `.tsx` and removed unused imports  &#10;deps(npm): Bumped package versions  &#10;fix(Env): Updated JWT algorithm in `.env_example`" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Taskly$Unnamed.coverage" NAME="Unnamed Coverage Results" MODIFIED="1764860605274" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />

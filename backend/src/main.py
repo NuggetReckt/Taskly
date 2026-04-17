@@ -80,8 +80,7 @@ class APIKeyMiddleware(BaseHTTPMiddleware):
         if request.method == "OPTIONS":
             return await call_next(request)
 
-        if request.url.path.startswith("/docs") or request.url.path.startswith(
-                "/openapi.json" or request.url.path.startswith("/favicon.ico")):
+        if request.url.path.startswith(("/docs", "/openapi.json", "/favicon.ico")):
             return await call_next(request)
 
         if request.url.path == "/":
