@@ -198,8 +198,8 @@ export default function List(data: ListData) {
                                         type="text"
                                         value={newCardTitle}
                                         onChange={(e) => {
-                                            if (e.target.value.length > 24) {
-                                                setError("The title must not be longer than 24 characters");
+                                            if (e.target.value.length > 28) {
+                                                setError("The title must not be longer than 28 characters");
                                                 return;
                                             }
                                             setError(null);
@@ -238,7 +238,7 @@ export default function List(data: ListData) {
                                 {error && <p className="auth-error">{error}</p>}
                                 <button className="auth-button" type="submit"
                                         disabled={creating || !newCardTitle.trim()}>
-                                    {creating ? "Creating..." : "Create List"}
+                                    {creating ? "Creating..." : "Create Card"}
                                 </button>
                             </form>
                         </div>

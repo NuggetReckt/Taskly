@@ -913,8 +913,8 @@ export default function BoardView(data: BoardViewData) {
                                         type="text"
                                         value={newCardTitle}
                                         onChange={(e) => {
-                                            if (e.target.value.length > 24) {
-                                                setError("The title must not be longer than 24 characters");
+                                            if (e.target.value.length > 28) {
+                                                setError("The title must not be longer than 28 characters");
                                                 return;
                                             }
                                             setError(null);
@@ -1330,8 +1330,8 @@ export default function BoardView(data: BoardViewData) {
                                 className="modal-title-input"
                                 value={editingCardTitle}
                                 onChange={(e) => {
-                                    if (e.target.value.length > 24) {
-                                        setError("The title must not be longer than 24 characters");
+                                    if (e.target.value.length > 28) {
+                                        setError("The title must not be longer than 28 characters");
                                         return;
                                     }
                                     setError(null);
