@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4cc50de9-dfc5-44f4-abd8-4356aa24684d" name="Changes" comment="fix(Auth): Improved JWT validation with clock skew tolerance and fallback decoding">
+    <list default="true" id="4cc50de9-dfc5-44f4-abd8-4356aa24684d" name="Changes" comment="fix(Board): Increased card title character limit to 28 and fixed typo for button label for card creation">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/app/components/boardView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/components/boardView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/components/list.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/components/list.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -179,7 +178,7 @@
       <recent name="C:\Users\corto\delivery\PRO\Taskly\frontend\app\app" />
     </key>
   </component>
-  <component name="RunManager" selected="Docker.Run (ALL)">
+  <component name="RunManager" selected="npm.[FRONT] Dev">
     <configuration name="Backend" type="ShConfigurationType">
       <option name="SCRIPT_TEXT" value="" />
       <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
@@ -473,7 +472,15 @@
       <option name="project" value="LOCAL" />
       <updated>1776442545815</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="fix(Board): Increased card title character limit to 28 and fixed typo for button label for card creation">
+      <option name="closed" value="true" />
+      <created>1777046130994</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1777046130994</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -491,7 +498,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat(Auth): Added login/register frontend routes&#10;feat(Frontend): Added changing title depending on what page the user is on" />
     <MESSAGE value="feat(Auth): Added login/register backend routes&#10;feat(API): Added header API secret middleware checker" />
     <MESSAGE value="feat(Auth): Added password hash stored in db" />
     <MESSAGE value="feat(Auth): Added Json Web Token sent to user on login" />
@@ -516,7 +522,8 @@
     <MESSAGE value="fix(Readme): Added more explicit quick start guide&#10;feat(Board): Improved lists wrapper scrollbar for chromium browsers&#10;deps(npm): Updated dependencies" />
     <MESSAGE value="ref(Hooks): Renamed `useBodyScrollLock` to `.tsx` and removed unused imports  &#10;deps(npm): Bumped package versions  &#10;fix(Env): Updated JWT algorithm in `.env_example`" />
     <MESSAGE value="fix(Auth): Improved JWT validation with clock skew tolerance and fallback decoding" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix(Auth): Improved JWT validation with clock skew tolerance and fallback decoding" />
+    <MESSAGE value="fix(Board): Increased card title character limit to 28 and fixed typo for button label for card creation" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix(Board): Increased card title character limit to 28 and fixed typo for button label for card creation" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Taskly$Unnamed.coverage" NAME="Unnamed Coverage Results" MODIFIED="1764860605274" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />

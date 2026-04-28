@@ -1107,17 +1107,19 @@ export default function BoardView(data: BoardViewData) {
                                     <section className="board-edit-section board-edit-section-labels">
                                         <h2>Labels</h2>
                                         <div className="board-edit-list">
-                                            {editLabels.length === 0 && <p className="auth-hint">No labels.</p>}
-                                            {editLabels.map((label, index) => (
-                                                <div key={`edit_label_${label.id ?? "new"}_${index}`} className="board-edit-row">
-                                                    <Label name={label.name} color={label.color}/>
-                                                    <button className="remove-btn board-edit-remove-btn"
-                                                            onClick={() => handleRemoveBoardLabelFromDraft(index)}
-                                                            disabled={isReadOnly || currentMember?.role === "viewer" || currentMember?.role === "editor"}>
-                                                        -
-                                                    </button>
-                                                </div>
-                                            ))}
+                                            <div className="labels-list">
+                                                {editLabels.length === 0 && <p className="auth-hint">No labels.</p>}
+                                                {editLabels.map((label, index) => (
+                                                    <div key={`edit_label_${label.id ?? "new"}_${index}`} className="label-item-wrapper">
+                                                        <Label name={label.name} color={label.color}/>
+                                                        <button className="remove-btn"
+                                                                onClick={() => handleRemoveBoardLabelFromDraft(index)}
+                                                                disabled={isReadOnly || currentMember?.role === "viewer" || currentMember?.role === "editor"}>
+                                                            -
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                            </div>
                                             <div className="board-edit-add-label">
                                                 <input
                                                     className="auth-input"
